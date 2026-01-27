@@ -1,0 +1,160 @@
+// ===========================================
+// CSS CUSTOM PROPERTIES
+// Default design system variables
+// ===========================================
+
+@use 'tokens' as tokens
+
+// ===== ROOT VARIABLES =====
+\:root
+  // ===== BASE COLORS (Static) =====
+  --color-white: #FFFFFF
+  --color-black: #000000
+
+  // ===== TYPOGRAPHY =====
+  --font-primary: "Test American Grotesk", -apple-system, sans-serif
+  --font-mono: "Departure Mono", monospace
+  --font-sans: "Inter", -apple-system, sans-serif
+
+  --line-height-base: 1.5
+  --line-height-tight: 1.2
+  --line-height-loose: 1.75
+
+  // Optimal line length: 7-10 words ≈ 45-75 characters
+  --measure: 65ch
+
+  // ===== TYPE SCALE =====
+  // For font sizes - does NOT follow 8pt grid
+  // Values: 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48
+  --type-8: 8px
+  --type-10: 10px
+  --type-12: 12px
+  --type-14: 14px
+  --type-16: 16px
+  --type-18: 18px
+  --type-20: 20px
+  --type-24: 24px
+  --type-28: 28px
+  --type-32: 32px
+  --type-40: 40px
+  --type-48: 48px
+
+  // Font Size Aliases (reference type scale)
+  --font-size-body-xsm: var(--type-12)
+  --font-size-body-sm: var(--type-14)
+  --font-size-body: var(--type-16)
+  --font-size-h3: var(--type-24)
+  --font-size-h2: var(--type-28)
+  --font-size-h1: var(--type-32)
+  --font-size-display-sm: var(--type-40)
+  --font-size-display: var(--type-48)
+
+  // ===== UI SCALE =====
+  // For spacing, padding, margins
+  // Values: 0, 2, 4, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48, 60, 72
+  --ui-0: 0px
+  --ui-2: 2px
+  --ui-4: 4px
+  --ui-8: 8px
+  --ui-10: 10px
+  --ui-12: 12px
+  --ui-14: 14px
+  --ui-16: 16px
+  --ui-20: 20px
+  --ui-24: 24px
+  --ui-28: 28px
+  --ui-32: 32px
+  --ui-40: 40px
+  --ui-48: 48px
+  --ui-60: 60px
+  --ui-64: 64px
+  --ui-72: 72px
+
+  // Spacing Aliases (reference ui scale)
+  --space-0: var(--ui-0)
+  --space-2: var(--ui-2)
+  --space-4: var(--ui-4)
+  --space-8: var(--ui-8)
+  --space-10: var(--ui-10)
+  --space-12: var(--ui-12)
+  --space-14: var(--ui-14)
+  --space-16: var(--ui-16)
+  --space-20: var(--ui-20)
+  --space-24: var(--ui-24)
+  --space-28: var(--ui-28)
+  --space-32: var(--ui-32)
+  --space-40: var(--ui-40)
+  --space-48: var(--ui-48)
+  --space-60: var(--ui-60)
+  --space-72: var(--ui-72)
+
+  // Gap Aliases
+  --gap-none: var(--ui-0)
+  --gap-xxs: var(--ui-2)
+  --gap-xs: var(--ui-4)
+  --gap-sm: var(--ui-8)
+  --gap-md: var(--ui-16)
+  --gap-lg: var(--ui-24)
+  --gap-xl: var(--ui-32)
+  --gap-2xl: var(--ui-40)
+  --gap-3xl: var(--ui-48)
+  --gap-4xl: var(--ui-64)
+
+  // Padding Aliases
+  --padding-xs: var(--ui-4)
+  --padding-sm: var(--ui-8)
+  --padding-md: var(--ui-16)
+  --padding-lg: var(--ui-24)
+  --padding-xl: var(--ui-32)
+  --padding-2xl: var(--ui-48)
+
+  // ===== GRID SYSTEM =====
+  --grid-columns: 12
+  --grid-gutter: var(--ui-24)
+  --grid-margin: var(--ui-16)
+
+
+// ===== LIGHT MODE (Default) =====
+\:root
+  --ui-bg-default: #F3F3F3
+  --ui-surface-default: #E8E8E8
+  --ui-border-default: #E8E8E8
+  --ui-border-strong: #F3F3F3
+  --ui-text-default: #5E5E5E
+  --ui-text-strong: #282828
+  --ui-text-disabled: #BBBBBB
+  --ui-action-primary: #FC7F79
+  --ui-action-primary-hover: #FFB2AB
+  --ui-action-primary-active: #FFB2AB
+  --ui-feedback-success: #0E8345
+  --ui-feedback-warning: #FC823A
+  --ui-feedback-danger: #DE1135
+  --ui-feedback-info: #007F8C
+
+  // Style guide specific
+  --ui-dot-pattern: rgba(0, 0, 0, 0.08)
+
+// ===== DARK MODE =====
+[data-theme="dark"]
+  --ui-bg-default: #141414
+  --ui-surface-default: #282828
+  --ui-border-default: #282828
+  --ui-border-strong: #141414
+  --ui-text-default: #DDDDDD
+  --ui-text-strong: #F3F3F3
+  --ui-text-disabled: #727272
+  --ui-action-primary: #F83446
+  --ui-action-primary-hover: #FC7F79
+  --ui-action-primary-active: #FC7F79
+  --ui-feedback-success: #06C167
+  --ui-feedback-warning: #FFB48C
+  --ui-feedback-danger: #FC7F79
+  --ui-feedback-info: #01B8CA
+
+  // Style guide specific
+  --ui-dot-pattern: rgba(255, 255, 255, 0.08)
+
+// ===== RESPONSIVE GRID MARGINS =====
+@media (min-width: 768px)
+  \:root
+    --grid-margin: var(--ui-24)

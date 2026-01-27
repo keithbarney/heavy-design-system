@@ -1,64 +1,48 @@
-# Keith Design System
+# Keith Barney Portfolio
 
-A reusable design system featuring Swiss Grid principles, design tokens synced with Figma, and base UI components.
+Personal portfolio site for a Design Systems Designer, built with Pug and Sass.
 
-## Installation
+## Getting Started
 
 ```bash
-# For local development with npm link
-npm link ../keith-design-system
-```
+# Install dependencies
+npm install
 
-## Usage
+# Start development server
+npm run dev
 
-### In your project's main.scss:
-
-```scss
-// Import core design system
-@use '@keith/design-system/styles' as ds;
-@use '@keith/design-system/grid';
-@use '@keith/design-system/components';
-
-// Import project token overrides (optional)
-@use '../tokens/generated/overrides';
-
-// Project-specific styles
-@use 'partials/header';
-@use 'partials/hero';
+# Build for production
+npm run build
 ```
 
 ## Structure
 
 ```
-keith-design-system/
-├── tokens/
-│   ├── base/           # Primitives (from Figma)
-│   ├── alias/          # Semantic defaults
-│   └── dist/           # Generated outputs
-├── components/         # Base UI components
-├── grid/               # Swiss grid system
-├── styles/             # Core styles
-├── scripts/            # Figma sync scripts
-├── templates/          # Project starter template
-└── docs/               # Documentation
-```
-
-## Token Override Flow
-
-```
-FIGMA → BASE TOKENS → ALIAS TOKENS → PROJECT OVERRIDES → FINAL CSS
+keith-barney-portfolio/
+├── src/
+│   ├── pug/              # Pug templates
+│   │   ├── index.pug
+│   │   ├── case-studies.pug
+│   │   ├── contact.pug
+│   │   └── partials/
+│   └── sass/             # Sass stylesheets
+│       ├── main.sass
+│       └── partials/
+├── dist/                 # Built output
+├── tokens/dist/          # Design tokens
+├── styles/               # Core styles
+└── grid/                 # Grid system
 ```
 
 ## Scripts
 
-- `npm run build` - Build tokens to CSS and Sass
-- `npm run pull:figma` - Sync tokens from Figma
-- `npm run push:figma` - Push tokens to Figma
+- `npm run dev` - Start development server with live reload
+- `npm run build` - Build for production
+- `npm run build:sass` - Compile Sass only
+- `npm run build:pug` - Compile Pug only
 
-## Starting a New Project
+## Pages
 
-1. Copy `templates/starter/` to new location
-2. Update package.json with project name
-3. Link design system: `npm link ../keith-design-system`
-4. Customize `tokens/alias-overrides.json`
-5. Run `npm run dev`
+- `/` - Home page
+- `/case-studies.html` - Case studies listing
+- `/contact.html` - Contact information

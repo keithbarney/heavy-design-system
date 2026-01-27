@@ -1,0 +1,90 @@
+doctype html
+html(lang="en")
+  - var title = null
+  - var description = "Keith Barney — Design Systems"
+  include partials/_head
+
+  body
+    //- 1. Header - Name left, Contact right
+    header.header
+      .container.flex.justify-between.items-center
+        a.wordmark(href="/") Keith Barney
+        a.nav-link(href="mailto:hello@keithbarney.com") Contact
+
+    main
+      //- 2. Hero / Identity
+      section.hero
+        .container
+          .grid.grid--12
+            .col-span-8
+              h1.name Keith Barney
+              p.role Design systems leader building scalable foundations for product teams.
+
+      //- 3. Services / Capabilities
+      section.capabilities
+        .container
+          ul.disciplines
+            li Design Systems
+            li Component Libraries
+            li Design Tokens
+            li Documentation
+
+      //- 4. Work / Case Studies
+      section.work
+        .container
+          article.project.grid.grid--12.gap-4
+            .col-span-6.project-info
+              span.project-index 01
+              span.project-category Design System
+              h2.project-name Enterprise Design System
+              p.project-description Led the creation of a comprehensive design system serving 50+ product teams across web and mobile platforms. Established the foundational architecture including design tokens, component APIs, and documentation standards. Worked closely with engineering to ensure seamless integration with existing build systems and workflows. The system reduced design-to-development handoff time significantly while improving visual consistency across all products. Created governance processes and contribution guidelines that enabled distributed teams to extend the system independently.
+              p.project-skills Design Systems // Component Architecture // Design Tokens // Documentation // Governance // Cross-platform
+            .col-span-6.project-image
+
+          article.project.grid.grid--12.gap-4
+            .col-span-6.project-info
+              span.project-index 02
+              span.project-category Accessibility
+              h2.project-name Accessibility Framework
+              p.project-description Developed accessibility standards and tooling integrated directly into the design system, achieving WCAG 2.1 AA compliance across all products. Built automated testing pipelines that caught accessibility regressions before deployment. Created component-level documentation detailing keyboard navigation patterns, screen reader behavior, and color contrast requirements. Partnered with product teams to remediate existing accessibility debt while establishing patterns that prevented future issues. Trained designers and engineers on inclusive design principles through workshops and embedded support.
+              p.project-skills Accessibility // WCAG Compliance // Automated Testing // Documentation // Training // Inclusive Design
+            .col-span-6.project-image
+
+          article.project.grid.grid--12.gap-4
+            .col-span-6.project-info
+              span.project-index 03
+              span.project-category Infrastructure
+              h2.project-name Token Infrastructure
+              p.project-description Created end-to-end Figma-to-code pipelines using design tokens as the source of truth, reducing handoff friction and ensuring design-development parity. Built tooling that automatically synchronized color, typography, and spacing values between design files and production codebases. Established naming conventions and token architecture that scaled across multiple platforms including web, iOS, and Android. The infrastructure enabled designers to push changes that propagated to production without engineering intervention, dramatically accelerating iteration cycles and reducing visual inconsistencies.
+              p.project-skills Design Tokens // Figma API // Build Tooling // Multi-platform // Automation // Style Dictionary
+            .col-span-6.project-image
+
+      //- 5. Experience / Companies
+      section.experience
+        .container
+          ul.companies
+            li Company Name
+            li Company Name
+            li Company Name
+            li Company Name
+
+      //- 6. About
+      section.about
+        .container
+          .grid.grid--12
+            .col-span-6
+              p I build design systems that scale. My focus is on the infrastructure layer—tokens, components, documentation—that enables teams to ship consistent, accessible products.
+              p Previously at #[a(href="#") Company] and #[a(href="#") Company].
+
+      //- 7. Social / Presence
+      section.social
+        .container
+          a(href="https://linkedin.com/in/keithbarney" target="_blank" rel="noopener") LinkedIn
+          a(href="https://github.com/keithbarney" target="_blank" rel="noopener") GitHub
+
+    //- 8. Footer
+    footer.footer
+      .container
+        p.footer-name Keith Barney
+        p.footer-role Design Systems
+        a.footer-email(href="mailto:hello@keithbarney.com") hello@keithbarney.com

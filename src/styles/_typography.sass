@@ -1,0 +1,132 @@
+// ===========================================
+// TYPOGRAPHY
+// Swiss typographic scale and utilities
+// ===========================================
+
+// ===== TYPE SCALE =====
+h1, .h1
+  font-size: var(--font-size-h1)
+  font-weight: 600
+  line-height: var(--line-height-tight)
+  letter-spacing: -0.02em
+
+h2, .h2
+  font-size: var(--font-size-h2)
+  font-weight: 600
+  line-height: var(--line-height-tight)
+  letter-spacing: -0.01em
+
+h3, .h3
+  font-size: var(--font-size-h3)
+  font-weight: 500
+  line-height: var(--line-height-tight)
+
+p, .body
+  font-size: var(--font-size-body)
+  line-height: var(--line-height-base)
+
+.body-sm
+  font-size: var(--font-size-body-sm)
+  line-height: var(--line-height-base)
+
+.body-xsm
+  font-size: var(--font-size-body-xsm)
+  line-height: var(--line-height-base)
+
+// ===== FONT FAMILY =====
+.font-primary
+  font-family: var(--font-primary)
+
+.font-mono
+  font-family: var(--font-mono)
+
+.font-sans
+  font-family: var(--font-sans)
+
+// ===== FONT WEIGHTS =====
+.font-thin
+  font-weight: 100
+.font-extralight
+  font-weight: 200
+.font-light
+  font-weight: 300
+.font-normal
+  font-weight: 400
+.font-medium
+  font-weight: 500
+.font-semibold
+  font-weight: 600
+.font-bold
+  font-weight: 700
+.font-extrabold
+  font-weight: 800
+.font-black
+  font-weight: 900
+
+// ===== TEXT COLORS =====
+.text-default
+  color: var(--ui-text-strong)
+
+.text-strong
+  color: var(--ui-text-strong)
+
+.text-muted
+  color: var(--ui-text-default)
+
+.text-disabled
+  color: var(--ui-text-disabled)
+
+// ===== TEXT UTILITIES =====
+.uppercase
+  text-transform: uppercase
+
+.lowercase
+  text-transform: lowercase
+
+.capitalize
+  text-transform: capitalize
+
+.tracking-tight
+  letter-spacing: -0.02em
+
+.tracking-normal
+  letter-spacing: 0
+
+.tracking-wide
+  letter-spacing: 0.05em
+
+.tracking-wider
+  letter-spacing: 0.1em
+
+.leading-none
+  line-height: 1
+
+.leading-tight
+  line-height: var(--line-height-tight)
+
+.leading-normal
+  line-height: var(--line-height-base)
+
+.leading-loose
+  line-height: var(--line-height-loose)
+
+// ===== LABEL STYLE =====
+// Common pattern for category labels
+.label
+  font-family: var(--font-mono)
+  font-size: var(--font-size-body)
+  font-weight: 500
+  text-transform: uppercase
+  letter-spacing: 0.05em
+  color: var(--ui-text-default)
+
+// ===== MEASURE (line length) =====
+// Optimal line length: 45-75 characters
+.measure
+  max-width: var(--measure, 65ch)
+
+.measure-narrow
+  max-width: 45ch
+
+.measure-wide
+  max-width: 75ch

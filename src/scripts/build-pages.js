@@ -180,8 +180,10 @@ function head(title, description) {
 
 function header(currentPage) {
   const navLinks = [
+    { href: 'components.html', label: 'Components' },
     { href: 'base.html', label: 'Base' },
     { href: 'alias.html', label: 'Alias' },
+    { href: 'layout.html', label: 'Layout' },
   ].map(link =>
     `      <a class="sg-nav-link${link.href === currentPage ? ' active' : ''}" href="${link.href}">${link.label}</a>`
   ).join('\n');
@@ -353,8 +355,8 @@ ${header('index.html')}
             <div class="stat-label">Color Families</div>
           </div>
           <div class="stat-block">
-            <div class="stat-value">120+</div>
-            <div class="stat-label">Custom Properties</div>
+            <div class="stat-value">36</div>
+            <div class="stat-label">Elements</div>
           </div>
           <div class="stat-block">
             <div class="stat-value">2</div>
@@ -781,6 +783,749 @@ ${scripts()}
 </html>`;
 }
 
+// ===== Components Page =====
+
+function componentsPage() {
+  return `<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+${head('Components', 'Reusable UI elements — buttons, forms, cards, navigation, feedback, and more')}
+<body>
+${header('components.html')}
+<main>
+  <div class="container">
+    <div class="sg-page">
+      <nav class="sg-sidebar">
+        <ul>
+          <li><a href="#buttons">Buttons</a></li>
+          <li><a href="#form-controls">Form Controls</a></li>
+          <li><a href="#data-display">Data Display</a></li>
+          <li><a href="#feedback">Feedback</a></li>
+          <li><a href="#navigation">Navigation</a></li>
+          <li><a href="#layout">Layout</a></li>
+          <li><a href="#animation">Animation</a></li>
+        </ul>
+      </nav>
+      <div class="sg-content">
+        <div class="page-intro">
+          <h1>Components</h1>
+          <p class="text-muted">36 reusable elements built from design tokens. Every element responds to light and dark themes.</p>
+        </div>
+
+        <section class="sg-section" id="buttons">
+          <span class="label">Buttons</span>
+          <div>
+            <div class="stack stack--lg">
+              <div class="cluster">
+                <button class="btn btn--primary">Primary</button>
+                <button class="btn btn--secondary">Secondary</button>
+                <button class="btn btn--danger">Danger</button>
+                <button class="btn btn--ghost">Ghost</button>
+                <button class="btn btn--primary" disabled>Disabled</button>
+              </div>
+              <div class="cluster">
+                <button class="btn btn--primary btn--sm">Small</button>
+                <button class="btn btn--primary">Default</button>
+                <button class="btn btn--primary btn--lg">Large</button>
+              </div>
+              <div>
+                <button class="btn btn--primary btn--block">Block Button</button>
+              </div>
+              <div class="cluster">
+                <button class="btn-icon" aria-label="Close">&times;</button>
+                <div class="btn-group">
+                  <button class="btn btn--secondary">Left</button>
+                  <button class="btn btn--secondary">Center</button>
+                  <button class="btn btn--secondary">Right</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sg-section" id="form-controls">
+          <span class="label">Form Controls</span>
+          <div>
+            <div class="stack stack--lg">
+              <div class="form-group">
+                <label class="form-label">Text Input</label>
+                <input class="form-input" type="text" placeholder="Enter text...">
+              </div>
+              <div class="form-group">
+                <label class="form-label form-label--required">Required Field</label>
+                <input class="form-input" type="text" placeholder="Required...">
+                <span class="form-hint">Helper text goes here</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Textarea</label>
+                <textarea class="form-input form-textarea" placeholder="Write something..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Select</label>
+                <select class="form-input form-select">
+                  <option>Option One</option>
+                  <option>Option Two</option>
+                  <option>Option Three</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Search</label>
+                <div class="form-search">
+                  <input class="form-input" type="search" placeholder="Search...">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="check1" checked>
+                  <label class="form-label" for="check1">Checkbox option</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="radio" id="radio1" checked>
+                  <label class="form-label" for="radio1">Radio option A</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="radio" id="radio2">
+                  <label class="form-label" for="radio2">Radio option B</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Toggle</label>
+                <label class="form-toggle">
+                  <input type="checkbox" checked>
+                  <span class="form-toggle-track"></span>
+                  <span>Enabled</span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="form-label">File Upload</label>
+                <div class="form-file">
+                  <input type="file" id="file1">
+                  <label class="form-file-trigger" for="file1">Choose file...</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Error State</label>
+                <input class="form-input form-input--error" type="text" value="Invalid input">
+                <span class="form-error">This field has an error</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Success State</label>
+                <input class="form-input form-input--success" type="text" value="Valid input">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sg-section" id="data-display">
+          <span class="label">Data Display</span>
+          <div>
+            <div class="stack stack--lg">
+              <div class="cluster">
+                <span class="badge">Default</span>
+                <span class="badge badge--success">Success</span>
+                <span class="badge badge--warning">Warning</span>
+                <span class="badge badge--danger">Danger</span>
+                <span class="badge badge--info">Info</span>
+              </div>
+              <div class="grid grid--3">
+                <div class="stat">
+                  <div class="stat-value">1,234</div>
+                  <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-value">98<span class="stat-unit">%</span></div>
+                  <div class="stat-label">Uptime</div>
+                  <div class="stat-delta stat-delta--positive">+2.3%</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-value">42ms</div>
+                  <div class="stat-label">Response Time</div>
+                  <div class="stat-delta stat-delta--negative">-5ms</div>
+                </div>
+              </div>
+              <div>
+                <div class="kv"><span class="kv-key">Version</span><span class="kv-value">2.4.1</span></div>
+                <div class="kv"><span class="kv-key">Status</span><span class="kv-value">Active</span></div>
+                <div class="kv"><span class="kv-key">Last Deploy</span><span class="kv-value">2 hours ago</span></div>
+              </div>
+              <div>
+                <div class="list-item">First list item</div>
+                <div class="list-item">Second list item</div>
+                <div class="list-item">Third list item</div>
+              </div>
+              <div class="stack stack--sm">
+                <div class="progress"><div class="progress-bar" style="width: 75%"></div></div>
+                <div class="progress"><div class="progress-bar" style="width: 45%"></div></div>
+                <div class="progress"><div class="progress-bar" style="width: 90%"></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sg-section" id="feedback">
+          <span class="label">Feedback</span>
+          <div>
+            <div class="stack stack--lg">
+              <div class="stack stack--sm">
+                <div class="status-msg status-msg--success">Operation completed successfully.</div>
+                <div class="status-msg status-msg--error">Something went wrong. Please try again.</div>
+                <div class="status-msg status-msg--warning">Your session will expire in 5 minutes.</div>
+                <div class="status-msg status-msg--info">A new version is available.</div>
+              </div>
+              <div class="empty-state">
+                <div class="empty-state-title">No results found</div>
+                <div class="empty-state-description">Try adjusting your search or filters.</div>
+              </div>
+              <div class="cluster">
+                <div class="spinner"></div>
+                <span class="body-sm text-muted">Loading...</span>
+              </div>
+              <div class="stack stack--sm">
+                <div class="skeleton" style="height: 16px; width: 60%"></div>
+                <div class="skeleton" style="height: 16px; width: 80%"></div>
+                <div class="skeleton" style="height: 16px; width: 40%"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sg-section" id="navigation">
+          <span class="label">Navigation</span>
+          <div>
+            <div class="stack stack--lg">
+              <div class="tabs">
+                <button class="tab tab--active">Overview</button>
+                <button class="tab">Details</button>
+                <button class="tab">Settings</button>
+              </div>
+              <div class="breadcrumbs">
+                <a class="breadcrumbs-link" href="#">Home</a>
+                <span class="breadcrumbs-separator">/</span>
+                <a class="breadcrumbs-link" href="#">Projects</a>
+                <span class="breadcrumbs-separator">/</span>
+                <span class="breadcrumbs-current">Design System</span>
+              </div>
+              <div class="cluster" style="gap: var(--space-24)">
+                <a class="nav-link nav-link--active" href="#">Dashboard</a>
+                <a class="nav-link" href="#">Settings</a>
+                <a class="nav-link" href="#">Profile</a>
+              </div>
+              <div class="cluster">
+                <button class="chip chip--active">All</button>
+                <button class="chip">Design</button>
+                <button class="chip">Development</button>
+                <button class="chip">Research</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sg-section" id="layout">
+          <span class="label">Layout</span>
+          <div>
+            <div class="stack stack--lg">
+              <div class="grid grid--3">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">Default Card</div>
+                    <div class="card-subtitle">With subtitle</div>
+                  </div>
+                  <div class="card-body">
+                    <p class="body-sm">Card body content goes here.</p>
+                  </div>
+                  <div class="card-footer">
+                    <span class="body-xsm text-muted">Card footer</span>
+                  </div>
+                </div>
+                <div class="card card--elevated">
+                  <div class="card-body">
+                    <div class="card-title">Elevated Card</div>
+                    <p class="body-sm text-muted" style="margin-top: var(--space-4)">No border, shadow only.</p>
+                  </div>
+                </div>
+                <div class="card card--interactive">
+                  <div class="card-body">
+                    <div class="card-title">Interactive Card</div>
+                    <p class="body-sm text-muted" style="margin-top: var(--space-4)">Hover to see effect.</p>
+                  </div>
+                </div>
+              </div>
+              <details class="collapsible">
+                <summary>Collapsible Section</summary>
+                <div>Hidden content revealed when expanded. Built with native &lt;details&gt; and &lt;summary&gt; elements &mdash; no JavaScript needed.</div>
+              </details>
+              <details class="collapsible" open>
+                <summary>Open by Default</summary>
+                <div>This section starts expanded. Click the header to collapse it.</div>
+              </details>
+              <hr class="divider">
+              <div class="section-header">Section Header</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sg-section" id="animation">
+          <span class="label">Animation</span>
+          <div>
+            <div class="stack stack--lg">
+              <div>
+                <div class="section-header" style="margin-bottom: var(--space-16)">Timing Functions</div>
+                <div class="stack stack--sm">
+                  <div class="kv"><span class="kv-key">--ease-out</span><span class="kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
+                  <div class="kv"><span class="kv-key">--ease-in-out</span><span class="kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
+                  <div class="kv"><span class="kv-key">--ease-spring</span><span class="kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
+                </div>
+              </div>
+              <div>
+                <div class="section-header" style="margin-bottom: var(--space-16)">Keyframes</div>
+                <div class="cluster">
+                  <span class="badge">fade-in</span>
+                  <span class="badge">slide-up</span>
+                  <span class="badge">slide-down</span>
+                  <span class="badge">scale-in</span>
+                  <span class="badge">spin</span>
+                  <span class="badge">shimmer</span>
+                </div>
+              </div>
+              <div>
+                <div class="section-header" style="margin-bottom: var(--space-16)">Utility Classes</div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Class</th>
+                      <th>Animation</th>
+                      <th>Duration</th>
+                      <th>Easing</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>.animate-fade-in</code></td>
+                      <td>fade-in</td>
+                      <td>0.2s</td>
+                      <td>ease-out</td>
+                    </tr>
+                    <tr>
+                      <td><code>.animate-slide-up</code></td>
+                      <td>slide-up</td>
+                      <td>0.3s</td>
+                      <td>ease-out</td>
+                    </tr>
+                    <tr>
+                      <td><code>.animate-slide-down</code></td>
+                      <td>slide-down</td>
+                      <td>0.3s</td>
+                      <td>ease-out</td>
+                    </tr>
+                    <tr>
+                      <td><code>.animate-scale-in</code></td>
+                      <td>scale-in</td>
+                      <td>0.2s</td>
+                      <td>spring</td>
+                    </tr>
+                    <tr>
+                      <td><code>.animate-spin</code></td>
+                      <td>spin</td>
+                      <td>1s</td>
+                      <td>linear</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="section-header" style="margin-bottom: var(--space-16)">Stagger Children</div>
+                <div class="stagger-children cluster">
+                  <span class="badge badge--info">1</span>
+                  <span class="badge badge--info">2</span>
+                  <span class="badge badge--info">3</span>
+                  <span class="badge badge--info">4</span>
+                  <span class="badge badge--info">5</span>
+                  <span class="badge badge--info">6</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+${footer()}
+${scripts()}
+</body>
+</html>`;
+}
+
+// ===== Layout Page =====
+
+function layoutPage() {
+  // Grid demo boxes
+  const gridBoxes = Array.from({ length: 12 }, (_, i) =>
+    `                    <div class="sg-demo-box">${i + 1}</div>`
+  ).join('\n');
+
+  // Helper to build table rows from arrays
+  const rows = (data) => data.map(([a, b, c]) =>
+    `                <tr><td>${a}</td><td>${b}</td><td>${c}</td><td></td></tr>`
+  ).join('\n');
+
+  const gridRows = rows([
+    ['.grid', 'Base grid container', 'gap: var(--grid-gutter)'],
+    ['.grid--2', '2 equal columns', 'repeat(2, 1fr)'],
+    ['.grid--3', '3 equal columns', 'repeat(3, 1fr)'],
+    ['.grid--4', '4 equal columns', 'repeat(4, 1fr)'],
+    ['.grid--6', '6 equal columns', 'repeat(6, 1fr)'],
+    ['.grid--10', '10 equal columns', 'repeat(10, 1fr)'],
+    ['.grid--12', '12 equal columns', 'repeat(12, 1fr)'],
+    ['.grid--auto', 'Auto-fit, 300px min', 'minmax(300px, 1fr)'],
+    ['.grid--auto-sm', 'Auto-fit, 200px min', 'minmax(200px, 1fr)'],
+    ['.grid--auto-lg', 'Auto-fit, 400px min', 'minmax(400px, 1fr)'],
+    ['.col-span-{N}', 'Span N columns', 'grid-column: span N'],
+    ['.col-span-full', 'Span all columns', 'grid-column: 1 / -1'],
+    ['.gap-1 \u2013 .gap-6', 'Gap utilities', '8px \u2013 48px'],
+  ]);
+
+  const stackRows = rows([
+    ['.stack', 'Default vertical rhythm', '16px'],
+    ['.stack--sm', 'Small gap', '8px'],
+    ['.stack--md', 'Medium gap', '16px'],
+    ['.stack--lg', 'Large gap', '24px'],
+    ['.stack--xl', 'Extra-large gap', '32px'],
+  ]);
+
+  const clusterRows = rows([
+    ['.cluster', 'display', 'flex'],
+    ['.cluster', 'flex-wrap', 'wrap'],
+    ['.cluster', 'gap', 'var(--cluster-space, 16px)'],
+    ['.cluster', 'align-items', 'center'],
+  ]);
+
+  const sidebarRows = rows([
+    ['.with-sidebar', 'display', 'flex'],
+    ['.with-sidebar', 'flex-wrap', 'wrap'],
+    ['.with-sidebar', 'gap', '24px'],
+    ['&gt; :first-child', 'flex-basis', 'var(--sidebar-width, 280px)'],
+    ['&gt; :first-child', 'flex-grow', '1'],
+    ['&gt; :last-child', 'flex-basis', '0'],
+    ['&gt; :last-child', 'flex-grow', '999'],
+    ['&gt; :last-child', 'min-inline-size', '50%'],
+  ]);
+
+  const centerRows = rows([
+    ['.center', 'max-inline-size', 'var(--measure) / 65ch'],
+    ['.center', 'margin-inline', 'auto'],
+    ['.center', 'padding-inline', '16px'],
+    ['.center', 'box-sizing', 'content-box'],
+  ]);
+
+  const coverRows = rows([
+    ['.cover', 'display', 'flex column'],
+    ['.cover', 'min-block-size', '100vh'],
+    ['.cover', 'padding', '16px'],
+    ['.cover &gt; *', 'margin-block', '16px'],
+    ['.cover__centered', 'margin-block', 'auto'],
+  ]);
+
+  const boxRows = rows([
+    ['.box', 'Default', '16px'],
+    ['.box--sm', 'Small', '8px'],
+    ['.box--lg', 'Large', '24px'],
+    ['.box--xl', 'Extra-large', '32px'],
+  ]);
+
+  const measureRows = rows([
+    ['.measure', 'Default', '65ch'],
+    ['.measure-narrow', 'Narrow', '45ch'],
+    ['.measure-wide', 'Wide', '75ch'],
+  ]);
+
+  const breakpointRows = rows([
+    ['sm', '480px', 'Small phones'],
+    ['md', '768px', 'Tablets'],
+    ['lg', '1024px', 'Small desktops'],
+    ['xl', '1200px', 'Large desktops'],
+    ['2xl', '1440px', 'Wide screens'],
+  ]);
+
+  return `<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+${head('Layout', 'Layout utilities \u2014 grid, stack, cluster, sidebar, center, cover, box, measure')}
+<body>
+${header('layout.html')}
+<main>
+  <div class="container">
+    <div class="sg-page">
+      <nav class="sg-sidebar">
+        <ul>
+          <li><a href="#grid">Grid</a></li>
+          <li><a href="#stack">Stack</a></li>
+          <li><a href="#cluster">Cluster</a></li>
+          <li><a href="#sidebar">Sidebar</a></li>
+          <li><a href="#center">Center</a></li>
+          <li><a href="#cover">Cover</a></li>
+          <li><a href="#box">Box</a></li>
+          <li><a href="#measure">Measure</a></li>
+          <li><a href="#breakpoints">Breakpoints</a></li>
+        </ul>
+      </nav>
+      <div class="sg-content">
+        <div class="page-intro">
+          <h1>Layout</h1>
+          <p class="text-muted">Compositional layout patterns built with CSS Grid and Flexbox.</p>
+        </div>
+
+        <section class="sg-section" id="grid">
+          <h2>Grid</h2>
+          <div>
+            <div class="sg-demo">
+              <div class="grid grid--12">
+${gridBoxes}
+              </div>
+            </div>
+            <div class="sg-demo">
+              <div class="grid grid--12">
+                <div class="sg-demo-box col-span-4">span 4</div>
+                <div class="sg-demo-box col-span-8">span 8</div>
+                <div class="sg-demo-box col-span-6">span 6</div>
+                <div class="sg-demo-box col-span-6">span 6</div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Description</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${gridRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="stack">
+          <h2>Stack</h2>
+          <div>
+            <div class="sg-demo">
+              <div class="stack">
+                <div class="sg-demo-box">Item 1</div>
+                <div class="sg-demo-box">Item 2</div>
+                <div class="sg-demo-box">Item 3</div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Description</th>
+                <th>Gap</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${stackRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="cluster">
+          <h2>Cluster</h2>
+          <div>
+            <div class="sg-demo">
+              <div class="cluster">
+                <div class="sg-demo-box">Tag</div>
+                <div class="sg-demo-box">Label</div>
+                <div class="sg-demo-box">Longer tag</div>
+                <div class="sg-demo-box">Item</div>
+                <div class="sg-demo-box">Another</div>
+                <div class="sg-demo-box">More</div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Property</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${clusterRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="sidebar">
+          <h2>Sidebar</h2>
+          <div>
+            <div class="sg-demo">
+              <div class="with-sidebar">
+                <div class="sg-demo-box">Sidebar (280px)</div>
+                <div class="sg-demo-box">Content (fills remaining)</div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Selector</th>
+                <th>Property</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${sidebarRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="center">
+          <h2>Center</h2>
+          <div>
+            <div class="sg-demo" style="background: var(--ui-surface-default)">
+              <div class="center" style="background: var(--ui-bg-default); padding: var(--space-16); border-radius: var(--radius-sm); text-align: center;">
+                <span class="body-xsm text-muted">Centered \u2014 max-width: var(--measure)</span>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Property</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${centerRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="cover">
+          <h2>Cover</h2>
+          <div>
+            <div class="sg-demo" style="padding: 0">
+              <div class="cover" style="min-block-size: 240px;">
+                <div class="sg-demo-box">Header</div>
+                <div class="sg-demo-box cover__centered">Centered element</div>
+                <div class="sg-demo-box">Footer</div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Selector</th>
+                <th>Property</th>
+                <th>Value</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${coverRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="box">
+          <h2>Box</h2>
+          <div>
+            <div class="sg-demo" style="display: flex; gap: var(--space-16); flex-wrap: wrap; align-items: start">
+              <div class="box--sm" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="sg-demo-box">.box--sm</div>
+              </div>
+              <div class="box" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="sg-demo-box">.box</div>
+              </div>
+              <div class="box--lg" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="sg-demo-box">.box--lg</div>
+              </div>
+              <div class="box--xl" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="sg-demo-box">.box--xl</div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Description</th>
+                <th>Padding</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${boxRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="measure">
+          <h2>Measure</h2>
+          <div>
+            <div class="sg-demo">
+              <div class="stack">
+                <div class="measure-narrow" style="background: var(--ui-surface-default); padding: var(--space-8); border-radius: var(--radius-sm)">
+                  <div class="sg-demo-box">.measure-narrow (45ch)</div>
+                </div>
+                <div class="measure" style="background: var(--ui-surface-default); padding: var(--space-8); border-radius: var(--radius-sm)">
+                  <div class="sg-demo-box">.measure (65ch)</div>
+                </div>
+                <div class="measure-wide" style="background: var(--ui-surface-default); padding: var(--space-8); border-radius: var(--radius-sm)">
+                  <div class="sg-demo-box">.measure-wide (75ch)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Description</th>
+                <th>Max Width</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${measureRows}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="sg-section" id="breakpoints">
+          <h2>Breakpoints</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Width</th>
+                <th>Usage</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+${breakpointRows}
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+${footer()}
+${scripts()}
+</body>
+</html>`;
+}
+
 // ===== Build =====
 
 function main() {
@@ -794,8 +1539,10 @@ function main() {
 
   const pages = [
     { name: 'index.html', fn: indexPage },
+    { name: 'components.html', fn: () => componentsPage() },
     { name: 'base.html', fn: basePage },
-    { name: 'alias.html', fn: aliasPage }
+    { name: 'alias.html', fn: aliasPage },
+    { name: 'layout.html', fn: () => layoutPage() }
   ];
 
   for (const page of pages) {

@@ -1,4 +1,4 @@
-# Keith Design System
+# Heavy Design System
 
 Core design system that powers all projects. Inherits from `~/Projects/CLAUDE.md`.
 
@@ -6,23 +6,24 @@ Core design system that powers all projects. Inherits from `~/Projects/CLAUDE.md
 
 ## Overview
 
-Token-driven design system with Sass compilation, Pug templates, and a self-documenting style guide. Generates CSS custom properties for light/dark theming.
+Token-driven design system with plain CSS (native nesting), Node.js page generation, and a self-documenting style guide. Generates CSS custom properties for light/dark theming. No preprocessors — no Sass, no Pug.
 
 ## Tech Stack
 
-- **Templating:** Pug
-- **Styling:** Sass
+- **Styling:** Plain CSS (native nesting)
+- **Pages:** Node.js template literals (reads token JSON)
 - **Build:** Node.js scripts, Browser-Sync
-- **Fonts:** Test American Grotesk, Inter, Departure Mono
+- **Fonts:** Test American Grotesk, Inter, JetBrains Mono
 
 ## Commands
 
 ```bash
-npm run dev           # Build + watch + serve with live reload
-npm run build         # Full build: tokens → assets → pages → styles
-npm run build:tokens  # Generate Sass from token JSON
-npm run build:styles  # Compile Sass to CSS
-npm run build:pages   # Compile Pug to HTML
+npm run dev           # Watch + serve with live reload
+npm run build         # Full build: tokens → styles → themes → pages
+npm run build:tokens  # Generate dist/tokens.css from token JSON
+npm run build:styles  # Copy src/styles/main.css to dist/
+npm run build:themes  # Generate dist/heavy-theme.css
+npm run build:pages   # Generate HTML pages from token JSON
 ```
 
 ---
@@ -31,44 +32,41 @@ npm run build:pages   # Compile Pug to HTML
 
 | File | Purpose |
 |------|---------|
-| `src/styles/main.sass` | Entry point, imports all partials |
-| `src/styles/_tokens.sass` | **AUTO-GENERATED** — do not edit |
-| `src/styles/_variables.sass` | CSS custom properties (light/dark themes) |
-| `src/styles/_grid.sass` | Swiss grid system (12-col, auto-fit) |
-| `src/styles/_breakpoints.sass` | Responsive mixins |
-| `src/scripts/build-tokens.js` | Token JSON → Sass generator |
+| `src/styles/main.css` | All styles in one file — hand-authored, source of truth |
+| `src/scripts/build-tokens.js` | Token JSON → `dist/tokens.css` (for external consumers) |
+| `src/scripts/build-pages.js` | Token JSON → `dist/*.html` (style guide pages) |
+| `src/scripts/build-themes.js` | Theme files → `dist/heavy-theme.css` |
+| `src/scripts/dev.js` | File watcher for dev mode |
 
 ---
 
 ## Token Build Process
 
 ```
-~/Projects/tokens/*.json → build-tokens.js → _tokens.sass
+~/Projects/tokens/*.json → build-tokens.js → dist/tokens.css
+~/Projects/tokens/*.json → build-pages.js  → dist/*.html (tables auto-populated)
 ```
 
-The script reads shared base tokens and generates:
-- Sass variables (`$spacing-16`, `$color-red-500`)
-- CSS custom properties (`--space-16`, `--ui-text-default`)
-- Dark theme overrides (`[data-theme="dark"]`)
+The style guide pages read token JSON directly — tables update automatically when tokens change.
 
-**Always run `npm run build:tokens` after modifying token JSON files.**
+**Always run `npm run build` after modifying token JSON files.**
 
 ---
 
 ## CSS Custom Properties
 
-```scss
-// Spacing
+```css
+/* Spacing */
 --space-{0,2,4,8,10,12,14,16,20,24,28,32,40,48,60,72}
 --gap-{none,xxs,xs,sm,md,lg,xl,2xl,3xl,4xl}
 --padding-{xs,sm,md,lg,xl,2xl}
 
-// Typography
---type-{8,10,12,14,20,28,32}
+/* Typography */
+--type-{8,10,12,14,16,18,20,24,28,32,40,48}
 --font-{primary,sans,mono}
 --line-height-{tight,base,loose}
 
-// UI Colors (theme-aware)
+/* UI Colors (theme-aware) */
 --ui-bg-default
 --ui-surface-default
 --ui-text-{default,strong,disabled}
@@ -81,23 +79,19 @@ The script reads shared base tokens and generates:
 
 ## Responsive Breakpoints
 
-| Mixin | Min-Width |
-|-------|-----------|
-| `@include sm` | 480px |
-| `@include md` | 768px |
-| `@include lg` | 1024px |
-| `@include xl` | 1200px |
-| `@include xxl` | 1440px |
+No mixins — use inline media queries with native CSS nesting:
 
-```scss
+```css
 .element {
   padding: var(--padding-sm);
 
-  @include md {
+  @media (min-width: 768px) {
     padding: var(--padding-md);
   }
 }
 ```
+
+Breakpoints: 480px (sm), 768px (md), 1024px (lg), 1200px (xl), 1440px (2xl)
 
 ---
 
@@ -105,40 +99,42 @@ The script reads shared base tokens and generates:
 
 Swiss-inspired CSS Grid layout.
 
-```scss
-.grid              // Base grid with gap
-.grid--2 to --12   // Fixed column counts
-.grid--auto        // Auto-fit (200px min)
-.grid--auto-300    // Auto-fit (300px min)
-.grid--auto-400    // Auto-fit (400px min)
-.col-span-{1-12}   // Column spanning
-.gap-{1-6}         // Gap utilities
+```css
+.grid              /* Base grid with gap */
+.grid--2 to --12   /* Fixed column counts */
+.grid--auto        /* Auto-fit (300px min) */
+.grid--auto-sm     /* Auto-fit (200px min) */
+.grid--auto-lg     /* Auto-fit (400px min) */
+.col-span-{1-12}   /* Column spanning */
+.gap-{1-6}         /* Gap utilities */
 ```
 
 ---
 
 ## Layout Utilities
 
-```scss
-// Stack (vertical rhythm)
-.stack > * + * { margin-block-start: var(--gap-md); }
+```css
+/* Stack (vertical rhythm) */
+.stack > * + * { margin-top: var(--space-16); }
 
-// Cluster (horizontal grouping)
-.cluster { display: flex; flex-wrap: wrap; gap: var(--gap-sm); }
+/* Cluster (horizontal grouping) */
+.cluster { display: flex; flex-wrap: wrap; gap: var(--space-16); }
 
-// Sidebar layout
+/* Sidebar layout */
 .with-sidebar { display: flex; flex-wrap: wrap; }
 
-// Center with max-width
-.center { max-width: var(--measure); margin-inline: auto; }
+/* Center with max-width */
+.center { max-inline-size: var(--measure); margin-inline: auto; }
 ```
 
 ---
 
 ## Notes
 
-- `_tokens.sass` is auto-generated — never edit directly
+- `src/styles/main.css` is the single source of truth for all styles
+- `dist/tokens.css` is auto-generated for external consumers — do not edit
 - Mobile-first responsive design
 - `[data-theme="dark"]` enables dark mode
-- Type scale is 8, 10, 12, 14, 20, 28, 32px (not strict 8pt)
+- Type scale: 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48px
 - Optimal line length: 65 characters (`--measure`)
+- No Sass, no Pug — plain CSS + Node.js only

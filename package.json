@@ -1,16 +1,15 @@
 {
-  "name": "keith-barney-portfolio",
+  "name": "heavy-design-system",
   "version": "1.0.0",
-  "description": "Keith Barney - Design Systems Designer Portfolio",
+  "description": "Heavy Design System — Token-driven design system for all projects",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run watch:styles\" \"npm run watch:pages\" \"npm run serve\"",
-    "build": "npm run build:tokens && npm run build:styles && npm run build:pages",
+    "dev": "concurrently \"node src/scripts/dev.js\" \"npm run serve\"",
+    "build": "npm run build:tokens && npm run build:styles && npm run build:themes && npm run build:pages",
     "build:tokens": "node src/scripts/build-tokens.js",
-    "build:styles": "sass src/styles/main.sass:dist/css/main.css",
-    "build:pages": "pug src/pages/*.pug --out dist/",
-    "watch:styles": "sass --watch src/styles/main.sass:dist/css/main.css",
-    "watch:pages": "pug --watch src/pages/*.pug --out dist/",
+    "build:styles": "cp src/styles/main.css dist/main.css",
+    "build:themes": "node src/scripts/build-themes.js",
+    "build:pages": "node src/scripts/build-pages.js",
     "serve": "browser-sync start --server dist --files 'dist/**/*'"
   },
   "engines": {
@@ -18,16 +17,12 @@
   },
   "keywords": [
     "portfolio",
-    "design-systems",
-    "pug",
-    "sass"
+    "design-systems"
   ],
   "author": "Keith Barney",
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^3.0.0",
-    "concurrently": "^8.0.0",
-    "pug-cli": "^1.0.0-alpha6",
-    "sass": "^1.70.0"
+    "concurrently": "^8.0.0"
   }
 }

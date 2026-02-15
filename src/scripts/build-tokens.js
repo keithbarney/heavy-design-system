@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Build Token JSON Files → Sass
+ * Build Token JSON Files → CSS
  *
- * Generates Sass variables from token files.
+ * Generates CSS custom properties from token files.
  * Supports project overrides via alias-overrides.json.
  *
- * Usage: npm run build
- *        npm run build -- --project-overrides=/path/to/alias-overrides.json
+ * Usage: npm run build:tokens
+ *        npm run build:tokens -- --project-overrides=/path/to/alias-overrides.json
  */
 
 import fs from 'fs';
@@ -18,7 +18,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SHARED_TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/tokens');
 const BASE_TOKENS_DIR = path.join(SHARED_TOKENS_DIR, 'base');
 const ALIAS_TOKENS_DIR = path.join(SHARED_TOKENS_DIR, 'alias');
-const OUTPUT_DIR = path.resolve(__dirname, '../styles');
+const DIST_DIR = path.resolve(__dirname, '../../dist');
 
 // Parse command line args for project overrides
 const args = process.argv.slice(2);
@@ -96,219 +96,145 @@ function getTokenValue(token) {
   return value;
 }
 
-function generateSass(lightTokens, darkTokens, baseTokens, aliasTokens, overrides) {
+function generateCSS(lightTokens, darkTokens, overrides) {
   const lines = [
-    '// Auto-generated from token files - DO NOT EDIT',
-    '// Run `npm run build` to regenerate',
+    '/* Auto-generated from token files - DO NOT EDIT */',
+    '/* Run `npm run build` to regenerate */',
     ''
   ];
 
-  // Base tokens as Sass variables
-  lines.push('// ===== BASE TOKENS =====');
-
-  // Colors
   const colorsTokens = readTokenFile(BASE_TOKENS_DIR, 'colors.tokens.json');
-  if (colorsTokens) {
-    for (const [colorName, shades] of Object.entries(colorsTokens)) {
-      if (colorName.startsWith('$')) continue;
-      for (const [shade, token] of Object.entries(shades)) {
-        if (shade.startsWith('$')) continue;
-        const value = getTokenValue(token);
-        lines.push(`$color-${colorName}-${shade}: ${value}`);
-      }
-    }
-  }
-
-  // Scale/Spacing
   const scaleTokens = readTokenFile(BASE_TOKENS_DIR, 'scale.tokens.json');
-  if (scaleTokens) {
-    lines.push('');
-    lines.push('// Scale');
-    for (const [name, token] of Object.entries(scaleTokens)) {
-      if (name.startsWith('$')) continue;
-      const value = getTokenValue(token);
-      lines.push(`$spacing-${name}: ${value}`);
-    }
-  }
-
-  // Typography (base)
   const typographyBaseTokens = readTokenFile(BASE_TOKENS_DIR, 'typography.tokens.json');
-  if (typographyBaseTokens) {
-    lines.push('');
-    lines.push('// Typography');
-    if (typographyBaseTokens.Family) {
-      for (const [name, token] of Object.entries(typographyBaseTokens.Family)) {
-        if (name.startsWith('$')) continue;
-        lines.push(`$font-family-${name}: "${token.$value}"`);
-      }
-    }
-    if (typographyBaseTokens.Weights) {
-      for (const [name, token] of Object.entries(typographyBaseTokens.Weights)) {
-        if (name.startsWith('$')) continue;
-        lines.push(`$font-weight-${name.toLowerCase()}: ${token.$value}`);
-      }
-    }
-  }
-
-  // Radius (base)
-  const radiusBaseTokens = readTokenFile(BASE_TOKENS_DIR, 'radius.tokens.json');
-  if (radiusBaseTokens) {
-    lines.push('');
-    lines.push('// Radius');
-    for (const [name, token] of Object.entries(radiusBaseTokens)) {
-      if (name.startsWith('$')) continue;
-      const value = getTokenValue(token);
-      lines.push(`$radius-${name}: ${value}`);
-    }
-  }
-
-  // Alias tokens
-  lines.push('');
-  lines.push('// ===== ALIAS TOKENS =====');
-
-  // Typography alias
   const typographyAliasTokens = readTokenFile(ALIAS_TOKENS_DIR, 'typography.tokens.json');
-  if (typographyAliasTokens) {
-    lines.push('');
-    lines.push('// Typography Alias');
-    if (typographyAliasTokens['font-family']) {
-      for (const [name, token] of Object.entries(typographyAliasTokens['font-family'])) {
-        if (name.startsWith('$')) continue;
-        lines.push(`$alias-font-${name}: "${token.$value}"`);
-      }
-    }
-    if (typographyAliasTokens['font-size']) {
-      for (const [name, token] of Object.entries(typographyAliasTokens['font-size'])) {
-        if (name.startsWith('$')) continue;
-        const value = getTokenValue(token);
-        lines.push(`$font-size-${name}: ${value}`);
-      }
-    }
-  }
-
-  // Spacing alias
   const spacingAliasTokens = readTokenFile(ALIAS_TOKENS_DIR, 'spacing.tokens.json');
-  if (spacingAliasTokens) {
-    lines.push('');
-    lines.push('// Spacing Alias');
-    if (spacingAliasTokens.gap) {
-      for (const [name, token] of Object.entries(spacingAliasTokens.gap)) {
-        if (name.startsWith('$')) continue;
-        const value = getTokenValue(token);
-        lines.push(`$gap-${name}: ${value}`);
-      }
-    }
-    if (spacingAliasTokens.padding) {
-      for (const [name, token] of Object.entries(spacingAliasTokens.padding)) {
-        if (name.startsWith('$')) continue;
-        const value = getTokenValue(token);
-        lines.push(`$padding-${name}: ${value}`);
-      }
-    }
-  }
-
-  // Radius alias
   const radiusAliasTokens = readTokenFile(ALIAS_TOKENS_DIR, 'radius.tokens.json');
-  if (radiusAliasTokens && radiusAliasTokens.container) {
-    lines.push('');
-    lines.push('// Radius Alias');
-    for (const [name, token] of Object.entries(radiusAliasTokens.container)) {
-      if (name.startsWith('$')) continue;
-      const value = getTokenValue(token);
-      lines.push(`$radius-${name}: ${value}`);
-    }
-  }
-
-  // UI colors (light and dark)
-  lines.push('');
-  lines.push('// ===== UI COLORS =====');
 
   const finalLightTokens = overrides ? deepMerge(lightTokens, overrides) : lightTokens;
   const finalDarkTokens = overrides ? deepMerge(darkTokens, overrides) : darkTokens;
-
-  // Light mode
-  lines.push('');
-  lines.push('// Light Mode');
   const lightFlat = flattenTokens(finalLightTokens);
-  for (const { name, token } of lightFlat) {
-    const value = getTokenValue(token);
-    lines.push(`$alias-light-${name}: ${value}`);
-  }
-
-  // Dark mode
-  lines.push('');
-  lines.push('// Dark Mode');
   const darkFlat = flattenTokens(finalDarkTokens);
-  for (const { name, token } of darkFlat) {
-    const value = getTokenValue(token);
-    lines.push(`$alias-dark-${name}: ${value}`);
-  }
 
-  // CSS Custom Properties
-  lines.push('');
-  lines.push('// ===== CSS CUSTOM PROPERTIES =====');
-  lines.push('');
-  lines.push('\\:root');
+  lines.push(':root {');
 
-  // Base color tokens
+  // Base colors
   if (colorsTokens) {
+    lines.push('  /* Colors */');
     for (const [colorName, shades] of Object.entries(colorsTokens)) {
       if (colorName.startsWith('$')) continue;
       for (const [shade, token] of Object.entries(shades)) {
         if (shade.startsWith('$')) continue;
         const value = getTokenValue(token);
-        lines.push(`  --color-${colorName}-${shade}: ${value}`);
+        lines.push(`  --color-${colorName}-${shade}: ${value};`);
       }
     }
+    lines.push('');
   }
 
-  // Scale/spacing tokens
+  // Scale tokens
   if (scaleTokens) {
-    for (const [name, token] of Object.entries(scaleTokens)) {
-      if (name.startsWith('$')) continue;
-      const value = getTokenValue(token);
-      lines.push(`  --space-${name}: ${value}`);
+    if (scaleTokens.ui) {
+      lines.push('  /* Space Scale */');
+      for (const [name, token] of Object.entries(scaleTokens.ui)) {
+        if (name.startsWith('$')) continue;
+        const value = getTokenValue(token);
+        lines.push(`  --space-${name}: ${value};`);
+      }
+      lines.push('');
+    }
+    if (scaleTokens.type) {
+      lines.push('  /* Type Scale */');
+      for (const [name, token] of Object.entries(scaleTokens.type)) {
+        if (name.startsWith('$')) continue;
+        const value = getTokenValue(token);
+        lines.push(`  --type-${name}: ${value};`);
+      }
+      lines.push('');
     }
   }
 
-  // Typography tokens
+  // Typography
   if (typographyBaseTokens) {
+    lines.push('  /* Typography */');
     if (typographyBaseTokens.Family) {
       for (const [name, token] of Object.entries(typographyBaseTokens.Family)) {
         if (name.startsWith('$')) continue;
-        lines.push(`  --font-${name.toLowerCase()}: "${token.$value}"`);
+        lines.push(`  --font-${name.toLowerCase()}: "${token.$value}";`);
       }
     }
     if (typographyBaseTokens.Weights) {
       for (const [name, token] of Object.entries(typographyBaseTokens.Weights)) {
         if (name.startsWith('$')) continue;
-        lines.push(`  --font-weight-${name.toLowerCase()}: ${token.$value}`);
+        lines.push(`  --font-weight-${name.toLowerCase()}: ${token.$value};`);
       }
+    }
+    lines.push('');
+  }
+
+  // Alias typography
+  if (typographyAliasTokens) {
+    if (typographyAliasTokens['font-size']) {
+      lines.push('  /* Font Sizes */');
+      for (const [name, token] of Object.entries(typographyAliasTokens['font-size'])) {
+        if (name.startsWith('$')) continue;
+        const value = getTokenValue(token);
+        lines.push(`  --font-size-${name}: ${value};`);
+      }
+      lines.push('');
     }
   }
 
-  // Radius tokens
-  if (radiusBaseTokens) {
-    for (const [name, token] of Object.entries(radiusBaseTokens)) {
+  // Alias spacing
+  if (spacingAliasTokens) {
+    if (spacingAliasTokens.space) {
+      lines.push('  /* Spacing Aliases */');
+      for (const [name, token] of Object.entries(spacingAliasTokens.space)) {
+        if (name.startsWith('$')) continue;
+        const value = getTokenValue(token);
+        lines.push(`  --gap-${name}: ${value};`);
+      }
+      lines.push('');
+    }
+    if (spacingAliasTokens.screen) {
+      lines.push('  /* Screen Spacing */');
+      for (const [name, token] of Object.entries(spacingAliasTokens.screen)) {
+        if (name.startsWith('$')) continue;
+        const value = getTokenValue(token);
+        lines.push(`  --screen-${name}: ${value};`);
+      }
+      lines.push('');
+    }
+  }
+
+  // Alias radius
+  if (radiusAliasTokens && radiusAliasTokens.container) {
+    lines.push('  /* Radius */');
+    for (const [name, token] of Object.entries(radiusAliasTokens.container)) {
       if (name.startsWith('$')) continue;
       const value = getTokenValue(token);
-      lines.push(`  --radius-${name}: ${value}`);
+      lines.push(`  --radius-${name}: ${value};`);
     }
+    lines.push('');
   }
 
   // UI tokens (light mode default)
+  lines.push('  /* UI Colors (light) */');
   for (const { name, token } of lightFlat) {
     const value = getTokenValue(token);
-    lines.push(`  --${name}: ${value}`);
+    lines.push(`  --${name}: ${value};`);
   }
 
-  // Dark mode
+  lines.push('}');
   lines.push('');
-  lines.push('[data-theme="dark"]');
+
+  // Dark mode
+  lines.push('[data-theme="dark"] {');
+  lines.push('  /* UI Colors (dark) */');
   for (const { name, token } of darkFlat) {
     const value = getTokenValue(token);
-    lines.push(`  --${name}: ${value}`);
+    lines.push(`  --${name}: ${value};`);
   }
+  lines.push('}');
 
   return lines.join('\n');
 }
@@ -318,15 +244,13 @@ function main() {
 
   try {
     // Ensure output directory exists
-    if (!fs.existsSync(OUTPUT_DIR)) {
-      fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    if (!fs.existsSync(DIST_DIR)) {
+      fs.mkdirSync(DIST_DIR, { recursive: true });
     }
 
     // Read token files
     const lightTokens = readTokenFile(ALIAS_TOKENS_DIR, 'ui.light.tokens.json') || {};
     const darkTokens = readTokenFile(ALIAS_TOKENS_DIR, 'ui.dark.tokens.json') || {};
-    const baseTokens = {};
-    const aliasTokens = {};
 
     // Read project overrides if specified
     let overrides = null;
@@ -335,11 +259,11 @@ function main() {
       console.log(`✓ Loaded project overrides from: ${projectOverridesPath}`);
     }
 
-    // Generate Sass
-    const sass = generateSass(lightTokens, darkTokens, baseTokens, aliasTokens, overrides);
-    const sassPath = path.join(OUTPUT_DIR, '_tokens.sass');
-    fs.writeFileSync(sassPath, sass);
-    console.log(`✓ Generated: ${path.relative(process.cwd(), sassPath)}`);
+    // Generate CSS
+    const css = generateCSS(lightTokens, darkTokens, overrides);
+    const cssPath = path.join(DIST_DIR, 'tokens.css');
+    fs.writeFileSync(cssPath, css);
+    console.log(`✓ Generated: ${path.relative(process.cwd(), cssPath)}`);
 
     // Count tokens
     const lightCount = flattenTokens(lightTokens).length;

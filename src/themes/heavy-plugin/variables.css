@@ -1,0 +1,53 @@
+/* Heavy Theme — Spacegray / Base16 Ocean */
+
+/* ================================================================
+   TOKENS
+   ================================================================ */
+
+:root {
+  /* Colors — UI */
+  --color-bg: #2b303b;
+  --color-surface: #343d46;
+  --color-border: #4f5b66;
+  --color-border-focus: #65737e;
+
+  /* Colors — Text */
+  --color-text: #c0c5ce;
+  --color-text-strong: #eff1f5;
+  --color-text-muted: #65737e;
+  --color-text-disabled: rgba(192, 197, 206, 0.2);
+  --color-text-placeholder: rgba(192, 197, 206, 0.4);
+
+  /* Colors — Interactive */
+  --color-accent: #8fa1b3;
+  --color-btn-bg: rgba(79, 91, 102, 0.5);
+  --color-btn-bg-hover: rgba(79, 91, 102, 0.7);
+  --color-btn-bg-disabled: rgba(79, 91, 102, 0.3);
+  --color-btn-primary: #a7adba;
+
+  /* Colors — Feedback */
+  --color-success: #a3be8c;
+  --color-danger: #bf616a;
+  --color-danger-bg: rgba(191, 97, 106, 0.15);
+  --color-danger-bg-hover: rgba(191, 97, 106, 0.25);
+
+  /* Typography */
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-size-xs: 10px;
+  --font-size-sm: 11px;
+  --font-size-base: 12px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 6px;
+  --space-md: 8px;
+  --space-lg: 12px;
+  --space-xl: 16px;
+
+  /* Sizing */
+  --control-height: 32px;
+  --radius: 3px;
+
+  /* Motion */
+  --transition: 100ms ease;
+}

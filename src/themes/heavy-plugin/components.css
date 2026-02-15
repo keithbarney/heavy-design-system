@@ -1,0 +1,414 @@
+
+/* ================================================================
+   RESET
+   ================================================================ */
+
+*,
+html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--color-surface);
+}
+
+/* ================================================================
+   BODY
+   ================================================================ */
+
+body {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background: var(--color-surface);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+
+h1 {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-strong);
+}
+
+h2 {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ================================================================
+   HEADER
+   ================================================================ */
+
+.header {
+  margin-bottom: var(--space-xl);
+}
+
+/* ================================================================
+   LABELS & FORM GROUPS
+   ================================================================ */
+
+label {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-group {
+  margin-bottom: var(--space-xl);
+}
+
+/* ================================================================
+   INPUTS
+   ================================================================ */
+
+input {
+  width: 100%;
+  height: var(--control-height);
+  padding: 0 var(--space-lg);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-strong);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  transition: color var(--transition), border-color var(--transition);
+}
+
+input:hover {
+  color: var(--color-text-strong);
+}
+
+input:hover::placeholder {
+  color: var(--color-text-strong);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  color: var(--color-text-strong);
+}
+
+input:focus::placeholder {
+  color: var(--color-text-strong);
+}
+
+input::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+input:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+input:disabled::placeholder {
+  color: var(--color-text-disabled);
+}
+
+/* ================================================================
+   SELECTS
+   ================================================================ */
+
+select {
+  height: var(--control-height);
+  padding: 0 32px 0 var(--space-lg);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-strong);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+  cursor: pointer;
+  appearance: none;
+  transition: color var(--transition), border-color var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23eff1f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-md) center;
+  background-size: 16px;
+}
+
+select:hover {
+  color: var(--color-text-strong);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  color: var(--color-text-strong);
+}
+
+select:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+select option {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  height: var(--control-height);
+  padding: 0 var(--space-lg);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-btn-bg);
+  color: var(--color-text);
+  transition: background-color var(--transition);
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--color-btn-bg-hover);
+}
+
+button:active:not(:disabled) {
+  background-color: var(--color-btn-bg);
+}
+
+button:disabled {
+  background-color: var(--color-btn-bg-disabled);
+  color: rgba(192, 197, 206, 0.3);
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--color-btn-primary);
+  color: var(--color-bg);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-btn-primary);
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: var(--color-btn-primary);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-btn-primary);
+  color: rgba(43, 48, 59, 0.3);
+}
+
+.btn-secondary {
+  background-color: var(--color-btn-bg);
+  color: var(--color-text);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-btn-bg-hover);
+}
+
+.btn-danger {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--color-danger-bg-hover);
+}
+
+/* ================================================================
+   ICONS (Lucide inline SVG)
+   ================================================================ */
+
+button svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.btn-primary svg {
+  stroke: var(--color-bg);
+}
+
+/* ================================================================
+   ACTIONS BAR
+   ================================================================ */
+
+.actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.actions button {
+  flex: 1;
+}
+
+/* ================================================================
+   RESULTS / PREVIEW PANELS
+   ================================================================ */
+
+.results,
+.preview {
+  flex: 1;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  overflow-y: auto;
+}
+
+.preview.empty {
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview.error {
+  color: var(--color-danger);
+  background: #342b2d;
+  border-color: var(--color-danger);
+}
+
+/* ================================================================
+   TABLES
+   ================================================================ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ================================================================
+   LISTS
+   ================================================================ */
+
+.match-list {
+  list-style: none;
+  font-size: var(--font-size-sm);
+}
+
+.match-list li {
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.match-list li:last-child {
+  border-bottom: none;
+}
+
+/* ================================================================
+   STATUS MESSAGES
+   ================================================================ */
+
+.status {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-md);
+}
+
+.status:empty {
+  display: none;
+}
+
+.status.success {
+  color: var(--color-success);
+}
+
+.status.error {
+  color: var(--color-danger);
+}
+
+/* ================================================================
+   FILENAME BADGE
+   ================================================================ */
+
+.filename {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius);
+}
+
+/* ================================================================
+   COLOR SWATCHES
+   ================================================================ */
+
+.hex-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.color-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid var(--color-border);
+}
+
+/* ================================================================
+   SUPPORT LINK
+   ================================================================ */
+
+.support-link {
+  text-align: center;
+  margin-top: var(--space-lg);
+  font-size: var(--font-size-xs);
+}
+
+.support-link a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.support-link a:hover {
+  color: var(--color-accent);
+}

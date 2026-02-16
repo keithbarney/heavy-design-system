@@ -29,9 +29,9 @@
 .heavy-select.is-disabled { color: var(--forms-input-text-disabled); background-image: var(--select-chevron-disabled); cursor: not-allowed; }
 
 /* Search */
-.heavy-search.is-hover { border-color: var(--forms-input-border-hover); }
-.heavy-search.is-focus { border-color: var(--forms-input-border-focus); }
-.heavy-search.is-disabled { color: var(--forms-input-text-disabled); cursor: not-allowed; }
+.heavy-search.is-hover input { border-color: var(--forms-input-border-hover); }
+.heavy-search.is-focus input { border-color: var(--forms-input-border-focus); }
+.heavy-search.is-disabled input { color: var(--forms-input-text-disabled); cursor: not-allowed; }
 .heavy-search.is-disabled::before { background-color: var(--forms-input-icon-disabled); }
 
 /* Form Inputs */

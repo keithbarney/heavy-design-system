@@ -42,6 +42,7 @@ const PAGES = [
   { file: 'tabs.html', id: 'tabs', label: 'Tabs', group: 'Components' },
   { file: 'toggles.html', id: 'toggles', label: 'Toggles', group: 'Components' },
   { file: 'form-validation.html', id: 'form-validation', label: 'Form Validation', group: 'Patterns' },
+  { file: 'search-pattern.html', id: 'search-pattern', label: 'Search', group: 'Patterns' },
 ];
 
 // ===== Token Reading =====
@@ -2113,35 +2114,37 @@ function navLinksContent() {
 function searchContent() {
   return componentPage('Search', {
     description: `          <h3 class="heavy-label">Description</h3>
-          <div><p class="style-guide-description">A search trigger styled as an input field. Clicking it opens a search dialog or navigates to a search view. Available in four sizes to match surrounding UI density.</p></div>`,
+          <div><p class="style-guide-description">A text input with a built-in search icon for filtering or querying content. Available in four sizes to match surrounding UI density. Wraps a native input element for full keyboard and assistive technology support.</p></div>`,
     whenToUse: `          <h3 class="heavy-label">When to use</h3>
           <div class="style-guide-guidelines">
             <ul>
+              <li>Filtering a list, table, or set of results by keyword.</li>
               <li>Global search in a header or sidebar.</li>
-              <li>As a shortcut trigger for a search modal (Cmd+K pattern).</li>
             </ul>
           </div>`,
     whenNotToUse: `          <h3 class="heavy-label">When not to use</h3>
           <div class="style-guide-guidelines">
             <ul>
-              <li><strong>Inline filtering</strong> — Use an <a href="inputs.html">input</a> with a filter icon for live-filtering a list.</li>
+              <li><strong>Structured input</strong> — Use an <a href="inputs.html">input</a> with a label for collecting specific data like names or emails.</li>
+              <li><strong>Filtering by category</strong> — Use <a href="chips.html">chips</a> for filtering by predefined tags.</li>
             </ul>
           </div>`,
     variants: `          <h3 class="heavy-label">Sizes</h3>
           <div class="style-guide-variants">
-            <button class="heavy-search heavy-search--xs heavy-col-span-2">X-Small</button>
-            <button class="heavy-search heavy-search--sm heavy-col-span-2">Small</button>
-            <button class="heavy-search heavy-col-span-2">Medium</button>
-            <button class="heavy-search heavy-search--lg heavy-col-span-2">Large</button>
+            <label class="heavy-search heavy-search--xs heavy-col-span-2"><input type="search" placeholder="X-Small"></label>
+            <label class="heavy-search heavy-search--sm heavy-col-span-2"><input type="search" placeholder="Small"></label>
+            <label class="heavy-search heavy-col-span-2"><input type="search" placeholder="Medium"></label>
+            <label class="heavy-search heavy-search--lg heavy-col-span-2"><input type="search" placeholder="Large"></label>
           </div>
-          ${codeBlock(`<button class="heavy-search">Search</button>
-<button class="heavy-search heavy-search--sm">Search</button>`)}
+          ${codeBlock(`<label class="heavy-search">
+  <input type="search" placeholder="Search...">
+</label>`)}
           <h3 class="heavy-label">States</h3>
           <div class="style-guide-variants">
-            <button class="heavy-search heavy-col-span-2">Default</button>
-            <button class="heavy-search is-hover heavy-col-span-2">Hover</button>
-            <button class="heavy-search is-focus heavy-col-span-2">Focus</button>
-            <button class="heavy-search is-disabled heavy-col-span-2" disabled>Disabled</button>
+            <label class="heavy-search heavy-col-span-2"><input type="search" placeholder="Default"></label>
+            <label class="heavy-search is-hover heavy-col-span-2"><input type="search" placeholder="Hover"></label>
+            <label class="heavy-search is-focus heavy-col-span-2"><input type="search" placeholder="Focus"></label>
+            <label class="heavy-search is-disabled heavy-col-span-2"><input type="search" placeholder="Disabled" disabled></label>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
           <table class="data-table">
@@ -2153,19 +2156,20 @@ function searchContent() {
             </thead>
             <tbody>
               <tr>
-                <td><code>Enter</code> / <code>Space</code></td>
-                <td>Activates the search trigger</td>
+                <td><code>Tab</code></td>
+                <td>Focuses the search input</td>
               </tr>
               <tr>
-                <td><code>Tab</code></td>
-                <td>Moves focus to the next focusable element</td>
+                <td><code>Escape</code></td>
+                <td>Clears the search input (browser default)</td>
               </tr>
             </tbody>
           </table>`,
     related: `          <h3 class="heavy-label">Related</h3>
           <div class="style-guide-guidelines">
             <ul>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — For general text entry and inline filtering.</li>
+              <li><strong><a href="inputs.html">Inputs</a></strong> — For general text entry and form fields.</li>
+              <li><strong><a href="chips.html">Chips</a></strong> — For filtering by predefined categories.</li>
             </ul>
           </div>`,
   });
@@ -2515,6 +2519,63 @@ function formValidationContent() {
   });
 }
 
+function searchPatternContent() {
+  return componentPage('Search', {
+    description: `          <h3 class="heavy-label">Description</h3>
+          <div><p class="style-guide-description">Interactive search pattern. Type in any field below to test the search component at different sizes and in different contexts.</p></div>`,
+    variants: `          <h3 class="heavy-label">Standalone</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <label class="heavy-search heavy-search--lg"><input type="search" placeholder="Search everything..."></label>
+            </div>
+          </div>
+          <h3 class="heavy-label">In a header</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); padding: var(--space-16); background: var(--ui-surface-default); border-radius: var(--radius-md);">
+                <span class="heavy-label" style="margin: 0;">App Name</span>
+                <label class="heavy-search heavy-search--sm" style="flex: 1; max-width: 320px;"><input type="search" placeholder="Search..."></label>
+                <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm">Settings</button>
+              </div>
+            </div>
+          </div>
+          <h3 class="heavy-label">In a sidebar</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div style="max-width: 280px; padding: var(--space-16); background: var(--ui-surface-default); border-radius: var(--radius-md);">
+                <div class="heavy-stack">
+                  <label class="heavy-search heavy-search--sm"><input type="search" placeholder="Filter items..."></label>
+                  <div class="heavy-list-item">Dashboard</div>
+                  <div class="heavy-list-item">Projects</div>
+                  <div class="heavy-list-item">Settings</div>
+                  <div class="heavy-list-item">Profile</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="heavy-label">Full width</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <label class="heavy-search" style="display: flex;"><input type="search" placeholder="Search across all projects, files, and settings..."></label>
+            </div>
+          </div>
+          <h3 class="heavy-label">Disabled</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <label class="heavy-search"><input type="search" placeholder="Search unavailable" disabled></label>
+            </div>
+          </div>`,
+    related: `          <h3 class="heavy-label">Related</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li><strong><a href="search.html">Search Component</a></strong> — API reference, sizes, states, and keyboard docs.</li>
+              <li><strong><a href="inputs.html">Inputs</a></strong> — For general text entry and form fields.</li>
+              <li><strong><a href="chips.html">Chips</a></strong> — For filtering by predefined categories.</li>
+            </ul>
+          </div>`,
+  });
+}
+
 // ===== Content Map =====
 
 const contentMap = {
@@ -2540,6 +2601,7 @@ const contentMap = {
   'tabs': () => tabsContent(),
   'toggles': () => togglesContent(),
   'form-validation': () => formValidationContent(),
+  'search-pattern': () => searchPatternContent(),
 };
 
 // ===== Build =====

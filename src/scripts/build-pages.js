@@ -276,19 +276,9 @@ function sidebar(currentPageId) {
     <nav>
 ${nav}    </nav>
     <div class="style-guide-sidebar-controls">
-      <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm grid-toggle" id="grid-toggle" aria-label="Toggle grid overlay">Grid</button>
       <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
     </div>
   </aside>`;
-}
-
-function gridOverlay() {
-  const cols = Array.from({ length: 12 }, () => '    <div class="style-guide-grid-col"></div>').join('\n');
-  return `<div class="style-guide-grid-overlay">
-  <div class="style-guide-grid-overlay-inner">
-${cols}
-  </div>
-</div>`;
 }
 
 function footer() {
@@ -319,20 +309,31 @@ function scripts() {
 </script>
 <script>
 (function() {
-  var btn = document.getElementById('grid-toggle');
-  var html = document.documentElement;
-  var stored = localStorage.getItem('hds-grid');
-  if (stored === 'on') html.setAttribute('data-grid', 'on');
-  btn.addEventListener('click', function() {
-    var isOn = html.getAttribute('data-grid') === 'on';
-    if (isOn) {
-      html.removeAttribute('data-grid');
-      localStorage.removeItem('hds-grid');
-    } else {
-      html.setAttribute('data-grid', 'on');
-      localStorage.setItem('hds-grid', 'on');
-    }
+  var links = document.querySelectorAll('.style-guide-sidebar a[href^="#"]');
+  if (!links.length) return;
+  var sections = [];
+  links.forEach(function(link) {
+    var id = link.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) sections.push({ link: link, el: el });
   });
+
+  function onScroll() {
+    var atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+    var active;
+    if (atBottom) {
+      active = sections[sections.length - 1];
+    } else {
+      active = sections[0];
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i].el.getBoundingClientRect().top <= 120) active = sections[i];
+      }
+    }
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (active) active.link.classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 })();
 </script>
 <script>
@@ -502,7 +503,6 @@ ${contentHtml}
   </main>
   ${footer()}
 </div>
-${gridOverlay()}
 ${scripts()}
 </body>
 </html>`;

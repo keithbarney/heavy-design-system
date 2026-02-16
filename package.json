@@ -10,7 +10,7 @@
     "build:styles": "cp src/styles/main.css dist/main.css && cp src/styles/style-guide.css dist/style-guide.css",
     "build:themes": "node src/scripts/build-themes.js",
     "build:pages": "node src/scripts/build-pages.js",
-    "serve": "browser-sync start --server dist --files 'dist/**/*'"
+    "serve": "browser-sync start --server dist --files 'dist/**/*' --port 3100"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,6 +1,6 @@
 # Heavy Design System
 
-Core design system that powers all projects. Inherits from `~/Projects/CLAUDE.md`.
+Core design system that powers all projects. Inherits from `~/Projects/CLAUDE.md` (symlink to `tools/claude-config/CLAUDE.md`).
 
 ---
 
@@ -44,8 +44,8 @@ npm run build:pages   # Generate HTML pages from token JSON
 ## Token Build Process
 
 ```
-~/Projects/tokens/*.json → build-tokens.js → dist/tokens.css
-~/Projects/tokens/*.json → build-pages.js  → dist/*.html (tables auto-populated)
+~/Projects/design/tokens/*.json → build-tokens.js → dist/tokens.css
+~/Projects/design/tokens/*.json → build-pages.js  → dist/*.html (tables auto-populated)
 ```
 
 The style guide pages read token JSON directly — tables update automatically when tokens change.

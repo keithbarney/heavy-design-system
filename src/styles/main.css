@@ -24,6 +24,7 @@
   --font-size-body-xsm: var(--ui-10);
   --font-size-body-sm: var(--ui-12);
   --font-size-body: var(--ui-14);
+  --font-size-body-lg: var(--ui-16);
   --font-size-h6: var(--ui-16);
   --font-size-h5: var(--ui-20);
   --font-size-h4: var(--ui-24);
@@ -426,7 +427,8 @@ p, .body {
 
 .heavy-grid {
   display: grid;
-  gap: var(--grid-gutter);
+  column-gap: var(--grid-gutter);
+  row-gap: var(--space-48);
 }
 
 .heavy-grid--auto { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }

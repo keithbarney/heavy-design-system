@@ -64,8 +64,39 @@ function flattenTokens(obj, prefix = '') {
   return result;
 }
 
-function getTokenValue(token) {
-  const value = token.$value;
+function buildRefLookup(colorsTokens, scaleTokens) {
+  const lookup = {};
+  if (colorsTokens) {
+    for (const [family, shades] of Object.entries(colorsTokens)) {
+      if (family.startsWith('$')) continue;
+      for (const [stop, token] of Object.entries(shades)) {
+        if (stop.startsWith('$')) continue;
+        lookup[`${family}.${stop}`] = token.$value;
+      }
+    }
+  }
+  if (scaleTokens) {
+    for (const [group, values] of Object.entries(scaleTokens)) {
+      if (group.startsWith('$')) continue;
+      for (const [name, token] of Object.entries(values)) {
+        if (name.startsWith('$')) continue;
+        lookup[`${group}.${name}`] = token.$value;
+      }
+    }
+  }
+  return lookup;
+}
+
+function resolveRef(value, lookup) {
+  if (typeof value === 'string') {
+    const match = value.match(/^\{(.+)\}$/);
+    if (match && match[1] in lookup) return lookup[match[1]];
+  }
+  return value;
+}
+
+function getTokenValue(token, refLookup) {
+  const value = refLookup ? resolveRef(token.$value, refLookup) : token.$value;
   const type = token.$type;
 
   // Handle color tokens
@@ -105,10 +136,11 @@ function generateCSS(lightTokens, darkTokens, overrides) {
 
   const colorsTokens = readTokenFile(BASE_TOKENS_DIR, 'colors.tokens.json');
   const scaleTokens = readTokenFile(BASE_TOKENS_DIR, 'scale.tokens.json');
-  const typographyBaseTokens = readTokenFile(BASE_TOKENS_DIR, 'typography.tokens.json');
   const typographyAliasTokens = readTokenFile(ALIAS_TOKENS_DIR, 'typography.tokens.json');
   const spacingAliasTokens = readTokenFile(ALIAS_TOKENS_DIR, 'spacing.tokens.json');
   const radiusAliasTokens = readTokenFile(ALIAS_TOKENS_DIR, 'radius.tokens.json');
+
+  const refLookup = buildRefLookup(colorsTokens, scaleTokens);
 
   const finalLightTokens = overrides ? deepMerge(lightTokens, overrides) : lightTokens;
   const finalDarkTokens = overrides ? deepMerge(darkTokens, overrides) : darkTokens;
@@ -153,24 +185,6 @@ function generateCSS(lightTokens, darkTokens, overrides) {
     }
   }
 
-  // Typography
-  if (typographyBaseTokens) {
-    lines.push('  /* Typography */');
-    if (typographyBaseTokens.Family) {
-      for (const [name, token] of Object.entries(typographyBaseTokens.Family)) {
-        if (name.startsWith('$')) continue;
-        lines.push(`  --font-${name.toLowerCase()}: "${token.$value}";`);
-      }
-    }
-    if (typographyBaseTokens.Weights) {
-      for (const [name, token] of Object.entries(typographyBaseTokens.Weights)) {
-        if (name.startsWith('$')) continue;
-        lines.push(`  --font-weight-${name.toLowerCase()}: ${token.$value};`);
-      }
-    }
-    lines.push('');
-  }
-
   // Alias typography
   if (typographyAliasTokens) {
     if (typographyAliasTokens['font-size']) {
@@ -190,7 +204,7 @@ function generateCSS(lightTokens, darkTokens, overrides) {
       lines.push('  /* Spacing Aliases */');
       for (const [name, token] of Object.entries(spacingAliasTokens.space)) {
         if (name.startsWith('$')) continue;
-        const value = getTokenValue(token);
+        const value = getTokenValue(token, refLookup);
         lines.push(`  --gap-${name}: ${value};`);
       }
       lines.push('');
@@ -199,7 +213,7 @@ function generateCSS(lightTokens, darkTokens, overrides) {
       lines.push('  /* Screen Spacing */');
       for (const [name, token] of Object.entries(spacingAliasTokens.screen)) {
         if (name.startsWith('$')) continue;
-        const value = getTokenValue(token);
+        const value = getTokenValue(token, refLookup);
         lines.push(`  --screen-${name}: ${value};`);
       }
       lines.push('');
@@ -211,7 +225,7 @@ function generateCSS(lightTokens, darkTokens, overrides) {
     lines.push('  /* Radius */');
     for (const [name, token] of Object.entries(radiusAliasTokens.container)) {
       if (name.startsWith('$')) continue;
-      const value = getTokenValue(token);
+      const value = getTokenValue(token, refLookup);
       lines.push(`  --radius-${name}: ${value};`);
     }
     lines.push('');
@@ -220,7 +234,7 @@ function generateCSS(lightTokens, darkTokens, overrides) {
   // UI tokens (light mode default)
   lines.push('  /* UI Colors (light) */');
   for (const { name, token } of lightFlat) {
-    const value = getTokenValue(token);
+    const value = getTokenValue(token, refLookup);
     lines.push(`  --${name}: ${value};`);
   }
 
@@ -231,7 +245,7 @@ function generateCSS(lightTokens, darkTokens, overrides) {
   lines.push('[data-theme="dark"] {');
   lines.push('  /* UI Colors (dark) */');
   for (const { name, token } of darkFlat) {
-    const value = getTokenValue(token);
+    const value = getTokenValue(token, refLookup);
     lines.push(`  --${name}: ${value};`);
   }
   lines.push('}');

@@ -441,6 +441,97 @@
   }
 }
 
+/* --- Documentation Prose --- */
+
+.style-guide-description {
+  font-size: var(--font-size-body-sm);
+  color: var(--ui-text-default);
+  max-inline-size: var(--measure);
+  line-height: var(--line-height-loose, 1.6);
+}
+
+.style-guide-code-block {
+  position: relative;
+
+  @media (min-width: 768px) {
+    grid-column: 3 / -1;
+  }
+}
+
+.style-guide-code-copy {
+  position: absolute;
+  top: var(--space-8);
+  right: var(--space-8);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-body-xsm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ui-text-disabled);
+  background: none;
+  border: 1px solid var(--ui-border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4) var(--space-8);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    color: var(--ui-text-strong);
+    border-color: var(--ui-border-strong);
+  }
+
+  &.copied {
+    color: var(--ui-feedback-success);
+    border-color: var(--ui-feedback-success);
+  }
+}
+
+.style-guide-code {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-body-xsm);
+  line-height: 1.5;
+  background: var(--ui-surface-default);
+  border: 1px solid var(--ui-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-16);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+}
+
+.style-guide-guidelines {
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-loose, 1.6);
+
+  @media (min-width: 768px) {
+    grid-column: 3 / -1;
+  }
+
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  & li {
+    padding-left: var(--space-16);
+    position: relative;
+
+    &::before {
+      content: "\2013";
+      position: absolute;
+      left: 0;
+      color: var(--ui-text-disabled);
+    }
+  }
+
+  & strong {
+    color: var(--ui-text-strong);
+  }
+}
+
 .style-guide-footer {
   padding: var(--space-32) 0;
   border-top: 1px solid var(--ui-border-default);

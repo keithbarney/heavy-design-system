@@ -17,6 +17,31 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '../../dist');
 const TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/tokens');
 
+// ===== Pages Registry =====
+
+const PAGES = [
+  { file: 'index.html', id: 'overview', label: 'Overview', group: 'Overview' },
+  { file: 'colors.html', id: 'colors', label: 'Colors', group: 'Foundations' },
+  { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
+  { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
+  { file: 'radius.html', id: 'radius', label: 'Radius', group: 'Foundations' },
+  { file: 'layout.html', id: 'layout', label: 'Layout', group: 'Foundations' },
+  { file: 'animation.html', id: 'animation', label: 'Animation', group: 'Foundations' },
+  { file: 'breadcrumbs.html', id: 'breadcrumbs', label: 'Breadcrumbs', group: 'Components' },
+  { file: 'buttons.html', id: 'buttons', label: 'Buttons', group: 'Components' },
+  { file: 'chips.html', id: 'chips', label: 'Chips', group: 'Components' },
+  { file: 'data-display.html', id: 'data-display', label: 'Data Display', group: 'Components' },
+  { file: 'feedback.html', id: 'feedback', label: 'Feedback', group: 'Components' },
+  { file: 'file-upload.html', id: 'file-upload', label: 'File Upload', group: 'Components' },
+  { file: 'inputs.html', id: 'inputs', label: 'Inputs', group: 'Components' },
+  { file: 'nav-links.html', id: 'nav-links', label: 'Nav Links', group: 'Components' },
+  { file: 'search.html', id: 'search', label: 'Search', group: 'Components' },
+  { file: 'selects.html', id: 'selects', label: 'Selects', group: 'Components' },
+  { file: 'tabs.html', id: 'tabs', label: 'Tabs', group: 'Components' },
+  { file: 'toggles.html', id: 'toggles', label: 'Toggles', group: 'Components' },
+  { file: 'form-validation.html', id: 'form-validation', label: 'Form Validation', group: 'Patterns' },
+];
+
 // ===== Token Reading =====
 
 function readJSON(filePath) {
@@ -215,55 +240,38 @@ function head(title, description) {
 </head>`;
 }
 
-function sidebar() {
-  const overviewLinks = [
+function sidebar(currentPageId) {
+  const groups = ['Overview', 'Foundations', 'Components', 'Patterns'];
+  const overviewSubLinks = [
     { anchor: 'files', label: 'Files' },
     { anchor: 'architecture', label: 'Tokens' },
   ];
 
-  const foundationsLinks = [
-    { anchor: 'colors', label: 'Colors' },
-    { anchor: 'typography', label: 'Typography' },
-    { anchor: 'spacing', label: 'Spacing' },
-    { anchor: 'radius', label: 'Radius' },
-    { anchor: 'layout', label: 'Layout' },
-    { anchor: 'animation', label: 'Animation' },
-  ];
-
-  const componentsLinks = [
-    { anchor: 'breadcrumbs', label: 'Breadcrumbs' },
-    { anchor: 'buttons', label: 'Buttons' },
-    { anchor: 'chips', label: 'Chips' },
-    { anchor: 'data-display', label: 'Data Display' },
-    { anchor: 'feedback', label: 'Feedback' },
-    { anchor: 'file-upload', label: 'File Upload' },
-    { anchor: 'inputs', label: 'Inputs' },
-    { anchor: 'nav-links', label: 'Nav Links' },
-    { anchor: 'search', label: 'Search' },
-    { anchor: 'selects', label: 'Selects' },
-    { anchor: 'tabs', label: 'Tabs' },
-    { anchor: 'toggles', label: 'Toggles' },
-  ];
-
-  const patternsLinks = [
-    { anchor: 'form-validation', label: 'Form Validation' },
-  ];
-
-  const renderLinks = (links) =>
-    links.map(link => `      <a href="#${link.anchor}">${link.label}</a>`).join('\n');
+  let nav = '';
+  for (const group of groups) {
+    nav += `      <span class="style-guide-sidebar-label">${group}</span>\n`;
+    const groupPages = PAGES.filter(p => p.group === group);
+    for (const pg of groupPages) {
+      if (pg.id === 'overview') {
+        // Overview page link
+        const active = currentPageId === 'overview' ? ' class="active"' : '';
+        nav += `      <a href="index.html"${active}>Overview</a>\n`;
+        // Sub-links for Files and Tokens
+        for (const sub of overviewSubLinks) {
+          const href = currentPageId === 'overview' ? `#${sub.anchor}` : `index.html#${sub.anchor}`;
+          nav += `      <a href="${href}">${sub.label}</a>\n`;
+        }
+      } else {
+        const active = currentPageId === pg.id ? ' class="active"' : '';
+        nav += `      <a href="${pg.file}"${active}>${pg.label}</a>\n`;
+      }
+    }
+  }
 
   return `  <aside class="style-guide-sidebar">
-    <a class="style-guide-brand" href="#">Heavy Design System</a>
+    <a class="style-guide-brand" href="index.html">Heavy Design System</a>
     <nav>
-      <span class="style-guide-sidebar-label">Overview</span>
-${renderLinks(overviewLinks)}
-      <span class="style-guide-sidebar-label">Foundations</span>
-${renderLinks(foundationsLinks)}
-      <span class="style-guide-sidebar-label">Components</span>
-${renderLinks(componentsLinks)}
-      <span class="style-guide-sidebar-label">Patterns</span>
-${renderLinks(patternsLinks)}
-    </nav>
+${nav}    </nav>
     <div class="style-guide-sidebar-controls">
       <button class="btn btn--tertiary btn--sm grid-toggle" id="grid-toggle" aria-label="Toggle grid overlay">Grid</button>
       <button class="btn btn--tertiary btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
@@ -427,10 +435,106 @@ function esc(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// ===== Single Page =====
+// ===== Page Wrapper =====
 
-function page(tokens) {
-  // Colors — one table per family
+function wrapPage(title, contentHtml, currentPageId) {
+  return `<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+${head(title, title ? `${title} — Heavy Design System` : 'Heavy Design System — Token-driven design system for all projects')}
+<body>
+<div class="style-guide-shell">
+${sidebar(currentPageId)}
+  <main class="style-guide-content">
+${contentHtml}
+  </main>
+  ${footer()}
+</div>
+${gridOverlay()}
+${scripts()}
+</body>
+</html>`;
+}
+
+// ===== Content Functions =====
+
+function overviewContent(tokens) {
+  return `    <div class="stat-grid">
+          <h2>Stats</h2>
+          <div class="stat-block">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Output Files</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-value">${tokens.colorFamilies.length}</div>
+            <div class="stat-label">Color Families</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-value">36</div>
+            <div class="stat-label">Elements</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Themes</div>
+          </div>
+        </div>
+
+        <section class="style-guide-section" id="files">
+          <h2>Files</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Contents</th>
+                <th>Consumers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>tokens.css</code></td>
+                <td>CSS custom properties (all themes)</td>
+                <td>Projects needing only variables</td>
+              </tr>
+              <tr>
+                <td><code>main.css</code></td>
+                <td>Full design system (variables + grid + typography + layout + utilities)</td>
+                <td>Web apps</td>
+              </tr>
+              <tr>
+                <td><code>heavy-theme.css</code></td>
+                <td>Spacegray variables + plugin component styles</td>
+                <td>Figma plugins</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="style-guide-section" id="architecture">
+          <h2>Tokens</h2>
+          <div class="flow-steps">
+            <div class="flow-step">
+              <div class="flow-number">1</div>
+              <span>Figma</span>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+              <div class="flow-number">2</div>
+              <span>JSON</span>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+              <div class="flow-number">3</div>
+              <span>CSS</span>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step">
+              <div class="flow-number">4</div>
+              <span>Projects</span>
+            </div>
+          </div>
+        </section>`;
+}
+
+function colorsContent(tokens) {
   const colorSections = tokens.colorFamilies.map(f => {
     const rows = f.stops.map(s =>
       `                    <tr>
@@ -456,7 +560,6 @@ ${rows}
             </table>`;
   }).join('\n');
 
-  // UI Colors table
   const uiColorRows = tokens.uiColorGroups.map(group => {
     return group.tokens.map(t =>
       `                <tr>
@@ -468,7 +571,30 @@ ${rows}
     ).join('\n');
   }).join('\n');
 
-  // Font families
+  return `        <section class="style-guide-section">
+          <h2 class="col-span-full">Colors</h2>
+${colorSections}
+        </section>
+
+        <section class="style-guide-section">
+          <h2>UI Colors</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Visual</th>
+                <th>Token</th>
+                <th>Light</th>
+                <th>Dark</th>
+              </tr>
+            </thead>
+            <tbody>
+${uiColorRows}
+            </tbody>
+          </table>
+        </section>`;
+}
+
+function typographyContent(tokens) {
   const familyRows = tokens.fontFamilies.map(f =>
     `                <tr>
                   <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.token)}', this)">${esc(f.token)}</span></td>
@@ -476,7 +602,6 @@ ${rows}
                 </tr>`
   ).join('\n');
 
-  // Font weights
   const weightRows = tokens.fontWeights.map(w =>
     `                <tr>
                   <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(w.token)}', this)">${esc(w.token)}</span></td>
@@ -485,7 +610,6 @@ ${rows}
                 </tr>`
   ).join('\n');
 
-  // Font size table — map to base UI scale
   const fontSizeTypeMap = {
     'body-xsm': 'ui.12',
     'body-sm': 'ui.14',
@@ -509,7 +633,51 @@ ${rows}
                 </tr>`;
   }).join('\n');
 
-  // UI scale table
+  return `        <section class="style-guide-section">
+          <h2>Typography</h2>
+          <h3 class="label">Font Families</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${familyRows}
+            </tbody>
+          </table>
+          <h3 class="label">Font Weights</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Sample</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${weightRows}
+            </tbody>
+          </table>
+          <h3 class="label">Font Sizes</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Sample</th>
+                <th>Base Token</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${fontSizeRows}
+            </tbody>
+          </table>
+        </section>`;
+}
+
+function spacingContent(tokens) {
   const uiRows = tokens.uiScale.map(t =>
     `                <tr>
                   <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.token)}', this)">${esc(t.token)}</span></td>
@@ -518,7 +686,6 @@ ${rows}
                 </tr>`
   ).join('\n');
 
-  // Gap table — map to base UI scale
   const gapUiMap = {
     'spacing.none': 'ui.0',
     'spacing.xxs': 'ui.2',
@@ -539,7 +706,39 @@ ${rows}
                 </tr>`
   ).join('\n');
 
-  // Radius table — map to base UI scale
+  return `        <section class="style-guide-section">
+          <h2>Spacing</h2>
+          <h3 class="label">UI Scale</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Visual</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${uiRows}
+            </tbody>
+          </table>
+          <h3 class="label">Spacing Aliases</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Visual</th>
+                <th>Base Token</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${gapRows}
+            </tbody>
+          </table>
+        </section>`;
+}
+
+function radiusContent(tokens) {
   const radiusUiMap = {
     'radius.none': 'ui.0',
     'radius.sm': 'ui.4',
@@ -556,7 +755,25 @@ ${rows}
                 </tr>`
   ).join('\n');
 
-  // Layout helpers
+  return `        <section class="style-guide-section">
+          <h2>Radius</h2>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Visual</th>
+                <th>Base Token</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${radiusRows}
+            </tbody>
+          </table>
+        </section>`;
+}
+
+function layoutContent() {
   const gridBoxes = Array.from({ length: 12 }, (_, i) =>
     `                    <div class="style-guide-demo-box">${i + 1}</div>`
   ).join('\n');
@@ -643,204 +860,9 @@ ${rows}
     ['2xl', '1440px', 'Wide screens'],
   ]);
 
-  return `<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-${head(null, 'Heavy Design System — Token-driven design system for all projects')}
-<body>
-<div class="style-guide-shell">
-${sidebar()}
-  <main class="style-guide-content">
-    <div class="stat-grid">
-          <h2>Stats</h2>
-          <div class="stat-block">
-            <div class="stat-value">3</div>
-            <div class="stat-label">Output Files</div>
-          </div>
-          <div class="stat-block">
-            <div class="stat-value">${tokens.colorFamilies.length}</div>
-            <div class="stat-label">Color Families</div>
-          </div>
-          <div class="stat-block">
-            <div class="stat-value">36</div>
-            <div class="stat-label">Elements</div>
-          </div>
-          <div class="stat-block">
-            <div class="stat-value">2</div>
-            <div class="stat-label">Themes</div>
-          </div>
-        </div>
-
-        <section class="style-guide-section" id="files">
-          <h2>Files</h2>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>Contents</th>
-                <th>Consumers</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>tokens.css</code></td>
-                <td>CSS custom properties (all themes)</td>
-                <td>Projects needing only variables</td>
-              </tr>
-              <tr>
-                <td><code>main.css</code></td>
-                <td>Full design system (variables + grid + typography + layout + utilities)</td>
-                <td>Web apps</td>
-              </tr>
-              <tr>
-                <td><code>heavy-theme.css</code></td>
-                <td>Spacegray variables + plugin component styles</td>
-                <td>Figma plugins</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section class="style-guide-section" id="architecture">
-          <h2>Tokens</h2>
-          <div class="flow-steps">
-            <div class="flow-step">
-              <div class="flow-number">1</div>
-              <span>Figma</span>
-            </div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-step">
-              <div class="flow-number">2</div>
-              <span>JSON</span>
-            </div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-step">
-              <div class="flow-number">3</div>
-              <span>CSS</span>
-            </div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-step">
-              <div class="flow-number">4</div>
-              <span>Projects</span>
-            </div>
-          </div>
-        </section>
-
-        <section class="style-guide-section" id="colors">
-          <h2 class="col-span-full">Colors</h2>
-${colorSections}
-        </section>
-
-        <section class="style-guide-section" id="ui-colors">
-          <h2>UI Colors</h2>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Visual</th>
-                <th>Token</th>
-                <th>Light</th>
-                <th>Dark</th>
-              </tr>
-            </thead>
-            <tbody>
-${uiColorRows}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="style-guide-section" id="typography">
-          <h2>Typography</h2>
-          <h3 class="label" id="font-families">Font Families</h3>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${familyRows}
-            </tbody>
-          </table>
-          <h3 class="label" id="font-weights">Font Weights</h3>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Sample</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${weightRows}
-            </tbody>
-          </table>
-          <h3 class="label" id="font-sizes">Font Sizes</h3>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Sample</th>
-                <th>Base Token</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${fontSizeRows}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="style-guide-section" id="spacing">
-          <h2>Spacing</h2>
-          <h3 class="label" id="ui-scale">UI Scale</h3>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Visual</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${uiRows}
-            </tbody>
-          </table>
-          <h3 class="label" id="spacing-aliases">Spacing Aliases</h3>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Visual</th>
-                <th>Base Token</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${gapRows}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="style-guide-section" id="radius">
-          <h2>Radius</h2>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Visual</th>
-                <th>Base Token</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${radiusRows}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="style-guide-section" id="layout">
+  return `        <section class="style-guide-section" id="grid">
           <h2>Layout</h2>
-          <h3 class="label" id="grid">Grid</h3>
+          <h3 class="label">Grid</h3>
           <div>
             <div class="style-guide-demo">
               <div class="grid grid--12">
@@ -861,7 +883,8 @@ ${gridBoxes}
               <tr>
                 <th>Class</th>
                 <th>Description</th>
-                <th>Value</th>              </tr>
+                <th>Value</th>
+              </tr>
             </thead>
             <tbody>
 ${gridRows}
@@ -882,7 +905,8 @@ ${gridRows}
               <tr>
                 <th>Class</th>
                 <th>Description</th>
-                <th>Gap</th>              </tr>
+                <th>Gap</th>
+              </tr>
             </thead>
             <tbody>
 ${stackRows}
@@ -906,7 +930,8 @@ ${stackRows}
               <tr>
                 <th>Class</th>
                 <th>Property</th>
-                <th>Value</th>              </tr>
+                <th>Value</th>
+              </tr>
             </thead>
             <tbody>
 ${clusterRows}
@@ -926,7 +951,8 @@ ${clusterRows}
               <tr>
                 <th>Selector</th>
                 <th>Property</th>
-                <th>Value</th>              </tr>
+                <th>Value</th>
+              </tr>
             </thead>
             <tbody>
 ${sidebarRows}
@@ -945,7 +971,8 @@ ${sidebarRows}
               <tr>
                 <th>Class</th>
                 <th>Property</th>
-                <th>Value</th>              </tr>
+                <th>Value</th>
+              </tr>
             </thead>
             <tbody>
 ${centerRows}
@@ -966,7 +993,8 @@ ${centerRows}
               <tr>
                 <th>Selector</th>
                 <th>Property</th>
-                <th>Value</th>              </tr>
+                <th>Value</th>
+              </tr>
             </thead>
             <tbody>
 ${coverRows}
@@ -994,7 +1022,8 @@ ${coverRows}
               <tr>
                 <th>Class</th>
                 <th>Description</th>
-                <th>Padding</th>              </tr>
+                <th>Padding</th>
+              </tr>
             </thead>
             <tbody>
 ${boxRows}
@@ -1021,7 +1050,8 @@ ${boxRows}
               <tr>
                 <th>Class</th>
                 <th>Description</th>
-                <th>Max Width</th>              </tr>
+                <th>Max Width</th>
+              </tr>
             </thead>
             <tbody>
 ${measureRows}
@@ -1033,7 +1063,8 @@ ${measureRows}
               <tr>
                 <th>Name</th>
                 <th>Width</th>
-                <th>Usage</th>              </tr>
+                <th>Usage</th>
+              </tr>
             </thead>
             <tbody>
 ${breakpointRows}
@@ -1090,11 +1121,13 @@ ${breakpointRows}
               <div class="section-header">Section Header</div>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="animation">
+function animationContent() {
+  return `        <section class="style-guide-section">
           <h2>Animation</h2>
-          <h3 class="label" id="timing-functions">Timing Functions</h3>
+          <h3 class="label">Timing Functions</h3>
           <div>
             <div class="stack stack--lg">
               <div class="stack stack--sm">
@@ -1104,7 +1137,7 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-          <h3 class="label" id="keyframes">Keyframes</h3>
+          <h3 class="label">Keyframes</h3>
           <div>
             <div class="stack stack--lg">
               <div class="cluster">
@@ -1117,7 +1150,7 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-          <h3 class="label" id="utilities">Utility Classes</h3>
+          <h3 class="label">Utility Classes</h3>
           <div>
             <div class="stack stack--lg">
               <table class="data-table">
@@ -1164,7 +1197,7 @@ ${breakpointRows}
               </table>
             </div>
           </div>
-          <h3 class="label" id="stagger">Stagger Children</h3>
+          <h3 class="label">Stagger Children</h3>
           <div>
             <div class="stack stack--lg">
               <div class="stagger-children cluster">
@@ -1177,9 +1210,11 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="breadcrumbs">
+function breadcrumbsContent() {
+  return `        <section class="style-guide-section">
           <h2>Breadcrumbs</h2>
           <span class="label">Default</span>
           <div>
@@ -1191,9 +1226,11 @@ ${breakpointRows}
               <span class="breadcrumbs-current">Design System</span>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="buttons">
+function buttonsContent() {
+  return `        <section class="style-guide-section">
           <h2>Buttons</h2>
           <h3 class="label">Primary</h3>
           <div class="style-guide-variants">
@@ -1234,9 +1271,11 @@ ${breakpointRows}
           <div>
             <button class="btn btn--primary btn--block">Block</button>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="chips">
+function chipsContent() {
+  return `        <section class="style-guide-section">
           <h2>Chips</h2>
           <span class="label">Default</span>
           <div>
@@ -1247,9 +1286,11 @@ ${breakpointRows}
               <button class="chip">Research</button>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="data-display">
+function dataDisplayContent() {
+  return `        <section class="style-guide-section">
           <h2>Data Display</h2>
           <span class="label">Badges</span>
           <div>
@@ -1314,18 +1355,20 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="feedback">
+function feedbackContent() {
+  return `        <section class="style-guide-section">
           <h2>Feedback</h2>
           <span class="label">Status Messages</span>
           <div>
             <div class="stack stack--lg">
               <div class="stack stack--sm">
-                <div class="status-msg status-mstyle-guide--success">Operation completed successfully.</div>
-                <div class="status-msg status-mstyle-guide--error">Something went wrong. Please try again.</div>
-                <div class="status-msg status-mstyle-guide--warning">Your session will expire in 5 minutes.</div>
-                <div class="status-msg status-mstyle-guide--info">A new version is available.</div>
+                <div class="status-msg status-msg--success">Operation completed successfully.</div>
+                <div class="status-msg status-msg--error">Something went wrong. Please try again.</div>
+                <div class="status-msg status-msg--warning">Your session will expire in 5 minutes.</div>
+                <div class="status-msg status-msg--info">A new version is available.</div>
               </div>
             </div>
           </div>
@@ -1352,9 +1395,11 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="file-upload">
+function fileUploadContent() {
+  return `        <section class="style-guide-section">
           <h2>File Upload</h2>
           <span class="label">Sizes</span>
           <div class="style-guide-variants">
@@ -1375,9 +1420,11 @@ ${breakpointRows}
               <label class="form-file-trigger" for="file-lg">Large</label>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="inputs">
+function inputsContent() {
+  return `        <section class="style-guide-section">
           <h2>Inputs</h2>
           <span class="label">Sizes</span>
           <div class="style-guide-variants">
@@ -1416,9 +1463,11 @@ ${breakpointRows}
           <div class="col-span-4">
             <textarea class="form-input form-textarea" placeholder="Write something..."></textarea>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="nav-links">
+function navLinksContent() {
+  return `        <section class="style-guide-section">
           <h2>Nav Links</h2>
           <span class="label">Default</span>
           <div>
@@ -1428,9 +1477,11 @@ ${breakpointRows}
               <a class="nav-link" href="#">Profile</a>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="search">
+function searchContent() {
+  return `        <section class="style-guide-section">
           <h2>Search</h2>
           <span class="label">Sizes</span>
           <div class="style-guide-variants">
@@ -1446,9 +1497,11 @@ ${breakpointRows}
             <button class="search is-focus col-span-2">Focus</button>
             <button class="search is-disabled col-span-2" disabled>Disabled</button>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="selects">
+function selectsContent() {
+  return `        <section class="style-guide-section">
           <h2>Selects</h2>
           <span class="label">Sizes</span>
           <div class="style-guide-variants">
@@ -1470,9 +1523,11 @@ ${breakpointRows}
             <select class="select"><option>Select an option</option></select>
             <span class="form-hint">Hint text goes here</span>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="tabs">
+function tabsContent() {
+  return `        <section class="style-guide-section">
           <h2>Tabs</h2>
           <span class="label">Default</span>
           <div>
@@ -1482,9 +1537,11 @@ ${breakpointRows}
               <button class="tab">Settings</button>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <section class="style-guide-section" id="toggles">
+function togglesContent() {
+  return `        <section class="style-guide-section">
           <h2>Toggles</h2>
           <span class="label">States</span>
           <div>
@@ -1518,10 +1575,11 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-        </section>
+        </section>`;
+}
 
-        <!-- Patterns -->
-        <section class="style-guide-section" id="form-validation">
+function formValidationContent() {
+  return `        <section class="style-guide-section">
           <h2>Form Validation</h2>
           <span class="label">Live example</span>
           <div class="col-span-4">
@@ -1553,15 +1611,33 @@ ${breakpointRows}
               </div>
             </div>
           </div>
-        </section>
-  </main>
-  ${footer()}
-</div>
-${gridOverlay()}
-${scripts()}
-</body>
-</html>`;
+        </section>`;
 }
+
+// ===== Content Map =====
+
+const contentMap = {
+  'overview': (tokens) => overviewContent(tokens),
+  'colors': (tokens) => colorsContent(tokens),
+  'typography': (tokens) => typographyContent(tokens),
+  'spacing': (tokens) => spacingContent(tokens),
+  'radius': (tokens) => radiusContent(tokens),
+  'layout': () => layoutContent(),
+  'animation': () => animationContent(),
+  'breadcrumbs': () => breadcrumbsContent(),
+  'buttons': () => buttonsContent(),
+  'chips': () => chipsContent(),
+  'data-display': () => dataDisplayContent(),
+  'feedback': () => feedbackContent(),
+  'file-upload': () => fileUploadContent(),
+  'inputs': () => inputsContent(),
+  'nav-links': () => navLinksContent(),
+  'search': () => searchContent(),
+  'selects': () => selectsContent(),
+  'tabs': () => tabsContent(),
+  'toggles': () => togglesContent(),
+  'form-validation': () => formValidationContent(),
+};
 
 // ===== Build =====
 
@@ -1573,14 +1649,20 @@ function main() {
   }
 
   const tokens = readTokens();
+  const activeFiles = new Set(PAGES.map(p => p.file));
 
-  const html = page(tokens);
-  const outPath = path.join(DIST_DIR, 'index.html');
-  fs.writeFileSync(outPath, html);
-  console.log('  \u2713 index.html');
+  for (const pg of PAGES) {
+    const contentFn = contentMap[pg.id];
+    const contentHtml = contentFn(tokens);
+    const title = pg.id === 'overview' ? null : pg.label;
+    const html = wrapPage(title, contentHtml, pg.id);
+    const outPath = path.join(DIST_DIR, pg.file);
+    fs.writeFileSync(outPath, html);
+    console.log(`  \u2713 ${pg.file}`);
+  }
 
   // Clean stale pages from previous structure
-  const stalePages = ['base.html', 'alias.html', 'buttons.html', 'forms.html', 'data-display.html', 'feedback.html', 'navigation.html', 'layout.html', 'animation.html', 'foundations.html', 'components.html'];
+  const stalePages = ['base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {
@@ -1589,7 +1671,7 @@ function main() {
     }
   }
 
-  console.log(`\n  1 page, ${tokens.colorFamilies.length} color families, ${tokens.typeScale.length} type steps, ${tokens.uiColorGroups.length} UI groups`);
+  console.log(`\n  ${PAGES.length} pages, ${tokens.colorFamilies.length} color families, ${tokens.typeScale.length} type steps, ${tokens.uiColorGroups.length} UI groups`);
 }
 
 main();

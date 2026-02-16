@@ -15,12 +15,14 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '../../dist');
-const TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/tokens');
+const TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/design/tokens');
 
 // ===== Pages Registry =====
 
 const PAGES = [
-  { file: 'index.html', id: 'overview', label: 'Overview', group: 'Overview' },
+  { file: 'stats.html', id: 'stats', label: 'Stats', group: 'Overview' },
+  { file: 'files.html', id: 'files', label: 'Files', group: 'Overview' },
+  { file: 'tokens.html', id: 'tokens', label: 'Tokens', group: 'Overview' },
   { file: 'colors.html', id: 'colors', label: 'Colors', group: 'Foundations' },
   { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
   { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
@@ -118,8 +120,8 @@ function readTokens() {
   _refLookup = buildRefLookup(colors, scale);
   const aliasSpacing = readJSON(path.join(TOKENS_DIR, 'alias/spacing.tokens.json'));
   const aliasRadius = readJSON(path.join(TOKENS_DIR, 'alias/radius.tokens.json'));
-  const uiLight = readJSON(path.join(TOKENS_DIR, 'alias/ui.light.tokens.json'));
-  const uiDark = readJSON(path.join(TOKENS_DIR, 'alias/ui.dark.tokens.json'));
+  const uiLight = readJSON(path.join(TOKENS_DIR, 'alias/light.tokens.json'));
+  const uiDark = readJSON(path.join(TOKENS_DIR, 'alias/dark.tokens.json'));
 
   // Parse colors into families
   const colorFamilies = [];
@@ -169,7 +171,7 @@ function readTokens() {
   if (aliasTypography && aliasTypography['font-size']) {
     for (const [name, token] of Object.entries(aliasTypography['font-size'])) {
       if (name.startsWith('$')) continue;
-      fontSizes.push({ name: `font-size.${name}`, css: `--font-size-${name}`, value: getNumericValue(token) });
+      fontSizes.push({ name: `font-size.${name}`, css: `--font-size-${name}`, value: getNumericValue(token), ref: getRefName(token) });
     }
   }
 
@@ -480,6 +482,20 @@ function componentPage(title, sections) {
   return html;
 }
 
+/**
+ * Renders a foundation documentation page from an ordered array of subsections.
+ * Unlike componentPage which uses named keys, foundation pages have free-form
+ * subsections rendered in the order provided.
+ */
+function foundationPage(title, subsections) {
+  let html = `        <section class="style-guide-section">\n          <h2>${title}</h2>`;
+  for (const section of subsections) {
+    html += '\n' + section;
+  }
+  html += '\n        </section>';
+  return html;
+}
+
 // ===== Code Block Helper =====
 
 function codeBlock(html) {
@@ -510,30 +526,34 @@ ${scripts()}
 
 // ===== Content Functions =====
 
-function overviewContent(tokens) {
-  return `    <div class="stat-grid">
-          <h2>Stats</h2>
-          <div class="stat-block">
-            <div class="heavy-stat-value">3</div>
-            <div class="heavy-stat-label">Output Files</div>
-          </div>
-          <div class="stat-block">
-            <div class="heavy-stat-value">${tokens.colorFamilies.length}</div>
-            <div class="heavy-stat-label">Color Families</div>
-          </div>
-          <div class="stat-block">
-            <div class="heavy-stat-value">36</div>
-            <div class="heavy-stat-label">Elements</div>
-          </div>
-          <div class="stat-block">
-            <div class="heavy-stat-value">2</div>
-            <div class="heavy-stat-label">Themes</div>
-          </div>
-        </div>
+function statsContent(tokens) {
+  const colorStops = tokens.colorFamilies.reduce((sum, f) => sum + f.stops.length, 0);
+  const uiColors = tokens.uiColorGroups.reduce((sum, g) => sum + g.tokens.length, 0);
 
-        <section class="style-guide-section" id="files">
-          <h2>Files</h2>
-          <table class="data-table">
+  const stats = [
+    { value: 3, label: 'Output Files' },
+    { value: tokens.colorFamilies.length, label: 'Color Families' },
+    { value: colorStops, label: 'Color Stops' },
+    { value: tokens.fontSizes.length, label: 'Font Sizes' },
+    { value: tokens.gaps.length, label: 'Spacing Tokens' },
+    { value: tokens.uiScale.length, label: 'UI Scale' },
+    { value: uiColors, label: 'UI Colors' },
+    { value: 2, label: 'Themes' },
+  ];
+
+  const statBlocks = stats.map(s => `            <div class="stat-block">
+              <div class="heavy-stat-value">${s.value}</div>
+              <div class="heavy-stat-label">${s.label}</div>
+            </div>`).join('\n');
+
+  return foundationPage('Stats', [
+    `          <div class="stat-grid">\n${statBlocks}\n          </div>`,
+  ]);
+}
+
+function filesContent() {
+  return foundationPage('Files', [
+    `          <table class="data-table">
             <thead>
               <tr>
                 <th>File</th>
@@ -558,12 +578,44 @@ function overviewContent(tokens) {
                 <td>Figma plugins</td>
               </tr>
             </tbody>
-          </table>
-        </section>
+          </table>`,
+    `          <h3>Import Snippets</h3>`,
+    `          <h4>tokens.css</h4>
+          ${codeBlock('<link rel="stylesheet" href="path/to/tokens.css">')}
+          ${codeBlock('@import url("path/to/tokens.css");')}`,
+    `          <h4>main.css</h4>
+          ${codeBlock('<link rel="stylesheet" href="path/to/main.css">')}
+          ${codeBlock('@import url("path/to/main.css");')}`,
+    `          <h4>heavy-theme.css</h4>
+          ${codeBlock('<link rel="stylesheet" href="path/to/heavy-theme.css">')}
+          ${codeBlock('@import url("path/to/heavy-theme.css");')}`,
+  ]);
+}
 
-        <section class="style-guide-section" id="architecture">
-          <h2>Tokens</h2>
-          <div class="flow-steps">
+function tokensContent(tokens) {
+  const colorStops = tokens.colorFamilies.reduce((sum, f) => sum + f.stops.length, 0);
+  const uiColors = tokens.uiColorGroups.reduce((sum, g) => sum + g.tokens.length, 0);
+
+  const sourceFiles = [
+    { file: 'base/colors.tokens.json', category: 'Color palette', count: colorStops },
+    { file: 'base/scale.tokens.json', category: 'UI scale', count: tokens.uiScale.length },
+    { file: 'alias/typography.tokens.json', category: 'Font sizes', count: tokens.fontSizes.length },
+    { file: 'alias/spacing.tokens.json', category: 'Spacing', count: tokens.gaps.length },
+    { file: 'alias/radius.tokens.json', category: 'Radius', count: tokens.radii.length },
+    { file: 'alias/light.tokens.json', category: 'Light theme', count: uiColors },
+    { file: 'alias/dark.tokens.json', category: 'Dark theme', count: uiColors },
+  ];
+
+  const sourceRows = sourceFiles.map(f =>
+    `              <tr>
+                <td><code>${f.file}</code></td>
+                <td>${f.category}</td>
+                <td>${f.count}</td>
+              </tr>`
+  ).join('\n');
+
+  return foundationPage('Tokens', [
+    `          <div class="flow-steps">
             <div class="flow-step">
               <div class="flow-number">1</div>
               <span>Figma</span>
@@ -583,8 +635,23 @@ function overviewContent(tokens) {
               <div class="flow-number">4</div>
               <span>Projects</span>
             </div>
-          </div>
-        </section>`;
+          </div>`,
+    `          <h3>Source Files</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Category</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+${sourceRows}
+            </tbody>
+          </table>`,
+    `          <h3>Build Command</h3>
+          ${codeBlock('npm run build:tokens')}`,
+  ]);
 }
 
 function colorsContent(tokens) {
@@ -624,13 +691,9 @@ ${rows}
     ).join('\n');
   }).join('\n');
 
-  return `        <section class="style-guide-section">
-          <h2 class="heavy-col-span-full">Colors</h2>
-${colorSections}
-        </section>
-
-        <section class="style-guide-section">
-          <h2>UI Colors</h2>
+  return foundationPage('Colors', [
+    colorSections,
+    `          <h3 class="heavy-label">UI Colors</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -643,8 +706,8 @@ ${colorSections}
             <tbody>
 ${uiColorRows}
             </tbody>
-          </table>
-        </section>`;
+          </table>`,
+  ]);
 }
 
 function typographyContent(tokens) {
@@ -663,32 +726,17 @@ function typographyContent(tokens) {
                 </tr>`
   ).join('\n');
 
-  const fontSizeTypeMap = {
-    'body-xsm': 'ui.12',
-    'body-sm': 'ui.14',
-    'body': 'ui.16',
-    'h6': 'ui.16',
-    'h5': 'ui.20',
-    'h4': 'ui.24',
-    'h3': 'ui.28',
-    'h2': 'ui.32',
-    'h1': 'ui.40',
-    'display': 'ui.48'
-  };
   const fontSizeRows = tokens.fontSizes.map(f => {
-    const shortName = f.name.replace('font-size.', '');
-    const mapsTo = fontSizeTypeMap[shortName] || '';
     return `                <tr>
                   <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.css)}', this)">${esc(f.name)}</span></td>
                   <td><span style="font-size: ${f.value}">Aa</span></td>
-                  <td class="body-xsm text-muted">${mapsTo}</td>
+                  <td class="body-xsm text-muted">${f.ref}</td>
                   <td>${f.value}</td>
                 </tr>`;
   }).join('\n');
 
-  return `        <section class="style-guide-section">
-          <h2>Typography</h2>
-          <h3 class="heavy-label">Font Families</h3>
+  return foundationPage('Typography', [
+    `          <h3 class="heavy-label">Font Families</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -699,8 +747,8 @@ function typographyContent(tokens) {
             <tbody>
 ${familyRows}
             </tbody>
-          </table>
-          <h3 class="heavy-label">Font Weights</h3>
+          </table>`,
+    `          <h3 class="heavy-label">Font Weights</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -712,8 +760,8 @@ ${familyRows}
             <tbody>
 ${weightRows}
             </tbody>
-          </table>
-          <h3 class="heavy-label">Font Sizes</h3>
+          </table>`,
+    `          <h3 class="heavy-label">Font Sizes</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -726,8 +774,8 @@ ${weightRows}
             <tbody>
 ${fontSizeRows}
             </tbody>
-          </table>
-        </section>`;
+          </table>`,
+  ]);
 }
 
 function spacingContent(tokens) {
@@ -759,9 +807,8 @@ function spacingContent(tokens) {
                 </tr>`
   ).join('\n');
 
-  return `        <section class="style-guide-section">
-          <h2>Spacing</h2>
-          <h3 class="heavy-label">UI Scale</h3>
+  return foundationPage('Spacing', [
+    `          <h3 class="heavy-label">UI Scale</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -773,8 +820,8 @@ function spacingContent(tokens) {
             <tbody>
 ${uiRows}
             </tbody>
-          </table>
-          <h3 class="heavy-label">Spacing Aliases</h3>
+          </table>`,
+    `          <h3 class="heavy-label">Spacing Aliases</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -787,8 +834,8 @@ ${uiRows}
             <tbody>
 ${gapRows}
             </tbody>
-          </table>
-        </section>`;
+          </table>`,
+  ]);
 }
 
 function radiusContent(tokens) {
@@ -808,9 +855,8 @@ function radiusContent(tokens) {
                 </tr>`
   ).join('\n');
 
-  return `        <section class="style-guide-section">
-          <h2>Radius</h2>
-          <table class="data-table">
+  return foundationPage('Radius', [
+    `          <table class="data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -822,8 +868,8 @@ function radiusContent(tokens) {
             <tbody>
 ${radiusRows}
             </tbody>
-          </table>
-        </section>`;
+          </table>`,
+  ]);
 }
 
 function layoutContent() {
@@ -913,10 +959,10 @@ function layoutContent() {
     ['2xl', '1440px', 'Wide screens'],
   ]);
 
-  return componentPage('Layout', {
-    description: `          <h3 class="heavy-label">Description</h3>
+  return foundationPage('Layout', [
+    `          <h3 class="heavy-label">Description</h3>
           <div><p class="style-guide-description">CSS Grid and flexbox layout primitives for building page structure. Includes grid systems, stacks, clusters, sidebars, centering, cover layouts, boxes, measure utilities, breakpoints, cards, collapsibles, and dividers.</p></div>`,
-    variants: `          <h3 class="heavy-label">Grid</h3>
+    `          <h3 class="heavy-label">Grid</h3>
           <div>
             <div class="style-guide-demo">
               <div class="heavy-grid heavy-grid--12">
@@ -1175,20 +1221,20 @@ ${breakpointRows}
               <div class="heavy-section-header">Section Header</div>
             </div>
           </div>`,
-    related: `          <h3 class="heavy-label">Related</h3>
+    `          <h3 class="heavy-label">Related</h3>
           <div class="style-guide-guidelines">
             <ul>
               <li><strong><a href="animation.html">Animation</a></strong> — For motion and transition utilities.</li>
             </ul>
           </div>`,
-  });
+  ]);
 }
 
 function animationContent() {
-  return componentPage('Animation', {
-    description: `          <h3 class="heavy-label">Description</h3>
+  return foundationPage('Animation', [
+    `          <h3 class="heavy-label">Description</h3>
           <div><p class="style-guide-description">Motion tokens and utility classes for consistent animation across the system. Includes timing functions, named keyframes, ready-made animation classes, and a stagger utility for sequencing children.</p></div>`,
-    variants: `          <h3 class="heavy-label">Timing Functions</h3>
+    `          <h3 class="heavy-label">Timing Functions</h3>
           <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-stack heavy-stack--sm">
@@ -1271,13 +1317,13 @@ function animationContent() {
               </div>
             </div>
           </div>`,
-    related: `          <h3 class="heavy-label">Related</h3>
+    `          <h3 class="heavy-label">Related</h3>
           <div class="style-guide-guidelines">
             <ul>
               <li><strong><a href="layout.html">Layout</a></strong> — For grid, spacing, and structural layout utilities.</li>
             </ul>
           </div>`,
-  });
+  ]);
 }
 
 function breadcrumbsContent() {
@@ -2579,7 +2625,9 @@ function searchPatternContent() {
 // ===== Content Map =====
 
 const contentMap = {
-  'overview': (tokens) => overviewContent(tokens),
+  'stats': (tokens) => statsContent(tokens),
+  'files': () => filesContent(),
+  'tokens': (tokens) => tokensContent(tokens),
   'colors': (tokens) => colorsContent(tokens),
   'typography': (tokens) => typographyContent(tokens),
   'spacing': (tokens) => spacingContent(tokens),
@@ -2619,7 +2667,7 @@ function main() {
   for (const pg of PAGES) {
     const contentFn = contentMap[pg.id];
     const contentHtml = contentFn(tokens);
-    const title = pg.id === 'overview' ? null : pg.label;
+    const title = pg.label;
     const html = wrapPage(title, contentHtml, pg.id);
     const outPath = path.join(DIST_DIR, pg.file);
     fs.writeFileSync(outPath, html);
@@ -2627,7 +2675,7 @@ function main() {
   }
 
   // Clean stale pages from previous structure
-  const stalePages = ['base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
+  const stalePages = ['index.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {

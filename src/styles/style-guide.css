@@ -116,6 +116,7 @@
 
 .style-guide-content {
   min-width: 0;
+  padding-top: var(--space-24);
 
   @media (min-width: 768px) {
     grid-column: 3 / -1;
@@ -138,7 +139,6 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--grid-gutter);
-  margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-3xl);
 
   @media (min-width: 768px) {
@@ -153,11 +153,9 @@
 
 .style-guide-content > .style-guide-section:first-child {
   border-top: none;
-  padding-top: 0;
 }
 
 .style-guide-section {
-  padding-block: var(--space-48);
   border-top: 1px solid var(--ui-border-default);
 
   @media (min-width: 768px) {

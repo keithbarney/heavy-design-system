@@ -273,8 +273,8 @@ function sidebar(currentPageId) {
     <nav>
 ${nav}    </nav>
     <div class="style-guide-sidebar-controls">
-      <button class="btn btn--tertiary btn--sm grid-toggle" id="grid-toggle" aria-label="Toggle grid overlay">Grid</button>
-      <button class="btn btn--tertiary btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
+      <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm grid-toggle" id="grid-toggle" aria-label="Toggle grid overlay">Grid</button>
+      <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
     </div>
   </aside>`;
 }
@@ -375,7 +375,7 @@ function copyToken(name, el) {
   groups.forEach(function(group) {
     var rule = group.getAttribute('data-validate');
     var input = group.querySelector('input, select');
-    var hint = group.querySelector('.form-hint');
+    var hint = group.querySelector('.heavy-form-hint');
     if (!input || !hint) return;
 
     var defaultHint = hint.textContent;
@@ -402,22 +402,22 @@ function copyToken(name, el) {
         msg = valid ? 'Selected' : 'Please select an option';
       }
 
-      input.classList.remove('form-input--error', 'form-input--success');
-      hint.classList.remove('form-hint--error', 'form-hint--success');
-      input.classList.add(valid ? 'form-input--success' : 'form-input--error');
-      hint.classList.add(valid ? 'form-hint--success' : 'form-hint--error');
+      input.classList.remove('heavy-form-input--error', 'heavy-form-input--success');
+      hint.classList.remove('heavy-form-hint--error', 'heavy-form-hint--success');
+      input.classList.add(valid ? 'heavy-form-input--success' : 'heavy-form-input--error');
+      hint.classList.add(valid ? 'heavy-form-hint--success' : 'heavy-form-hint--error');
       hint.textContent = msg;
     }
 
     function reset() {
-      input.classList.remove('form-input--error', 'form-input--success');
-      hint.classList.remove('form-hint--error', 'form-hint--success');
+      input.classList.remove('heavy-form-input--error', 'heavy-form-input--success');
+      hint.classList.remove('heavy-form-hint--error', 'heavy-form-hint--success');
       hint.textContent = defaultHint;
     }
 
     input.addEventListener('blur', validate);
     input.addEventListener('input', function() {
-      if (input.classList.contains('form-input--error') || input.classList.contains('form-input--success')) {
+      if (input.classList.contains('heavy-form-input--error') || input.classList.contains('heavy-form-input--success')) {
         validate();
       }
     });
@@ -461,20 +461,20 @@ function overviewContent(tokens) {
   return `    <div class="stat-grid">
           <h2>Stats</h2>
           <div class="stat-block">
-            <div class="stat-value">3</div>
-            <div class="stat-label">Output Files</div>
+            <div class="heavy-stat-value">3</div>
+            <div class="heavy-stat-label">Output Files</div>
           </div>
           <div class="stat-block">
-            <div class="stat-value">${tokens.colorFamilies.length}</div>
-            <div class="stat-label">Color Families</div>
+            <div class="heavy-stat-value">${tokens.colorFamilies.length}</div>
+            <div class="heavy-stat-label">Color Families</div>
           </div>
           <div class="stat-block">
-            <div class="stat-value">36</div>
-            <div class="stat-label">Elements</div>
+            <div class="heavy-stat-value">36</div>
+            <div class="heavy-stat-label">Elements</div>
           </div>
           <div class="stat-block">
-            <div class="stat-value">2</div>
-            <div class="stat-label">Themes</div>
+            <div class="heavy-stat-value">2</div>
+            <div class="heavy-stat-label">Themes</div>
           </div>
         </div>
 
@@ -544,7 +544,7 @@ function colorsContent(tokens) {
                       <td>${s.hex}</td>
                     </tr>`
     ).join('\n');
-    return `            <h3 class="label">${f.name}</h3>
+    return `            <h3 class="heavy-label">${f.name}</h3>
             <table class="data-table">
               <thead>
                 <tr>
@@ -572,7 +572,7 @@ ${rows}
   }).join('\n');
 
   return `        <section class="style-guide-section">
-          <h2 class="col-span-full">Colors</h2>
+          <h2 class="heavy-col-span-full">Colors</h2>
 ${colorSections}
         </section>
 
@@ -635,7 +635,7 @@ function typographyContent(tokens) {
 
   return `        <section class="style-guide-section">
           <h2>Typography</h2>
-          <h3 class="label">Font Families</h3>
+          <h3 class="heavy-label">Font Families</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -647,7 +647,7 @@ function typographyContent(tokens) {
 ${familyRows}
             </tbody>
           </table>
-          <h3 class="label">Font Weights</h3>
+          <h3 class="heavy-label">Font Weights</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -660,7 +660,7 @@ ${familyRows}
 ${weightRows}
             </tbody>
           </table>
-          <h3 class="label">Font Sizes</h3>
+          <h3 class="heavy-label">Font Sizes</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -708,7 +708,7 @@ function spacingContent(tokens) {
 
   return `        <section class="style-guide-section">
           <h2>Spacing</h2>
-          <h3 class="label">UI Scale</h3>
+          <h3 class="heavy-label">UI Scale</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -721,7 +721,7 @@ function spacingContent(tokens) {
 ${uiRows}
             </tbody>
           </table>
-          <h3 class="label">Spacing Aliases</h3>
+          <h3 class="heavy-label">Spacing Aliases</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -783,40 +783,40 @@ function layoutContent() {
   ).join('\n');
 
   const gridRows = layoutRows([
-    ['.grid', 'Base grid container', 'gap: var(--grid-gutter)'],
-    ['.grid--2', '2 equal columns', 'repeat(2, 1fr)'],
-    ['.grid--3', '3 equal columns', 'repeat(3, 1fr)'],
-    ['.grid--4', '4 equal columns', 'repeat(4, 1fr)'],
-    ['.grid--6', '6 equal columns', 'repeat(6, 1fr)'],
-    ['.grid--10', '10 equal columns', 'repeat(10, 1fr)'],
-    ['.grid--12', '12 equal columns', 'repeat(12, 1fr)'],
-    ['.grid--auto', 'Auto-fit, 300px min', 'minmax(300px, 1fr)'],
-    ['.grid--auto-sm', 'Auto-fit, 200px min', 'minmax(200px, 1fr)'],
-    ['.grid--auto-lg', 'Auto-fit, 400px min', 'minmax(400px, 1fr)'],
-    ['.col-span-{N}', 'Span N columns', 'grid-column: span N'],
-    ['.col-span-full', 'Span all columns', 'grid-column: 1 / -1'],
-    ['.gap-1 \u2013 .gap-6', 'Gap utilities', '8px \u2013 48px'],
+    ['.heavy-grid', 'Base grid container', 'gap: var(--grid-gutter)'],
+    ['.heavy-grid--2', '2 equal columns', 'repeat(2, 1fr)'],
+    ['.heavy-grid--3', '3 equal columns', 'repeat(3, 1fr)'],
+    ['.heavy-grid--4', '4 equal columns', 'repeat(4, 1fr)'],
+    ['.heavy-grid--6', '6 equal columns', 'repeat(6, 1fr)'],
+    ['.heavy-grid--10', '10 equal columns', 'repeat(10, 1fr)'],
+    ['.heavy-grid--12', '12 equal columns', 'repeat(12, 1fr)'],
+    ['.heavy-grid--auto', 'Auto-fit, 300px min', 'minmax(300px, 1fr)'],
+    ['.heavy-grid--auto-sm', 'Auto-fit, 200px min', 'minmax(200px, 1fr)'],
+    ['.heavy-grid--auto-lg', 'Auto-fit, 400px min', 'minmax(400px, 1fr)'],
+    ['.heavy-col-span-{N}', 'Span N columns', 'grid-column: span N'],
+    ['.heavy-col-span-full', 'Span all columns', 'grid-column: 1 / -1'],
+    ['.heavy-gap-1 \u2013 .heavy-gap-6', 'Gap utilities', '8px \u2013 48px'],
   ]);
 
   const stackRows = layoutRows([
-    ['.stack', 'Default vertical rhythm', '16px'],
-    ['.stack--sm', 'Small gap', '8px'],
-    ['.stack--md', 'Medium gap', '16px'],
-    ['.stack--lg', 'Large gap', '24px'],
-    ['.stack--xl', 'Extra-large gap', '32px'],
+    ['.heavy-stack', 'Default vertical rhythm', '16px'],
+    ['.heavy-stack--sm', 'Small gap', '8px'],
+    ['.heavy-stack--md', 'Medium gap', '16px'],
+    ['.heavy-stack--lg', 'Large gap', '24px'],
+    ['.heavy-stack--xl', 'Extra-large gap', '32px'],
   ]);
 
   const clusterRows = layoutRows([
-    ['.cluster', 'display', 'flex'],
-    ['.cluster', 'flex-wrap', 'wrap'],
-    ['.cluster', 'gap', 'var(--cluster-space, 16px)'],
-    ['.cluster', 'align-items', 'center'],
+    ['.heavy-cluster', 'display', 'flex'],
+    ['.heavy-cluster', 'flex-wrap', 'wrap'],
+    ['.heavy-cluster', 'gap', 'var(--cluster-space, 16px)'],
+    ['.heavy-cluster', 'align-items', 'center'],
   ]);
 
   const sidebarRows = layoutRows([
-    ['.with-sidebar', 'display', 'flex'],
-    ['.with-sidebar', 'flex-wrap', 'wrap'],
-    ['.with-sidebar', 'gap', '24px'],
+    ['.heavy-with-sidebar', 'display', 'flex'],
+    ['.heavy-with-sidebar', 'flex-wrap', 'wrap'],
+    ['.heavy-with-sidebar', 'gap', '24px'],
     ['&gt; :first-child', 'flex-basis', 'var(--sidebar-width, 280px)'],
     ['&gt; :first-child', 'flex-grow', '1'],
     ['&gt; :last-child', 'flex-basis', '0'],
@@ -825,25 +825,25 @@ function layoutContent() {
   ]);
 
   const centerRows = layoutRows([
-    ['.center', 'max-inline-size', 'var(--measure) / 65ch'],
-    ['.center', 'margin-inline', 'auto'],
-    ['.center', 'padding-inline', '16px'],
-    ['.center', 'box-sizing', 'content-box'],
+    ['.heavy-center', 'max-inline-size', 'var(--measure) / 65ch'],
+    ['.heavy-center', 'margin-inline', 'auto'],
+    ['.heavy-center', 'padding-inline', '16px'],
+    ['.heavy-center', 'box-sizing', 'content-box'],
   ]);
 
   const coverRows = layoutRows([
-    ['.cover', 'display', 'flex column'],
-    ['.cover', 'min-block-size', '100vh'],
-    ['.cover', 'padding', '16px'],
-    ['.cover &gt; *', 'margin-block', '16px'],
-    ['.cover__centered', 'margin-block', 'auto'],
+    ['.heavy-cover', 'display', 'flex column'],
+    ['.heavy-cover', 'min-block-size', '100vh'],
+    ['.heavy-cover', 'padding', '16px'],
+    ['.heavy-cover &gt; *', 'margin-block', '16px'],
+    ['.heavy-cover__centered', 'margin-block', 'auto'],
   ]);
 
   const boxRows = layoutRows([
-    ['.box', 'Default', '16px'],
-    ['.box--sm', 'Small', '8px'],
-    ['.box--lg', 'Large', '24px'],
-    ['.box--xl', 'Extra-large', '32px'],
+    ['.heavy-box', 'Default', '16px'],
+    ['.heavy-box--sm', 'Small', '8px'],
+    ['.heavy-box--lg', 'Large', '24px'],
+    ['.heavy-box--xl', 'Extra-large', '32px'],
   ]);
 
   const measureRows = layoutRows([
@@ -862,19 +862,19 @@ function layoutContent() {
 
   return `        <section class="style-guide-section" id="grid">
           <h2>Layout</h2>
-          <h3 class="label">Grid</h3>
+          <h3 class="heavy-label">Grid</h3>
           <div>
             <div class="style-guide-demo">
-              <div class="grid grid--12">
+              <div class="heavy-grid heavy-grid--12">
 ${gridBoxes}
               </div>
             </div>
             <div class="style-guide-demo">
-              <div class="grid grid--12">
-                <div class="style-guide-demo-box col-span-4">span 4</div>
-                <div class="style-guide-demo-box col-span-8">span 8</div>
-                <div class="style-guide-demo-box col-span-6">span 6</div>
-                <div class="style-guide-demo-box col-span-6">span 6</div>
+              <div class="heavy-grid heavy-grid--12">
+                <div class="style-guide-demo-box heavy-col-span-4">span 4</div>
+                <div class="style-guide-demo-box heavy-col-span-8">span 8</div>
+                <div class="style-guide-demo-box heavy-col-span-6">span 6</div>
+                <div class="style-guide-demo-box heavy-col-span-6">span 6</div>
               </div>
             </div>
           </div>
@@ -890,10 +890,10 @@ ${gridBoxes}
 ${gridRows}
             </tbody>
           </table>
-          <h3 class="label" id="stack">Stack</h3>
+          <h3 class="heavy-label" id="stack">Stack</h3>
           <div>
             <div class="style-guide-demo">
-              <div class="stack">
+              <div class="heavy-stack">
                 <div class="style-guide-demo-box">Item 1</div>
                 <div class="style-guide-demo-box">Item 2</div>
                 <div class="style-guide-demo-box">Item 3</div>
@@ -912,10 +912,10 @@ ${gridRows}
 ${stackRows}
             </tbody>
           </table>
-          <h3 class="label" id="cluster">Cluster</h3>
+          <h3 class="heavy-label" id="cluster">Cluster</h3>
           <div>
             <div class="style-guide-demo">
-              <div class="cluster">
+              <div class="heavy-cluster">
                 <div class="style-guide-demo-box">Tag</div>
                 <div class="style-guide-demo-box">Label</div>
                 <div class="style-guide-demo-box">Longer tag</div>
@@ -937,10 +937,10 @@ ${stackRows}
 ${clusterRows}
             </tbody>
           </table>
-          <h3 class="label" id="sidebar-layout">Sidebar</h3>
+          <h3 class="heavy-label" id="sidebar-layout">Sidebar</h3>
           <div>
             <div class="style-guide-demo">
-              <div class="with-sidebar">
+              <div class="heavy-with-sidebar">
                 <div class="style-guide-demo-box">Sidebar (280px)</div>
                 <div class="style-guide-demo-box">Content (fills remaining)</div>
               </div>
@@ -958,10 +958,10 @@ ${clusterRows}
 ${sidebarRows}
             </tbody>
           </table>
-          <h3 class="label" id="center">Center</h3>
+          <h3 class="heavy-label" id="center">Center</h3>
           <div>
             <div class="style-guide-demo" style="background: var(--ui-surface-default)">
-              <div class="center" style="background: var(--ui-bg-default); padding: var(--space-16); border-radius: var(--radius-sm); text-align: center;">
+              <div class="heavy-center" style="background: var(--ui-bg-default); padding: var(--space-16); border-radius: var(--radius-sm); text-align: center;">
                 <span class="body-xsm text-muted">Centered \u2014 max-width: var(--measure)</span>
               </div>
             </div>
@@ -978,12 +978,12 @@ ${sidebarRows}
 ${centerRows}
             </tbody>
           </table>
-          <h3 class="label" id="cover">Cover</h3>
+          <h3 class="heavy-label" id="cover">Cover</h3>
           <div>
             <div class="style-guide-demo" style="padding: 0">
-              <div class="cover" style="min-block-size: 240px;">
+              <div class="heavy-cover" style="min-block-size: 240px;">
                 <div class="style-guide-demo-box">Header</div>
-                <div class="style-guide-demo-box cover__centered">Centered element</div>
+                <div class="style-guide-demo-box heavy-cover__centered">Centered element</div>
                 <div class="style-guide-demo-box">Footer</div>
               </div>
             </div>
@@ -1000,20 +1000,20 @@ ${centerRows}
 ${coverRows}
             </tbody>
           </table>
-          <h3 class="label" id="box">Box</h3>
+          <h3 class="heavy-label" id="box">Box</h3>
           <div>
             <div class="style-guide-demo" style="display: flex; gap: var(--space-16); flex-wrap: wrap; align-items: start">
-              <div class="box--sm" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
-                <div class="style-guide-demo-box">.box--sm</div>
+              <div class="heavy-box--sm" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="style-guide-demo-box">.heavy-box--sm</div>
               </div>
-              <div class="box" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
-                <div class="style-guide-demo-box">.box</div>
+              <div class="heavy-box" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="style-guide-demo-box">.heavy-box</div>
               </div>
-              <div class="box--lg" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
-                <div class="style-guide-demo-box">.box--lg</div>
+              <div class="heavy-box--lg" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="style-guide-demo-box">.heavy-box--lg</div>
               </div>
-              <div class="box--xl" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
-                <div class="style-guide-demo-box">.box--xl</div>
+              <div class="heavy-box--xl" style="background: var(--ui-surface-default); border-radius: var(--radius-sm)">
+                <div class="style-guide-demo-box">.heavy-box--xl</div>
               </div>
             </div>
           </div>
@@ -1029,10 +1029,10 @@ ${coverRows}
 ${boxRows}
             </tbody>
           </table>
-          <h3 class="label" id="measure">Measure</h3>
+          <h3 class="heavy-label" id="measure">Measure</h3>
           <div>
             <div class="style-guide-demo">
-              <div class="stack">
+              <div class="heavy-stack">
                 <div class="measure-narrow" style="background: var(--ui-surface-default); padding: var(--space-8); border-radius: var(--radius-sm)">
                   <div class="style-guide-demo-box">.measure-narrow (45ch)</div>
                 </div>
@@ -1057,7 +1057,7 @@ ${boxRows}
 ${measureRows}
             </tbody>
           </table>
-          <h3 class="label" id="breakpoints">Breakpoints</h3>
+          <h3 class="heavy-label" id="breakpoints">Breakpoints</h3>
           <table class="data-table">
             <thead>
               <tr>
@@ -1070,40 +1070,40 @@ ${measureRows}
 ${breakpointRows}
             </tbody>
           </table>
-          <h3 class="label" id="cards">Cards</h3>
+          <h3 class="heavy-label" id="cards">Cards</h3>
           <div>
-            <div class="stack stack--lg">
-              <div class="grid grid--3">
-                <div class="card">
-                  <div class="card-header">
-                    <div class="card-title">Default Card</div>
-                    <div class="card-subtitle">With subtitle</div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-grid heavy-grid--3">
+                <div class="heavy-card">
+                  <div class="heavy-card-header">
+                    <div class="heavy-card-title">Default Card</div>
+                    <div class="heavy-card-subtitle">With subtitle</div>
                   </div>
-                  <div class="card-body">
+                  <div class="heavy-card-body">
                     <p class="body-sm">Card body content goes here.</p>
                   </div>
-                  <div class="card-footer">
+                  <div class="heavy-card-footer">
                     <span class="body-xsm text-muted">Card footer</span>
                   </div>
                 </div>
-                <div class="card card--elevated">
-                  <div class="card-body">
-                    <div class="card-title">Elevated Card</div>
+                <div class="heavy-card heavy-card--elevated">
+                  <div class="heavy-card-body">
+                    <div class="heavy-card-title">Elevated Card</div>
                     <p class="body-sm text-muted" style="margin-top: var(--space-4)">No border, shadow only.</p>
                   </div>
                 </div>
-                <div class="card card--interactive">
-                  <div class="card-body">
-                    <div class="card-title">Interactive Card</div>
+                <div class="heavy-card heavy-card--interactive">
+                  <div class="heavy-card-body">
+                    <div class="heavy-card-title">Interactive Card</div>
                     <p class="body-sm text-muted" style="margin-top: var(--space-4)">Hover to see effect.</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <h3 class="label" id="collapsibles">Collapsibles</h3>
+          <h3 class="heavy-label" id="collapsibles">Collapsibles</h3>
           <div>
-            <div class="stack stack--lg">
+            <div class="heavy-stack heavy-stack--lg">
               <details class="collapsible">
                 <summary>Collapsible Section</summary>
                 <div>Hidden content revealed when expanded. Built with native &lt;details&gt; and &lt;summary&gt; elements &mdash; no JavaScript needed.</div>
@@ -1114,11 +1114,11 @@ ${breakpointRows}
               </details>
             </div>
           </div>
-          <h3 class="label" id="dividers">Dividers</h3>
+          <h3 class="heavy-label" id="dividers">Dividers</h3>
           <div>
-            <div class="stack stack--lg">
+            <div class="heavy-stack heavy-stack--lg">
               <hr class="divider">
-              <div class="section-header">Section Header</div>
+              <div class="heavy-section-header">Section Header</div>
             </div>
           </div>
         </section>`;
@@ -1127,32 +1127,32 @@ ${breakpointRows}
 function animationContent() {
   return `        <section class="style-guide-section">
           <h2>Animation</h2>
-          <h3 class="label">Timing Functions</h3>
+          <h3 class="heavy-label">Timing Functions</h3>
           <div>
-            <div class="stack stack--lg">
-              <div class="stack stack--sm">
-                <div class="kv"><span class="kv-key">--ease-out</span><span class="kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
-                <div class="kv"><span class="kv-key">--ease-in-out</span><span class="kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
-                <div class="kv"><span class="kv-key">--ease-spring</span><span class="kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-stack heavy-stack--sm">
+                <div class="heavy-kv"><span class="heavy-kv-key">--ease-out</span><span class="heavy-kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
+                <div class="heavy-kv"><span class="heavy-kv-key">--ease-in-out</span><span class="heavy-kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
+                <div class="heavy-kv"><span class="heavy-kv-key">--ease-spring</span><span class="heavy-kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
               </div>
             </div>
           </div>
-          <h3 class="label">Keyframes</h3>
+          <h3 class="heavy-label">Keyframes</h3>
           <div>
-            <div class="stack stack--lg">
-              <div class="cluster">
-                <span class="badge">fade-in</span>
-                <span class="badge">slide-up</span>
-                <span class="badge">slide-down</span>
-                <span class="badge">scale-in</span>
-                <span class="badge">spin</span>
-                <span class="badge">shimmer</span>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-cluster">
+                <span class="heavy-badge">fade-in</span>
+                <span class="heavy-badge">slide-up</span>
+                <span class="heavy-badge">slide-down</span>
+                <span class="heavy-badge">scale-in</span>
+                <span class="heavy-badge">spin</span>
+                <span class="heavy-badge">shimmer</span>
               </div>
             </div>
           </div>
-          <h3 class="label">Utility Classes</h3>
+          <h3 class="heavy-label">Utility Classes</h3>
           <div>
-            <div class="stack stack--lg">
+            <div class="heavy-stack heavy-stack--lg">
               <table class="data-table">
                 <thead>
                   <tr>
@@ -1197,16 +1197,16 @@ function animationContent() {
               </table>
             </div>
           </div>
-          <h3 class="label">Stagger Children</h3>
+          <h3 class="heavy-label">Stagger Children</h3>
           <div>
-            <div class="stack stack--lg">
-              <div class="stagger-children cluster">
-                <span class="badge badge--info">1</span>
-                <span class="badge badge--info">2</span>
-                <span class="badge badge--info">3</span>
-                <span class="badge badge--info">4</span>
-                <span class="badge badge--info">5</span>
-                <span class="badge badge--info">6</span>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="stagger-children heavy-cluster">
+                <span class="heavy-badge heavy-badge--info">1</span>
+                <span class="heavy-badge heavy-badge--info">2</span>
+                <span class="heavy-badge heavy-badge--info">3</span>
+                <span class="heavy-badge heavy-badge--info">4</span>
+                <span class="heavy-badge heavy-badge--info">5</span>
+                <span class="heavy-badge heavy-badge--info">6</span>
               </div>
             </div>
           </div>
@@ -1216,14 +1216,14 @@ function animationContent() {
 function breadcrumbsContent() {
   return `        <section class="style-guide-section">
           <h2>Breadcrumbs</h2>
-          <span class="label">Default</span>
+          <span class="heavy-label">Default</span>
           <div>
-            <div class="breadcrumbs">
-              <a class="breadcrumbs-link" href="#">Home</a>
-              <span class="breadcrumbs-separator">/</span>
-              <a class="breadcrumbs-link" href="#">Projects</a>
-              <span class="breadcrumbs-separator">/</span>
-              <span class="breadcrumbs-current">Design System</span>
+            <div class="heavy-breadcrumbs">
+              <a class="heavy-breadcrumbs-link" href="#">Home</a>
+              <span class="heavy-breadcrumbs-separator">/</span>
+              <a class="heavy-breadcrumbs-link" href="#">Projects</a>
+              <span class="heavy-breadcrumbs-separator">/</span>
+              <span class="heavy-breadcrumbs-current">Design System</span>
             </div>
           </div>
         </section>`;
@@ -1232,44 +1232,44 @@ function breadcrumbsContent() {
 function buttonsContent() {
   return `        <section class="style-guide-section">
           <h2>Buttons</h2>
-          <h3 class="label">Primary</h3>
+          <h3 class="heavy-label">Primary</h3>
           <div class="style-guide-variants">
-            <button class="btn btn--primary">Default</button>
-            <button class="btn btn--primary is-hover">Hover</button>
-            <button class="btn btn--primary is-active">Active</button>
-            <button class="btn btn--primary is-disabled" disabled>Disabled</button>
+            <button class="heavy-btn heavy-btn--primary">Default</button>
+            <button class="heavy-btn heavy-btn--primary is-hover">Hover</button>
+            <button class="heavy-btn heavy-btn--primary is-active">Active</button>
+            <button class="heavy-btn heavy-btn--primary is-disabled" disabled>Disabled</button>
           </div>
-          <h3 class="label">Secondary</h3>
+          <h3 class="heavy-label">Secondary</h3>
           <div class="style-guide-variants">
-            <button class="btn btn--secondary">Default</button>
-            <button class="btn btn--secondary is-hover">Hover</button>
-            <button class="btn btn--secondary is-active">Active</button>
-            <button class="btn btn--secondary is-disabled" disabled>Disabled</button>
+            <button class="heavy-btn heavy-btn--secondary">Default</button>
+            <button class="heavy-btn heavy-btn--secondary is-hover">Hover</button>
+            <button class="heavy-btn heavy-btn--secondary is-active">Active</button>
+            <button class="heavy-btn heavy-btn--secondary is-disabled" disabled>Disabled</button>
           </div>
-          <h3 class="label">Tertiary</h3>
+          <h3 class="heavy-label">Tertiary</h3>
           <div class="style-guide-variants">
-            <button class="btn btn--tertiary">Default</button>
-            <button class="btn btn--tertiary is-hover">Hover</button>
-            <button class="btn btn--tertiary is-active">Active</button>
-            <button class="btn btn--tertiary is-disabled" disabled>Disabled</button>
+            <button class="heavy-btn heavy-btn--tertiary">Default</button>
+            <button class="heavy-btn heavy-btn--tertiary is-hover">Hover</button>
+            <button class="heavy-btn heavy-btn--tertiary is-active">Active</button>
+            <button class="heavy-btn heavy-btn--tertiary is-disabled" disabled>Disabled</button>
           </div>
-          <h3 class="label">Danger</h3>
+          <h3 class="heavy-label">Danger</h3>
           <div class="style-guide-variants">
-            <button class="btn btn--danger">Default</button>
-            <button class="btn btn--danger is-hover">Hover</button>
-            <button class="btn btn--danger is-active">Active</button>
-            <button class="btn btn--danger is-disabled" disabled>Disabled</button>
+            <button class="heavy-btn heavy-btn--danger">Default</button>
+            <button class="heavy-btn heavy-btn--danger is-hover">Hover</button>
+            <button class="heavy-btn heavy-btn--danger is-active">Active</button>
+            <button class="heavy-btn heavy-btn--danger is-disabled" disabled>Disabled</button>
           </div>
-          <h3 class="label">Sizes</h3>
+          <h3 class="heavy-label">Sizes</h3>
           <div class="style-guide-variants">
-            <button class="btn btn--primary btn--xs">X-Small</button>
-            <button class="btn btn--primary btn--sm">Small</button>
-            <button class="btn btn--primary">Medium</button>
-            <button class="btn btn--primary btn--lg">Large</button>
+            <button class="heavy-btn heavy-btn--primary heavy-btn--xs">X-Small</button>
+            <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Small</button>
+            <button class="heavy-btn heavy-btn--primary">Medium</button>
+            <button class="heavy-btn heavy-btn--primary heavy-btn--lg">Large</button>
           </div>
-          <h3 class="label">Block</h3>
+          <h3 class="heavy-label">Block</h3>
           <div>
-            <button class="btn btn--primary btn--block">Block</button>
+            <button class="heavy-btn heavy-btn--primary heavy-btn--block">Block</button>
           </div>
         </section>`;
 }
@@ -1277,13 +1277,13 @@ function buttonsContent() {
 function chipsContent() {
   return `        <section class="style-guide-section">
           <h2>Chips</h2>
-          <span class="label">Default</span>
+          <span class="heavy-label">Default</span>
           <div>
-            <div class="cluster">
-              <button class="chip chip--active">All</button>
-              <button class="chip">Design</button>
-              <button class="chip">Development</button>
-              <button class="chip">Research</button>
+            <div class="heavy-cluster">
+              <button class="heavy-chip heavy-chip--active">All</button>
+              <button class="heavy-chip">Design</button>
+              <button class="heavy-chip">Development</button>
+              <button class="heavy-chip">Research</button>
             </div>
           </div>
         </section>`;
@@ -1292,66 +1292,66 @@ function chipsContent() {
 function dataDisplayContent() {
   return `        <section class="style-guide-section">
           <h2>Data Display</h2>
-          <span class="label">Badges</span>
+          <span class="heavy-label">Badges</span>
           <div>
-            <div class="stack stack--lg">
-              <div class="cluster">
-                <span class="badge">Default</span>
-                <span class="badge badge--success">Success</span>
-                <span class="badge badge--warning">Warning</span>
-                <span class="badge badge--danger">Danger</span>
-                <span class="badge badge--info">Info</span>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-cluster">
+                <span class="heavy-badge">Default</span>
+                <span class="heavy-badge heavy-badge--success">Success</span>
+                <span class="heavy-badge heavy-badge--warning">Warning</span>
+                <span class="heavy-badge heavy-badge--danger">Danger</span>
+                <span class="heavy-badge heavy-badge--info">Info</span>
               </div>
             </div>
           </div>
-          <span class="label">Stats</span>
+          <span class="heavy-label">Stats</span>
           <div>
-            <div class="stack stack--lg">
-              <div class="grid grid--3">
-                <div class="stat">
-                  <div class="stat-value">1,234</div>
-                  <div class="stat-label">Total Users</div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-grid heavy-grid--3">
+                <div class="heavy-stat">
+                  <div class="heavy-stat-value">1,234</div>
+                  <div class="heavy-stat-label">Total Users</div>
                 </div>
-                <div class="stat">
-                  <div class="stat-value">98<span class="stat-unit">%</span></div>
-                  <div class="stat-label">Uptime</div>
-                  <div class="stat-delta stat-delta--positive">+2.3%</div>
+                <div class="heavy-stat">
+                  <div class="heavy-stat-value">98<span class="heavy-stat-unit">%</span></div>
+                  <div class="heavy-stat-label">Uptime</div>
+                  <div class="heavy-stat-delta heavy-stat-delta--positive">+2.3%</div>
                 </div>
-                <div class="stat">
-                  <div class="stat-value">42ms</div>
-                  <div class="stat-label">Response Time</div>
-                  <div class="stat-delta stat-delta--negative">-5ms</div>
+                <div class="heavy-stat">
+                  <div class="heavy-stat-value">42ms</div>
+                  <div class="heavy-stat-label">Response Time</div>
+                  <div class="heavy-stat-delta heavy-stat-delta--negative">-5ms</div>
                 </div>
               </div>
             </div>
           </div>
-          <span class="label">Key-Value</span>
+          <span class="heavy-label">Key-Value</span>
           <div>
-            <div class="stack stack--lg">
+            <div class="heavy-stack heavy-stack--lg">
               <div>
-                <div class="kv"><span class="kv-key">Version</span><span class="kv-value">2.4.1</span></div>
-                <div class="kv"><span class="kv-key">Status</span><span class="kv-value">Active</span></div>
-                <div class="kv"><span class="kv-key">Last Deploy</span><span class="kv-value">2 hours ago</span></div>
+                <div class="heavy-kv"><span class="heavy-kv-key">Version</span><span class="heavy-kv-value">2.4.1</span></div>
+                <div class="heavy-kv"><span class="heavy-kv-key">Status</span><span class="heavy-kv-value">Active</span></div>
+                <div class="heavy-kv"><span class="heavy-kv-key">Last Deploy</span><span class="heavy-kv-value">2 hours ago</span></div>
               </div>
             </div>
           </div>
-          <span class="label">Lists</span>
+          <span class="heavy-label">Lists</span>
           <div>
-            <div class="stack stack--lg">
+            <div class="heavy-stack heavy-stack--lg">
               <div>
-                <div class="list-item">First list item</div>
-                <div class="list-item">Second list item</div>
-                <div class="list-item">Third list item</div>
+                <div class="heavy-list-item">First list item</div>
+                <div class="heavy-list-item">Second list item</div>
+                <div class="heavy-list-item">Third list item</div>
               </div>
             </div>
           </div>
-          <span class="label">Progress</span>
+          <span class="heavy-label">Progress</span>
           <div>
-            <div class="stack stack--lg">
-              <div class="stack stack--sm">
-                <div class="progress"><div class="progress-bar" style="width: 75%"></div></div>
-                <div class="progress"><div class="progress-bar" style="width: 45%"></div></div>
-                <div class="progress"><div class="progress-bar" style="width: 90%"></div></div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-stack heavy-stack--sm">
+                <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 75%"></div></div>
+                <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 45%"></div></div>
+                <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 90%"></div></div>
               </div>
             </div>
           </div>
@@ -1361,37 +1361,37 @@ function dataDisplayContent() {
 function feedbackContent() {
   return `        <section class="style-guide-section">
           <h2>Feedback</h2>
-          <span class="label">Status Messages</span>
+          <span class="heavy-label">Status Messages</span>
           <div>
-            <div class="stack stack--lg">
-              <div class="stack stack--sm">
-                <div class="status-msg status-msg--success">Operation completed successfully.</div>
-                <div class="status-msg status-msg--error">Something went wrong. Please try again.</div>
-                <div class="status-msg status-msg--warning">Your session will expire in 5 minutes.</div>
-                <div class="status-msg status-msg--info">A new version is available.</div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-stack heavy-stack--sm">
+                <div class="heavy-status-msg heavy-status-msg--success">Operation completed successfully.</div>
+                <div class="heavy-status-msg heavy-status-msg--error">Something went wrong. Please try again.</div>
+                <div class="heavy-status-msg heavy-status-msg--warning">Your session will expire in 5 minutes.</div>
+                <div class="heavy-status-msg heavy-status-msg--info">A new version is available.</div>
               </div>
             </div>
           </div>
-          <span class="label">Empty State</span>
+          <span class="heavy-label">Empty State</span>
           <div>
-            <div class="stack stack--lg">
-              <div class="empty-state">
-                <div class="empty-state-title">No results found</div>
-                <div class="empty-state-description">Try adjusting your search or filters.</div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-empty-state">
+                <div class="heavy-empty-state-title">No results found</div>
+                <div class="heavy-empty-state-description">Try adjusting your search or filters.</div>
               </div>
             </div>
           </div>
-          <span class="label">Loading</span>
+          <span class="heavy-label">Loading</span>
           <div>
-            <div class="stack stack--lg">
-              <div class="cluster">
-                <div class="spinner"></div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-cluster">
+                <div class="heavy-spinner"></div>
                 <span class="body-sm text-muted">Loading...</span>
               </div>
-              <div class="stack stack--sm">
-                <div class="skeleton" style="height: 16px; width: 60%"></div>
-                <div class="skeleton" style="height: 16px; width: 80%"></div>
-                <div class="skeleton" style="height: 16px; width: 40%"></div>
+              <div class="heavy-stack heavy-stack--sm">
+                <div class="heavy-skeleton" style="height: 16px; width: 60%"></div>
+                <div class="heavy-skeleton" style="height: 16px; width: 80%"></div>
+                <div class="heavy-skeleton" style="height: 16px; width: 40%"></div>
               </div>
             </div>
           </div>
@@ -1401,23 +1401,23 @@ function feedbackContent() {
 function fileUploadContent() {
   return `        <section class="style-guide-section">
           <h2>File Upload</h2>
-          <span class="label">Sizes</span>
+          <span class="heavy-label">Sizes</span>
           <div class="style-guide-variants">
-            <div class="form-file form-file--xs">
+            <div class="heavy-form-file heavy-form-file--xs">
               <input type="file" id="file-xs">
-              <label class="form-file-trigger" for="file-xs">X-Small</label>
+              <label class="heavy-form-file-trigger" for="file-xs">X-Small</label>
             </div>
-            <div class="form-file form-file--sm">
+            <div class="heavy-form-file heavy-form-file--sm">
               <input type="file" id="file-sm">
-              <label class="form-file-trigger" for="file-sm">Small</label>
+              <label class="heavy-form-file-trigger" for="file-sm">Small</label>
             </div>
-            <div class="form-file">
+            <div class="heavy-form-file">
               <input type="file" id="file-md">
-              <label class="form-file-trigger" for="file-md">Medium</label>
+              <label class="heavy-form-file-trigger" for="file-md">Medium</label>
             </div>
-            <div class="form-file form-file--lg">
+            <div class="heavy-form-file heavy-form-file--lg">
               <input type="file" id="file-lg">
-              <label class="form-file-trigger" for="file-lg">Large</label>
+              <label class="heavy-form-file-trigger" for="file-lg">Large</label>
             </div>
           </div>
         </section>`;
@@ -1426,42 +1426,42 @@ function fileUploadContent() {
 function inputsContent() {
   return `        <section class="style-guide-section">
           <h2>Inputs</h2>
-          <span class="label">Sizes</span>
+          <span class="heavy-label">Sizes</span>
           <div class="style-guide-variants">
-            <input class="form-input form-input--xs col-span-2" type="text" placeholder="X-Small">
-            <input class="form-input form-input--sm col-span-2" type="text" placeholder="Small">
-            <input class="form-input col-span-2" type="text" placeholder="Medium">
-            <input class="form-input form-input--lg col-span-2" type="text" placeholder="Large">
+            <input class="heavy-form-input heavy-form-input--xs heavy-col-span-2" type="text" placeholder="X-Small">
+            <input class="heavy-form-input heavy-form-input--sm heavy-col-span-2" type="text" placeholder="Small">
+            <input class="heavy-form-input heavy-col-span-2" type="text" placeholder="Medium">
+            <input class="heavy-form-input heavy-form-input--lg heavy-col-span-2" type="text" placeholder="Large">
           </div>
-          <span class="label">States</span>
+          <span class="heavy-label">States</span>
           <div class="style-guide-variants">
-            <input class="form-input col-span-2" type="text" placeholder="Default">
-            <input class="form-input is-hover col-span-2" type="text" placeholder="Hover">
-            <input class="form-input is-focus col-span-2" type="text" placeholder="Focus">
-            <input class="form-input is-disabled col-span-2" type="text" placeholder="Disabled" disabled>
+            <input class="heavy-form-input heavy-col-span-2" type="text" placeholder="Default">
+            <input class="heavy-form-input is-hover heavy-col-span-2" type="text" placeholder="Hover">
+            <input class="heavy-form-input is-focus heavy-col-span-2" type="text" placeholder="Focus">
+            <input class="heavy-form-input is-disabled heavy-col-span-2" type="text" placeholder="Disabled" disabled>
           </div>
-          <span class="label">Validation</span>
+          <span class="heavy-label">Validation</span>
           <div class="style-guide-variants">
-            <div class="form-group col-span-3">
-              <label class="form-label">Email</label>
-              <input class="form-input form-input--error" type="text" placeholder="Enter email" value="not-an-email">
-              <span class="form-hint form-hint--error">Please enter a valid email address</span>
+            <div class="heavy-form-group heavy-col-span-3">
+              <label class="heavy-form-label">Email</label>
+              <input class="heavy-form-input heavy-form-input--error" type="text" placeholder="Enter email" value="not-an-email">
+              <span class="heavy-form-hint heavy-form-hint--error">Please enter a valid email address</span>
             </div>
-            <div class="form-group col-span-3">
-              <label class="form-label">Username</label>
-              <input class="form-input form-input--success" type="text" placeholder="Choose username" value="keithbarney">
-              <span class="form-hint form-hint--success">Username is available</span>
+            <div class="heavy-form-group heavy-col-span-3">
+              <label class="heavy-form-label">Username</label>
+              <input class="heavy-form-input heavy-form-input--success" type="text" placeholder="Choose username" value="keithbarney">
+              <span class="heavy-form-hint heavy-form-hint--success">Username is available</span>
             </div>
           </div>
-          <span class="label">Form group</span>
-          <div class="form-group col-span-3">
-            <label class="form-label">Label</label>
-            <input class="form-input" type="text" placeholder="Placeholder">
-            <span class="form-hint">Hint text goes here</span>
+          <span class="heavy-label">Form group</span>
+          <div class="heavy-form-group heavy-col-span-3">
+            <label class="heavy-form-label">Label</label>
+            <input class="heavy-form-input" type="text" placeholder="Placeholder">
+            <span class="heavy-form-hint">Hint text goes here</span>
           </div>
-          <span class="label">Textarea</span>
-          <div class="col-span-4">
-            <textarea class="form-input form-textarea" placeholder="Write something..."></textarea>
+          <span class="heavy-label">Textarea</span>
+          <div class="heavy-col-span-4">
+            <textarea class="heavy-form-input heavy-form-textarea" placeholder="Write something..."></textarea>
           </div>
         </section>`;
 }
@@ -1469,12 +1469,12 @@ function inputsContent() {
 function navLinksContent() {
   return `        <section class="style-guide-section">
           <h2>Nav Links</h2>
-          <span class="label">Default</span>
+          <span class="heavy-label">Default</span>
           <div>
-            <div class="cluster" style="gap: var(--space-24)">
-              <a class="nav-link nav-link--active" href="#">Dashboard</a>
-              <a class="nav-link" href="#">Settings</a>
-              <a class="nav-link" href="#">Profile</a>
+            <div class="heavy-cluster" style="gap: var(--space-24)">
+              <a class="heavy-nav-link heavy-nav-link--active" href="#">Dashboard</a>
+              <a class="heavy-nav-link" href="#">Settings</a>
+              <a class="heavy-nav-link" href="#">Profile</a>
             </div>
           </div>
         </section>`;
@@ -1483,19 +1483,19 @@ function navLinksContent() {
 function searchContent() {
   return `        <section class="style-guide-section">
           <h2>Search</h2>
-          <span class="label">Sizes</span>
+          <span class="heavy-label">Sizes</span>
           <div class="style-guide-variants">
-            <button class="search search--xs col-span-2">X-Small</button>
-            <button class="search search--sm col-span-2">Small</button>
-            <button class="search col-span-2">Medium</button>
-            <button class="search search--lg col-span-2">Large</button>
+            <button class="heavy-search heavy-search--xs heavy-col-span-2">X-Small</button>
+            <button class="heavy-search heavy-search--sm heavy-col-span-2">Small</button>
+            <button class="heavy-search heavy-col-span-2">Medium</button>
+            <button class="heavy-search heavy-search--lg heavy-col-span-2">Large</button>
           </div>
-          <span class="label">States</span>
+          <span class="heavy-label">States</span>
           <div class="style-guide-variants">
-            <button class="search col-span-2">Default</button>
-            <button class="search is-hover col-span-2">Hover</button>
-            <button class="search is-focus col-span-2">Focus</button>
-            <button class="search is-disabled col-span-2" disabled>Disabled</button>
+            <button class="heavy-search heavy-col-span-2">Default</button>
+            <button class="heavy-search is-hover heavy-col-span-2">Hover</button>
+            <button class="heavy-search is-focus heavy-col-span-2">Focus</button>
+            <button class="heavy-search is-disabled heavy-col-span-2" disabled>Disabled</button>
           </div>
         </section>`;
 }
@@ -1503,25 +1503,25 @@ function searchContent() {
 function selectsContent() {
   return `        <section class="style-guide-section">
           <h2>Selects</h2>
-          <span class="label">Sizes</span>
+          <span class="heavy-label">Sizes</span>
           <div class="style-guide-variants">
-            <select class="select select--xs col-span-2"><option>X-Small</option></select>
-            <select class="select select--sm col-span-2"><option>Small</option></select>
-            <select class="select col-span-2"><option>Medium</option></select>
-            <select class="select select--lg col-span-2"><option>Large</option></select>
+            <select class="heavy-select heavy-select--xs heavy-col-span-2"><option>X-Small</option></select>
+            <select class="heavy-select heavy-select--sm heavy-col-span-2"><option>Small</option></select>
+            <select class="heavy-select heavy-col-span-2"><option>Medium</option></select>
+            <select class="heavy-select heavy-select--lg heavy-col-span-2"><option>Large</option></select>
           </div>
-          <span class="label">States</span>
+          <span class="heavy-label">States</span>
           <div class="style-guide-variants">
-            <select class="select col-span-2"><option>Default</option></select>
-            <select class="select is-hover col-span-2"><option>Hover</option></select>
-            <select class="select is-focus col-span-2"><option>Focus</option></select>
-            <select class="select is-disabled col-span-2" disabled><option>Disabled</option></select>
+            <select class="heavy-select heavy-col-span-2"><option>Default</option></select>
+            <select class="heavy-select is-hover heavy-col-span-2"><option>Hover</option></select>
+            <select class="heavy-select is-focus heavy-col-span-2"><option>Focus</option></select>
+            <select class="heavy-select is-disabled heavy-col-span-2" disabled><option>Disabled</option></select>
           </div>
-          <span class="label">Form group</span>
-          <div class="form-group col-span-3">
-            <label class="form-label">Label</label>
-            <select class="select"><option>Select an option</option></select>
-            <span class="form-hint">Hint text goes here</span>
+          <span class="heavy-label">Form group</span>
+          <div class="heavy-form-group heavy-col-span-3">
+            <label class="heavy-form-label">Label</label>
+            <select class="heavy-select"><option>Select an option</option></select>
+            <span class="heavy-form-hint">Hint text goes here</span>
           </div>
         </section>`;
 }
@@ -1529,12 +1529,12 @@ function selectsContent() {
 function tabsContent() {
   return `        <section class="style-guide-section">
           <h2>Tabs</h2>
-          <span class="label">Default</span>
+          <span class="heavy-label">Default</span>
           <div>
-            <div class="tabs">
-              <button class="tab tab--active">Overview</button>
-              <button class="tab">Details</button>
-              <button class="tab">Settings</button>
+            <div class="heavy-tabs">
+              <button class="heavy-tab heavy-tab--active">Overview</button>
+              <button class="heavy-tab">Details</button>
+              <button class="heavy-tab">Settings</button>
             </div>
           </div>
         </section>`;
@@ -1543,35 +1543,35 @@ function tabsContent() {
 function togglesContent() {
   return `        <section class="style-guide-section">
           <h2>Toggles</h2>
-          <span class="label">States</span>
+          <span class="heavy-label">States</span>
           <div>
-            <div class="cluster">
-              <label class="form-toggle">
+            <div class="heavy-cluster">
+              <label class="heavy-form-toggle">
                 <input type="checkbox">
-                <span class="form-toggle-track"></span>
+                <span class="heavy-form-toggle-track"></span>
                 <span>Off</span>
               </label>
-              <label class="form-toggle">
+              <label class="heavy-form-toggle">
                 <input type="checkbox" checked>
-                <span class="form-toggle-track"></span>
+                <span class="heavy-form-toggle-track"></span>
                 <span>On</span>
               </label>
             </div>
           </div>
-          <span class="label">Choices</span>
+          <span class="heavy-label">Choices</span>
           <div>
-            <div class="stack">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="check1" checked>
-                <label class="form-label" for="check1">Checkbox option</label>
+            <div class="heavy-stack">
+              <div class="heavy-form-check">
+                <input class="heavy-form-check-input" type="checkbox" id="check1" checked>
+                <label class="heavy-form-label" for="check1">Checkbox option</label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="radio" id="radio1" checked>
-                <label class="form-label" for="radio1">Radio option A</label>
+              <div class="heavy-form-check">
+                <input class="heavy-form-check-input" type="radio" name="radio" id="radio1" checked>
+                <label class="heavy-form-label" for="radio1">Radio option A</label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="radio" id="radio2">
-                <label class="form-label" for="radio2">Radio option B</label>
+              <div class="heavy-form-check">
+                <input class="heavy-form-check-input" type="radio" name="radio" id="radio2">
+                <label class="heavy-form-label" for="radio2">Radio option B</label>
               </div>
             </div>
           </div>
@@ -1581,33 +1581,33 @@ function togglesContent() {
 function formValidationContent() {
   return `        <section class="style-guide-section">
           <h2>Form Validation</h2>
-          <span class="label">Live example</span>
-          <div class="col-span-4">
-            <div class="stack">
-              <div class="form-group" data-validate="required">
-                <label class="form-label">Name</label>
-                <input class="form-input" type="text" placeholder="Enter your name">
-                <span class="form-hint">Required field</span>
+          <span class="heavy-label">Live example</span>
+          <div class="heavy-col-span-4">
+            <div class="heavy-stack">
+              <div class="heavy-form-group" data-validate="required">
+                <label class="heavy-form-label">Name</label>
+                <input class="heavy-form-input" type="text" placeholder="Enter your name">
+                <span class="heavy-form-hint">Required field</span>
               </div>
-              <div class="form-group" data-validate="email">
-                <label class="form-label">Email</label>
-                <input class="form-input" type="text" placeholder="Enter your email">
-                <span class="form-hint">Must be a valid email</span>
+              <div class="heavy-form-group" data-validate="email">
+                <label class="heavy-form-label">Email</label>
+                <input class="heavy-form-input" type="text" placeholder="Enter your email">
+                <span class="heavy-form-hint">Must be a valid email</span>
               </div>
-              <div class="form-group" data-validate="minlength" data-minlength="8">
-                <label class="form-label">Password</label>
-                <input class="form-input" type="password" placeholder="Choose a password">
-                <span class="form-hint">Minimum 8 characters</span>
+              <div class="heavy-form-group" data-validate="minlength" data-minlength="8">
+                <label class="heavy-form-label">Password</label>
+                <input class="heavy-form-input" type="password" placeholder="Choose a password">
+                <span class="heavy-form-hint">Minimum 8 characters</span>
               </div>
-              <div class="form-group" data-validate="select">
-                <label class="form-label">Role</label>
-                <select class="select">
+              <div class="heavy-form-group" data-validate="select">
+                <label class="heavy-form-label">Role</label>
+                <select class="heavy-select">
                   <option value="">Select a role</option>
                   <option value="designer">Designer</option>
                   <option value="developer">Developer</option>
                   <option value="manager">Manager</option>
                 </select>
-                <span class="form-hint">Choose one option</span>
+                <span class="heavy-form-hint">Choose one option</span>
               </div>
             </div>
           </div>

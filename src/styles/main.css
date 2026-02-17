@@ -3,6 +3,56 @@
    All styles in one file — no preprocessor needed
    =========================================== */
 
+/* ===== 0. FONTS ===== */
+
+@font-face {
+  font-family: "Test American Grotesk";
+  src: url("fonts/TestAmericanGrotesk-Light.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Test American Grotesk";
+  src: url("fonts/TestAmericanGrotesk-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Test American Grotesk";
+  src: url("fonts/TestAmericanGrotesk-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Light.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ===== 1. VARIABLES ===== */
 
 :root {
@@ -25,6 +75,7 @@
   --font-size-body-sm: var(--ui-12);
   --font-size-body: var(--ui-14);
   --font-size-body-lg: var(--ui-16);
+  --font-size-body-xlg: var(--ui-20);
   --font-size-h6: var(--ui-16);
   --font-size-h5: var(--ui-20);
   --font-size-h4: var(--ui-24);

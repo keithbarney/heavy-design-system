@@ -20,10 +20,7 @@ const TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/design/tokens');
 // ===== Pages Registry =====
 
 const PAGES = [
-  { file: 'stats.html', id: 'stats', label: 'Stats', group: 'Overview' },
-  { file: 'files.html', id: 'files', label: 'Files', group: 'Overview' },
-  { file: 'tokens.html', id: 'tokens', label: 'Tokens', group: 'Overview' },
-  { file: 'colors.html', id: 'colors', label: 'Colors', group: 'Foundations' },
+  { file: 'index.html', id: 'colors', label: 'Colors', group: 'Foundations' },
   { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
   { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
   { file: 'radius.html', id: 'radius', label: 'Radius', group: 'Foundations' },
@@ -115,6 +112,7 @@ function getNumericValue(token) {
 function readTokens() {
   const colors = readJSON(path.join(TOKENS_DIR, 'base/colors.tokens.json'));
   const scale = readJSON(path.join(TOKENS_DIR, 'base/scale.tokens.json'));
+  const baseTypography = readJSON(path.join(TOKENS_DIR, 'base/typography.tokens.json'));
   const aliasTypography = readJSON(path.join(TOKENS_DIR, 'alias/typography.tokens.json'));
 
   _refLookup = buildRefLookup(colors, scale);
@@ -157,14 +155,20 @@ function readTokens() {
 
   // Parse font families from alias typography
   const fontFamilies = [];
-  if (aliasTypography && aliasTypography.Family) {
-    for (const [name, token] of Object.entries(aliasTypography.Family)) {
+  if (aliasTypography && (aliasTypography.family || aliasTypography.Family)) {
+    for (const [name, token] of Object.entries(aliasTypography.family || aliasTypography.Family)) {
       if (name.startsWith('$')) continue;
       fontFamilies.push({ token: `font-family.${name}`, value: `"${token.$value}"` });
     }
   }
 
   const fontWeights = [];
+  if (baseTypography && baseTypography['font-weight']) {
+    for (const [name, token] of Object.entries(baseTypography['font-weight'])) {
+      if (name.startsWith('$')) continue;
+      fontWeights.push({ token: `font-weight.${name}`, value: token.$value });
+    }
+  }
 
   // Parse alias font sizes
   const fontSizes = [];
@@ -246,30 +250,15 @@ function head(title, description) {
 }
 
 function sidebar(currentPageId) {
-  const groups = ['Overview', 'Foundations', 'Components', 'Patterns'];
-  const overviewSubLinks = [
-    { anchor: 'files', label: 'Files' },
-    { anchor: 'architecture', label: 'Tokens' },
-  ];
+  const groups = ['Foundations', 'Components', 'Patterns'];
 
   let nav = '';
   for (const group of groups) {
     nav += `      <span class="style-guide-sidebar-label">${group}</span>\n`;
     const groupPages = PAGES.filter(p => p.group === group);
     for (const pg of groupPages) {
-      if (pg.id === 'overview') {
-        // Overview page link
-        const active = currentPageId === 'overview' ? ' class="active"' : '';
-        nav += `      <a href="index.html"${active}>Overview</a>\n`;
-        // Sub-links for Files and Tokens
-        for (const sub of overviewSubLinks) {
-          const href = currentPageId === 'overview' ? `#${sub.anchor}` : `index.html#${sub.anchor}`;
-          nav += `      <a href="${href}">${sub.label}</a>\n`;
-        }
-      } else {
-        const active = currentPageId === pg.id ? ' class="active"' : '';
-        nav += `      <a href="${pg.file}"${active}>${pg.label}</a>\n`;
-      }
+      const active = currentPageId === pg.id ? ' class="active"' : '';
+      nav += `      <a href="${pg.file}"${active}>${pg.label}</a>\n`;
     }
   }
 
@@ -526,134 +515,6 @@ ${scripts()}
 
 // ===== Content Functions =====
 
-function statsContent(tokens) {
-  const colorStops = tokens.colorFamilies.reduce((sum, f) => sum + f.stops.length, 0);
-  const uiColors = tokens.uiColorGroups.reduce((sum, g) => sum + g.tokens.length, 0);
-
-  const stats = [
-    { value: 3, label: 'Output Files' },
-    { value: tokens.colorFamilies.length, label: 'Color Families' },
-    { value: colorStops, label: 'Color Stops' },
-    { value: tokens.fontSizes.length, label: 'Font Sizes' },
-    { value: tokens.gaps.length, label: 'Spacing Tokens' },
-    { value: tokens.uiScale.length, label: 'UI Scale' },
-    { value: uiColors, label: 'UI Colors' },
-    { value: 2, label: 'Themes' },
-  ];
-
-  const statBlocks = stats.map(s => `            <div class="stat-block">
-              <div class="heavy-stat-value">${s.value}</div>
-              <div class="heavy-stat-label">${s.label}</div>
-            </div>`).join('\n');
-
-  return foundationPage('Stats', [
-    `          <div class="stat-grid">\n${statBlocks}\n          </div>`,
-  ]);
-}
-
-function filesContent() {
-  return foundationPage('Files', [
-    `          <table class="data-table">
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>Contents</th>
-                <th>Consumers</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>tokens.css</code></td>
-                <td>CSS custom properties (all themes)</td>
-                <td>Projects needing only variables</td>
-              </tr>
-              <tr>
-                <td><code>main.css</code></td>
-                <td>Full design system (variables + grid + typography + layout + utilities)</td>
-                <td>Web apps</td>
-              </tr>
-              <tr>
-                <td><code>heavy-theme.css</code></td>
-                <td>Spacegray variables + plugin component styles</td>
-                <td>Figma plugins</td>
-              </tr>
-            </tbody>
-          </table>`,
-    `          <h3>Import Snippets</h3>`,
-    `          <h4>tokens.css</h4>
-          ${codeBlock('<link rel="stylesheet" href="path/to/tokens.css">')}
-          ${codeBlock('@import url("path/to/tokens.css");')}`,
-    `          <h4>main.css</h4>
-          ${codeBlock('<link rel="stylesheet" href="path/to/main.css">')}
-          ${codeBlock('@import url("path/to/main.css");')}`,
-    `          <h4>heavy-theme.css</h4>
-          ${codeBlock('<link rel="stylesheet" href="path/to/heavy-theme.css">')}
-          ${codeBlock('@import url("path/to/heavy-theme.css");')}`,
-  ]);
-}
-
-function tokensContent(tokens) {
-  const colorStops = tokens.colorFamilies.reduce((sum, f) => sum + f.stops.length, 0);
-  const uiColors = tokens.uiColorGroups.reduce((sum, g) => sum + g.tokens.length, 0);
-
-  const sourceFiles = [
-    { file: 'base/colors.tokens.json', category: 'Color palette', count: colorStops },
-    { file: 'base/scale.tokens.json', category: 'UI scale', count: tokens.uiScale.length },
-    { file: 'alias/typography.tokens.json', category: 'Font sizes', count: tokens.fontSizes.length },
-    { file: 'alias/spacing.tokens.json', category: 'Spacing', count: tokens.gaps.length },
-    { file: 'alias/radius.tokens.json', category: 'Radius', count: tokens.radii.length },
-    { file: 'alias/light.tokens.json', category: 'Light theme', count: uiColors },
-    { file: 'alias/dark.tokens.json', category: 'Dark theme', count: uiColors },
-  ];
-
-  const sourceRows = sourceFiles.map(f =>
-    `              <tr>
-                <td><code>${f.file}</code></td>
-                <td>${f.category}</td>
-                <td>${f.count}</td>
-              </tr>`
-  ).join('\n');
-
-  return foundationPage('Tokens', [
-    `          <div class="flow-steps">
-            <div class="flow-step">
-              <div class="flow-number">1</div>
-              <span>Figma</span>
-            </div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-step">
-              <div class="flow-number">2</div>
-              <span>JSON</span>
-            </div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-step">
-              <div class="flow-number">3</div>
-              <span>CSS</span>
-            </div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-step">
-              <div class="flow-number">4</div>
-              <span>Projects</span>
-            </div>
-          </div>`,
-    `          <h3>Source Files</h3>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>Category</th>
-                <th>Count</th>
-              </tr>
-            </thead>
-            <tbody>
-${sourceRows}
-            </tbody>
-          </table>`,
-    `          <h3>Build Command</h3>
-          ${codeBlock('npm run build:tokens')}`,
-  ]);
-}
-
 function colorsContent(tokens) {
   const colorSections = tokens.colorFamilies.map(f => {
     const rows = f.stops.map(s =>
@@ -665,7 +526,7 @@ function colorsContent(tokens) {
                     </tr>`
     ).join('\n');
     return `            <h3 class="heavy-label">${f.name}</h3>
-            <table class="data-table">
+            <table class="data-table data-table--visual">
               <thead>
                 <tr>
                   <th>Stop</th>
@@ -694,7 +555,7 @@ ${rows}
   return foundationPage('Colors', [
     colorSections,
     `          <h3 class="heavy-label">UI Colors</h3>
-          <table class="data-table">
+          <table class="data-table data-table--visual">
             <thead>
               <tr>
                 <th>Visual</th>
@@ -721,7 +582,7 @@ function typographyContent(tokens) {
   const weightRows = tokens.fontWeights.map(w =>
     `                <tr>
                   <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(w.token)}', this)">${esc(w.token)}</span></td>
-                  <td><span style="font-weight: ${w.value}">Aa</span></td>
+                  <td><span style="font-size: var(--font-size-body-xlg); font-weight: ${w.value}">Aa</span></td>
                   <td>${w.value}</td>
                 </tr>`
   ).join('\n');
@@ -2625,9 +2486,6 @@ function searchPatternContent() {
 // ===== Content Map =====
 
 const contentMap = {
-  'stats': (tokens) => statsContent(tokens),
-  'files': () => filesContent(),
-  'tokens': (tokens) => tokensContent(tokens),
   'colors': (tokens) => colorsContent(tokens),
   'typography': (tokens) => typographyContent(tokens),
   'spacing': (tokens) => spacingContent(tokens),
@@ -2675,7 +2533,7 @@ function main() {
   }
 
   // Clean stale pages from previous structure
-  const stalePages = ['index.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
+  const stalePages = ['stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {

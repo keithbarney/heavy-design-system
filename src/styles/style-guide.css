@@ -285,12 +285,13 @@
   @media (min-width: 768px) {
     display: grid;
     grid-template-columns: subgrid;
-    align-items: center;
+    align-items: baseline;
 
     & thead, & tbody, & tr { display: contents; }
     & th, & td { grid-column: span 2; }
     & th:last-child, & td:last-child { grid-column: 7 / 9; }
-    & th { align-self: baseline; }
+
+    &.data-table--visual { align-items: center; }
   }
 
   & th {

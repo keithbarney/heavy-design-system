@@ -5,8 +5,14 @@ node_modules/
 dist/
 *.css.map
 
+# Trial fonts (not licensed for distribution)
+src/assets/fonts/TestAmericanGrotesk-*
+
 # OS files
 .DS_Store
+
+# Claude Code
+.claude/
 
 # Editor files
 .idea/

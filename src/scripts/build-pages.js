@@ -2533,7 +2533,7 @@ function main() {
   }
 
   // Clean stale pages from previous structure
-  const stalePages = ['stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
+  const stalePages = ['colors.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {

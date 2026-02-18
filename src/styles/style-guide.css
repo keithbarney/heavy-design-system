@@ -298,7 +298,7 @@
     font-size: var(--font-size-body-xsm);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--ui-text-default);
+    color: var(--ui-text-disabled);
     font-weight: 400;
     text-align: left;
     padding: var(--space-8) 0;

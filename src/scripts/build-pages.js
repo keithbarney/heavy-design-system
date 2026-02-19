@@ -345,35 +345,6 @@ function copyCode(btn) {
 </script>
 <script>
 (function() {
-  var links = document.querySelectorAll('.style-guide-sidebar a[href^="#"]');
-  if (!links.length) return;
-  var sections = [];
-  links.forEach(function(link) {
-    var id = link.getAttribute('href').slice(1);
-    var el = document.getElementById(id);
-    if (el) sections.push({ link: link, el: el });
-  });
-
-  function onScroll() {
-    var atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
-    var active;
-    if (atBottom) {
-      active = sections[sections.length - 1];
-    } else {
-      active = sections[0];
-      for (var i = 0; i < sections.length; i++) {
-        if (sections[i].el.getBoundingClientRect().top <= 120) active = sections[i];
-      }
-    }
-    links.forEach(function(l) { l.classList.remove('active'); });
-    if (active) active.link.classList.add('active');
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-})();
-</script>
-<script>
-(function() {
   var groups = document.querySelectorAll('[data-validate]');
   groups.forEach(function(group) {
     var rule = group.getAttribute('data-validate');

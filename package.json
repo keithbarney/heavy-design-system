@@ -7,7 +7,7 @@
     "dev": "concurrently \"node src/scripts/dev.js\" \"npm run serve\"",
     "build": "npm run build:tokens && npm run build:styles && npm run build:themes && npm run build:pages",
     "build:tokens": "node src/scripts/build-tokens.js",
-    "build:styles": "cp src/styles/main.css dist/main.css && cp src/styles/style-guide.css dist/style-guide.css && cp src/assets/fonts/*.woff2 src/assets/fonts/*.otf dist/fonts/",
+    "build:styles": "cp src/styles/main.css dist/main.css && cp src/styles/style-guide.css dist/style-guide.css && cp src/assets/fonts/*.woff2 dist/fonts/",
     "build:themes": "node src/scripts/build-themes.js",
     "build:pages": "node src/scripts/build-pages.js",
     "serve": "browser-sync start --config bs-config.cjs"

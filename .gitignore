@@ -23,3 +23,5 @@ src/assets/fonts/TestAmericanGrotesk-*
 # Logs
 *.log
 npm-debug.log*
+
+screenshots/

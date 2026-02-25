@@ -1,0 +1,5 @@
+{
+  "port": 3100,
+  "startCommand": "npm run dev",
+  "type": "browser-sync"
+}

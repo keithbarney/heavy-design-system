@@ -1,4 +1,4 @@
-/* Heavy Theme — Spacegray / Base16 Ocean */
+/* Heavy Theme — Dark */
 
 /* ================================================================
    TOKENS
@@ -6,30 +6,30 @@
 
 :root {
   /* Colors — UI */
-  --color-bg: #2b303b;
-  --color-surface: #343d46;
-  --color-border: #4f5b66;
-  --color-border-focus: #65737e;
+  --color-bg: #141414;
+  --color-surface: #1E1E1E;
+  --color-border: #3A3A3A;
+  --color-border-focus: #727272;
 
   /* Colors — Text */
-  --color-text: #c0c5ce;
-  --color-text-strong: #eff1f5;
-  --color-text-muted: #65737e;
-  --color-text-disabled: rgba(192, 197, 206, 0.2);
-  --color-text-placeholder: rgba(192, 197, 206, 0.4);
+  --color-text: #DDDDDD;
+  --color-text-strong: #F3F3F3;
+  --color-text-muted: #727272;
+  --color-text-disabled: rgba(221, 221, 221, 0.2);
+  --color-text-placeholder: rgba(221, 221, 221, 0.4);
 
   /* Colors — Interactive */
-  --color-accent: #8fa1b3;
-  --color-btn-bg: rgba(79, 91, 102, 0.5);
-  --color-btn-bg-hover: rgba(79, 91, 102, 0.7);
-  --color-btn-bg-disabled: rgba(79, 91, 102, 0.3);
-  --color-btn-primary: #a7adba;
+  --color-accent: #DDDDDD;
+  --color-btn-bg: rgba(255, 255, 255, 0.08);
+  --color-btn-bg-hover: rgba(255, 255, 255, 0.12);
+  --color-btn-bg-disabled: rgba(255, 255, 255, 0.04);
+  --color-btn-primary: #F3F3F3;
 
   /* Colors — Feedback */
-  --color-success: #a3be8c;
-  --color-danger: #bf616a;
-  --color-danger-bg: rgba(191, 97, 106, 0.15);
-  --color-danger-bg-hover: rgba(191, 97, 106, 0.25);
+  --color-success: #06C167;
+  --color-danger: #FC7F79;
+  --color-danger-bg: rgba(252, 127, 121, 0.15);
+  --color-danger-bg-hover: rgba(252, 127, 121, 0.25);
 
   /* Typography */
   --font-secondary: 'JetBrains Mono', ui-monospace, monospace;
@@ -46,7 +46,7 @@
 
   /* Sizing */
   --control-height: 32px;
-  --radius: 3px;
+  --radius: 4px;
 
   /* Motion */
   --transition: 100ms ease;

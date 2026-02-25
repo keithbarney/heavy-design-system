@@ -224,6 +224,20 @@
   --ui-feedback-danger: #DE1135;
   --ui-feedback-info: #007F8C;
 
+  /* Style Guide Contract Tokens */
+  --style-guide-bg: var(--ui-bg-default);
+  --style-guide-accent: var(--ui-action-primary);
+  --style-guide-marker: #868686;
+  --style-guide-accent-text: var(--ui-action-primary-text);
+  --style-guide-accent-bg: var(--ui-action-primary);
+  --style-guide-accent-bg-hover: var(--ui-action-primary-hover);
+  --style-guide-success: var(--ui-feedback-success);
+  --style-guide-success-bg: rgba(14, 131, 69, 0.1);
+  --style-guide-syntax-tag: #5E9BD6;
+  --style-guide-syntax-attr: #6BB89D;
+  --style-guide-syntax-string: #D48C7B;
+  --style-guide-syntax-punct: #868686;
+
 }
 
 /* Dark Mode */
@@ -297,6 +311,20 @@
   --ui-feedback-warning: #FFB48C;
   --ui-feedback-danger: #FC7F79;
   --ui-feedback-info: #01B8CA;
+
+  /* Style Guide Contract Tokens (dark) */
+  --style-guide-bg: var(--ui-bg-default);
+  --style-guide-accent: var(--ui-action-primary);
+  --style-guide-marker: #BBBBBB;
+  --style-guide-accent-text: var(--ui-action-primary-text);
+  --style-guide-accent-bg: var(--ui-action-primary);
+  --style-guide-accent-bg-hover: var(--ui-action-primary-hover);
+  --style-guide-success: var(--ui-feedback-success);
+  --style-guide-success-bg: rgba(6, 193, 103, 0.1);
+  --style-guide-syntax-tag: #7DB8E8;
+  --style-guide-syntax-attr: #8DD4B6;
+  --style-guide-syntax-string: #E8A898;
+  --style-guide-syntax-punct: #BBBBBB;
 
 }
 

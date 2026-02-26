@@ -191,11 +191,12 @@ function readTokens() {
     }
   }
 
-  // Parse alias radius
+  // Parse alias radius (tokens may be under 'container' key or at root level)
   const radii = [];
-  if (aliasRadius && aliasRadius.container) {
-    for (const [name, token] of Object.entries(aliasRadius.container)) {
-      if (name.startsWith('$')) continue;
+  const radiusSource = aliasRadius?.container || aliasRadius;
+  if (radiusSource) {
+    for (const [name, token] of Object.entries(radiusSource)) {
+      if (name.startsWith('$') || typeof token !== 'object' || !token.$value) continue;
       radii.push({ name: `radius.${name}`, css: `--radius-${name}`, value: getNumericValue(token) });
     }
   }

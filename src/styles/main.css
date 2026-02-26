@@ -70,8 +70,10 @@
   /* Optimal line length: 7-10 words ~ 45-75 characters */
   --measure: 65ch;
 
+  --font-family: var(--font-primary);
+
   /* Font Size Aliases */
-  --font-size-body-xsm: var(--ui-10);
+  --font-size-body-xs: var(--ui-10);
   --font-size-body-sm: var(--ui-12);
   --font-size-body: var(--ui-14);
   --font-size-body-lg: var(--ui-16);
@@ -83,6 +85,9 @@
   --font-size-h2: var(--ui-32);
   --font-size-h1: var(--ui-40);
   --font-size-display: var(--ui-48);
+  --typography-heading-6-size: var(--font-size-h6);
+  --typography-heading-6-weight: 700;
+  --typography-heading-6-line-height: var(--line-height-tight);
 
   /* UI Scale (spacing, padding, margins) */
   --ui-0: 0px;
@@ -448,7 +453,7 @@ p, .body {
 }
 
 .body-xsm {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   line-height: var(--line-height-base);
 }
 
@@ -486,7 +491,7 @@ p, .body {
 .leading-loose { line-height: var(--line-height-loose); }
 
 .heavy-label {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -855,13 +860,13 @@ p, .body {
 
 .heavy-btn--xs {
   padding: var(--space-4);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   border-radius: var(--radius-xsm);
 }
 
 .heavy-btn--sm {
   padding: var(--space-8);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
 }
 
 .heavy-btn--lg {
@@ -935,7 +940,7 @@ p, .body {
 .heavy-select--xs {
   padding: var(--space-4);
   padding-right: 22px;
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   border-radius: var(--radius-xsm);
   background-position: right 4px center;
   background-size: 10px;
@@ -944,7 +949,7 @@ p, .body {
 .heavy-select--sm {
   padding: var(--space-8);
   padding-right: 26px;
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   background-position: right 8px center;
   background-size: 10px;
 }
@@ -1019,7 +1024,7 @@ p, .body {
   & input {
     padding: var(--space-4);
     padding-left: calc(var(--space-4) + 10px + var(--space-4));
-    font-size: var(--font-size-body-xsm);
+    font-size: var(--font-size-body-xs);
     border-radius: var(--radius-xsm);
   }
 }
@@ -1030,7 +1035,7 @@ p, .body {
   & input {
     padding: var(--space-8);
     padding-left: calc(var(--space-8) + 10px + var(--space-4));
-    font-size: var(--font-size-body-xsm);
+    font-size: var(--font-size-body-xs);
   }
 }
 
@@ -1096,13 +1101,13 @@ p, .body {
 
 .heavy-form-input--xs {
   padding: var(--space-4);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   border-radius: var(--radius-xsm);
 }
 
 .heavy-form-input--sm {
   padding: var(--space-8);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
 }
 
 .heavy-form-input--lg {
@@ -1209,13 +1214,13 @@ p, .body {
 
   &.heavy-form-file--xs .heavy-form-file-trigger {
     padding: var(--space-4);
-    font-size: var(--font-size-body-xsm);
+    font-size: var(--font-size-body-xs);
     border-radius: var(--radius-xsm);
   }
 
   &.heavy-form-file--sm .heavy-form-file-trigger {
     padding: var(--space-8);
-    font-size: var(--font-size-body-xsm);
+    font-size: var(--font-size-body-xs);
   }
 
   &.heavy-form-file--lg .heavy-form-file-trigger {
@@ -1227,7 +1232,7 @@ p, .body {
 
 
 .heavy-form-hint {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   color: var(--ui-text-default);
 }
 
@@ -1248,7 +1253,7 @@ p, .body {
   display: inline-flex;
   align-items: center;
   padding: var(--padding-xs) var(--padding-sm);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   font-weight: 500;
   letter-spacing: 0.025em;
   border-radius: var(--radius-sm);
@@ -1278,7 +1283,7 @@ p, .body {
 }
 
 .heavy-stat-label {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   font-weight: 400;
   letter-spacing: 0.05em;
   color: var(--ui-text-default);
@@ -1466,7 +1471,7 @@ p, .body {
   display: inline-flex;
   align-items: center;
   padding: var(--padding-xs) var(--padding-sm);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   color: var(--ui-text-default);
   background: transparent;
   border: 1px solid var(--ui-border-default);
@@ -1534,6 +1539,56 @@ p, .body {
   }
 }
 
+/* --- 8g. Modal --- */
+
+.heavy-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.heavy-modal {
+  background: var(--ui-surface-default);
+  border: 1px solid var(--ui-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--padding-lg);
+  min-width: 280px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.heavy-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-16);
+}
+
+.heavy-modal-title {
+  font-size: var(--font-size-h5);
+  font-weight: 600;
+  color: var(--ui-text-strong);
+}
+
+.heavy-modal-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.heavy-modal-footer {
+  display: flex;
+  gap: var(--space-8);
+  justify-content: flex-end;
+  margin-top: var(--space-16);
+}
+
 .collapsible {
   border: 1px solid var(--ui-border-default);
   border-radius: var(--radius-sm);
@@ -1575,7 +1630,7 @@ p, .body {
 }
 
 .heavy-section-header {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   font-weight: 400;
   letter-spacing: 0.05em;
   color: var(--ui-text-default);

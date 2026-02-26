@@ -129,7 +129,7 @@
 }
 
 .sg-color-family-name {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--ui-text-default);
@@ -159,7 +159,7 @@
 }
 
 .sample-label {
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   color: var(--ui-text-default);
 }
 
@@ -170,42 +170,6 @@
   align-items: center;
   gap: var(--space-16);
   padding: var(--space-4) 0;
-}
-
-/* --- Data Table (Heavy alias) --- */
-
-.data-table {
-  width: 100%;
-  font-size: var(--font-size-body-sm);
-
-  @media (min-width: 768px) {
-    display: grid;
-    grid-template-columns: subgrid;
-    align-items: baseline;
-
-    & thead, & tbody, & tr { display: contents; }
-    & th, & td { grid-column: span 2; }
-    & th:last-child, & td:last-child { grid-column: 7 / 9; }
-
-    &.data-table--visual { align-items: center; }
-  }
-
-  & th {
-    font-size: var(--font-size-body-xsm);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--ui-text-default);
-    font-weight: 400;
-    text-align: left;
-    padding: var(--space-8) 0;
-  }
-
-  & td {
-    padding: var(--space-8) 0;
-    color: var(--ui-text-strong);
-  }
-
-  & code { color: var(--ui-action-primary); }
 }
 
 /* --- Flow Steps --- */
@@ -240,7 +204,7 @@
   border-radius: var(--radius-full);
   background: var(--ui-action-primary);
   color: var(--ui-bg-default);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   font-weight: 400;
   flex-shrink: 0;
 }
@@ -249,36 +213,6 @@
   color: var(--ui-text-disabled);
   font-size: var(--font-size-body);
   text-align: center;
-}
-
-/* --- Token Display --- */
-
-.token-copy {
-  cursor: pointer;
-  transition: color 0.15s ease;
-
-  &:hover { color: var(--ui-action-primary); }
-  &.copied { color: var(--ui-feedback-success); }
-}
-
-.token-bar {
-  height: 8px;
-  background: var(--ui-action-primary);
-  border-radius: var(--radius-sm);
-  min-width: 1px;
-}
-
-.token-swatch {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--ui-border-default);
-}
-
-.token-radius-sample {
-  width: 40px;
-  height: 40px;
-  background: var(--ui-action-primary);
 }
 
 /* --- Demo Containers --- */
@@ -296,7 +230,7 @@
   background: var(--ui-action-primary);
   border-radius: var(--radius-sm);
   padding: var(--space-8) var(--space-12);
-  font-size: var(--font-size-body-xsm);
+  font-size: var(--font-size-body-xs);
   color: var(--ui-action-primary-text);
   min-height: 32px;
   display: flex;

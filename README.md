@@ -65,7 +65,7 @@ Named references to base tokens that communicate *intent*:
 --space-4: var(--ui-4);  --space-8: var(--ui-8);  --space-16: var(--ui-16); ...
 
 /* Font sizes */
---font-size-body-xsm: var(--ui-10);  --font-size-body-sm: var(--ui-12);
+--font-size-body-xs: var(--ui-10);  --font-size-body-sm: var(--ui-12);
 --font-size-body: var(--ui-14);       --font-size-h1: var(--ui-40);
 
 /* Radius */

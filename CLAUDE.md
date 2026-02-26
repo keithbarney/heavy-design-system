@@ -132,14 +132,21 @@ Swiss-inspired CSS Grid layout.
 
 ## Component Documentation Template
 
-Every component page follows this structure. Use `buttonsContent()` in `build-pages.js` as the reference implementation.
+All component pages follow the **style-guide framework's component page principles** (see `~/Projects/design/style-guide/CLAUDE.md` → "Component Page Principles"). The core rules:
+
+- **Narrative arc:** Intro → Anatomy → Dimension sections → Props → Guidelines (fixed order)
+- **Dimension isolation:** One section per axis of variation. Show all values of one dimension while holding every other dimension at its default. Never mix dimensions.
+- **Instance minimalism:** Every instance teaches one concept. Total = 1 (Anatomy) + N₁ + N₂ + …
+- **Layout widths:** Visual sections = 6 grid columns, text sections = 10 columns
+
+Heavy DS extends the base template with additional documentation sections. Use `buttonsContent()` in `build-pages.js` as the reference implementation.
 
 ### Sections (in order)
 
 1. **Description** — `<p class="style-guide-description">`. One or two sentences: what it is, what it does.
 2. **When to use** — `<div class="style-guide-guidelines">`. Bulleted scenarios where this component is the right choice.
 3. **When not to use** — Same format. Each bullet names the alternative: "Use X instead."
-4. **Variants / Demo** — Visual demos with simulated states (`.is-hover`, `.is-active`, `.is-disabled`), followed by a `codeBlock()` per variant showing copyable HTML.
+4. **Variants / Demo** — One section per dimension. Visual demos with simulated states (`.is-hover`, `.is-active`, `.is-disabled`), followed by a `codeBlock()` per variant showing copyable HTML. Each section isolates one variable.
 5. **Formatting** — Sizes, block, modifiers — whatever applies. Each gets a demo + code block.
 6. **Usage Guidelines** — When to use each variant, hierarchy rules.
 7. **Content** — Label/copy rules: verbs, casing, length, specificity.

@@ -305,7 +305,7 @@ const builder = createPageBuilder({
   customScripts: VALIDATION_SCRIPT,
 });
 
-const { esc, codeBlock, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, baseScaleTable } = builder;
+const { esc, codeBlock, playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, baseScaleTable } = builder;
 
 // ===== Content Functions =====
 
@@ -834,24 +834,17 @@ function animationContent() {
 
 function breadcrumbsContent() {
   return componentPage('Breadcrumbs', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A horizontal trail of links showing the user's location within a site hierarchy. Helps users navigate back to parent pages without using the browser's back button.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>The site has three or more levels of hierarchy.</li>
-              <li>Users need to navigate back to parent sections frequently.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Flat sites</strong> — If all pages are at the same level, breadcrumbs add noise.</li>
-              <li><strong>Linear flows</strong> — Multi-step wizards or checkout flows should use a stepper, not breadcrumbs.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
+    description: description('A horizontal trail of links showing the user\'s location within a site hierarchy. Helps users navigate back to parent pages without using the browser\'s back button.'),
+    whenToUse: guidelines([
+      'The site has three or more levels of hierarchy.',
+      'Users need to navigate back to parent sections frequently.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Flat sites</strong> — If all pages are at the same level, breadcrumbs add noise.',
+      '<strong>Linear flows</strong> — Multi-step wizards or checkout flows should use a stepper, not breadcrumbs.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <div class="heavy-breadcrumbs">
               <a class="heavy-breadcrumbs-link" href="#">Home</a>
               <span class="heavy-breadcrumbs-separator">/</span>
@@ -859,24 +852,21 @@ function breadcrumbsContent() {
               <span class="heavy-breadcrumbs-separator">/</span>
               <span class="heavy-breadcrumbs-current">Design System</span>
             </div>
-          </div>
-          ${codeBlock(`<nav class="heavy-breadcrumbs">
+          </div>`,
+      `<nav class="heavy-breadcrumbs">
   <a class="heavy-breadcrumbs-link" href="#">Home</a>
   <span class="heavy-breadcrumbs-separator">/</span>
   <a class="heavy-breadcrumbs-link" href="#">Projects</a>
   <span class="heavy-breadcrumbs-separator">/</span>
   <span class="heavy-breadcrumbs-current">Design System</span>
-</nav>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Current page is text, not a link</strong> — The last item in the trail should never be clickable.</li>
-              <li><strong>Use "/" as separator</strong> — Keeps the trail compact and universally understood.</li>
-              <li><strong>Match page titles exactly</strong> — Breadcrumb labels must match the destination page's heading.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</nav>`
+    ),
+    content: guidelines([
+      '<strong>Current page is text, not a link</strong> — The last item in the trail should never be clickable.',
+      '<strong>Use "/" as separator</strong> — Keeps the trail compact and universally understood.',
+      '<strong>Match page titles exactly</strong> — Breadcrumb labels must match the destination page\'s heading.',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -894,106 +884,88 @@ function breadcrumbsContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="nav-links.html">Nav Links</a></strong> — For primary navigation between top-level pages.</li>
-              <li><strong><a href="tabs.html">Tabs</a></strong> — For switching between views within the same page.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="nav-links.html">Nav Links</a></strong> — For primary navigation between top-level pages.',
+      '<strong><a href="tabs.html">Tabs</a></strong> — For switching between views within the same page.',
+    ]),
   });
 }
 
 function buttonsContent() {
   return componentPage('Button', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Trigger actions or navigate. Four style variants establish visual hierarchy — primary for the main call to action, secondary for supporting actions, tertiary for low-emphasis options, and danger for destructive operations.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>To trigger an action — submit a form, open a dialog, delete a record, confirm a choice.</li>
-              <li>As the primary call to action on a page or within a section.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Navigation</strong> — Use <code>a</code> elements or nav links to move between pages. Buttons that navigate confuse assistive technology.</li>
-              <li><strong>Inline text actions</strong> — Use a text link instead. Buttons inside paragraphs disrupt reading flow.</li>
-              <li><strong>Selection</strong> — Use chips, toggles, or radio buttons for choosing between options.</li>
-              <li><strong>Icon-only actions</strong> — Use a <a href="button-icon.html">button icon</a> instead.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Primary</h3>
-          <div class="style-guide-variants">
+    description: description('Trigger actions or navigate. Four style variants establish visual hierarchy — primary for the main call to action, secondary for supporting actions, tertiary for low-emphasis options, and danger for destructive operations.'),
+    whenToUse: guidelines([
+      'To trigger an action — submit a form, open a dialog, delete a record, confirm a choice.',
+      'As the primary call to action on a page or within a section.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Navigation</strong> — Use <code>a</code> elements or nav links to move between pages. Buttons that navigate confuse assistive technology.',
+      '<strong>Inline text actions</strong> — Use a text link instead. Buttons inside paragraphs disrupt reading flow.',
+      '<strong>Selection</strong> — Use chips, toggles, or radio buttons for choosing between options.',
+      '<strong>Icon-only actions</strong> — Use a <a href="button-icon.html">button icon</a> instead.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <button class="heavy-btn heavy-btn--primary">Default</button>
             <button class="heavy-btn heavy-btn--primary is-hover">Hover</button>
             <button class="heavy-btn heavy-btn--primary is-active">Active</button>
             <button class="heavy-btn heavy-btn--primary is-disabled" disabled>Disabled</button>
           </div>
-          ${codeBlock('<button class="heavy-btn heavy-btn--primary">Label</button>')}
-          <h3 class="style-guide-section-name">Secondary</h3>
-          <div class="style-guide-variants">
+          <div class="style-guide-variant-row">
             <button class="heavy-btn heavy-btn--secondary">Default</button>
             <button class="heavy-btn heavy-btn--secondary is-hover">Hover</button>
             <button class="heavy-btn heavy-btn--secondary is-active">Active</button>
             <button class="heavy-btn heavy-btn--secondary is-disabled" disabled>Disabled</button>
           </div>
-          ${codeBlock('<button class="heavy-btn heavy-btn--secondary">Label</button>')}
-          <h3 class="style-guide-section-name">Tertiary</h3>
-          <div class="style-guide-variants">
+          <div class="style-guide-variant-row">
             <button class="heavy-btn heavy-btn--tertiary">Default</button>
             <button class="heavy-btn heavy-btn--tertiary is-hover">Hover</button>
             <button class="heavy-btn heavy-btn--tertiary is-active">Active</button>
             <button class="heavy-btn heavy-btn--tertiary is-disabled" disabled>Disabled</button>
           </div>
-          ${codeBlock('<button class="heavy-btn heavy-btn--tertiary">Label</button>')}
-          <h3 class="style-guide-section-name">Danger</h3>
-          <div class="style-guide-variants">
+          <div class="style-guide-variant-row">
             <button class="heavy-btn heavy-btn--danger">Default</button>
             <button class="heavy-btn heavy-btn--danger is-hover">Hover</button>
             <button class="heavy-btn heavy-btn--danger is-active">Active</button>
             <button class="heavy-btn heavy-btn--danger is-disabled" disabled>Disabled</button>
-          </div>
-          ${codeBlock('<button class="heavy-btn heavy-btn--danger">Label</button>')}`,
-    formatting: `          <h3 class="style-guide-section-name">Sizes</h3>
-          <div class="style-guide-variants">
+          </div>`,
+      `<button class="heavy-btn heavy-btn--primary">Label</button>
+<button class="heavy-btn heavy-btn--secondary">Label</button>
+<button class="heavy-btn heavy-btn--tertiary">Label</button>
+<button class="heavy-btn heavy-btn--danger">Label</button>`
+    ),
+    formatting: playground(
+      `          <div class="style-guide-variant-row">
             <button class="heavy-btn heavy-btn--primary heavy-btn--xs">X-Small</button>
             <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Small</button>
             <button class="heavy-btn heavy-btn--primary">Medium</button>
             <button class="heavy-btn heavy-btn--primary heavy-btn--lg">Large</button>
-          </div>
-          ${codeBlock(`<button class="heavy-btn heavy-btn--primary heavy-btn--xs">Label</button>
+          </div>`,
+      `<button class="heavy-btn heavy-btn--primary heavy-btn--xs">Label</button>
 <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Label</button>
 <button class="heavy-btn heavy-btn--primary">Label</button>
-<button class="heavy-btn heavy-btn--primary heavy-btn--lg">Label</button>`)}
-          <h3 class="style-guide-section-name">Block</h3>
-          <div>
+<button class="heavy-btn heavy-btn--primary heavy-btn--lg">Label</button>`
+    ) + '\n' + playground(
+      `          <div class="style-guide-variant-row">
             <button class="heavy-btn heavy-btn--primary heavy-btn--block">Block</button>
-          </div>
-          ${codeBlock('<button class="heavy-btn heavy-btn--primary heavy-btn--block">Label</button>')}`,
-    usage: `          <h3 class="style-guide-section-name">Usage Guidelines</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Primary</strong> — One per view. The main CTA. Use for the action you most want users to take.</li>
-              <li><strong>Secondary</strong> — Supporting actions alongside a primary. "Cancel" next to "Save".</li>
-              <li><strong>Tertiary</strong> — Low-emphasis actions. Toolbars, inline actions, filter controls.</li>
-              <li><strong>Danger</strong> — Destructive actions only (delete, remove, disconnect). Always confirm.</li>
-              <li><strong>Disabled</strong> — Show when an action exists but isn't available. Prefer hiding over disabling when possible.</li>
-            </ul>
           </div>`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Use verbs</strong> — "Save", "Delete", "Export". Not "Okay", "Yes", "Submit".</li>
-              <li><strong>Sentence case</strong> — Buttons use uppercase via CSS text-transform. Labels still authored in sentence case.</li>
-              <li><strong>Max 3 words</strong> — "Save changes" not "Save all of your current changes".</li>
-              <li><strong>Be specific</strong> — "Delete project" not "Delete". Context helps users confirm intent.</li>
-              <li><strong>No periods</strong> — Button labels are not sentences.</li>
-            </ul>
-          </div>`,
-    stringLength: `          <h3 class="style-guide-section-name">String Length</h3>
-          <div>
+      '<button class="heavy-btn heavy-btn--primary heavy-btn--block">Label</button>'
+    ),
+    usage: guidelines([
+      '<strong>Primary</strong> — One per view. The main CTA. Use for the action you most want users to take.',
+      '<strong>Secondary</strong> — Supporting actions alongside a primary. "Cancel" next to "Save".',
+      '<strong>Tertiary</strong> — Low-emphasis actions. Toolbars, inline actions, filter controls.',
+      '<strong>Danger</strong> — Destructive actions only (delete, remove, disconnect). Always confirm.',
+      '<strong>Disabled</strong> — Show when an action exists but isn\'t available. Prefer hiding over disabling when possible.',
+    ]),
+    content: guidelines([
+      '<strong>Use verbs</strong> — "Save", "Delete", "Export". Not "Okay", "Yes", "Submit".',
+      '<strong>Sentence case</strong> — Buttons use uppercase via CSS text-transform. Labels still authored in sentence case.',
+      '<strong>Max 3 words</strong> — "Save changes" not "Save all of your current changes".',
+      '<strong>Be specific</strong> — "Delete project" not "Delete". Context helps users confirm intent.',
+      '<strong>No periods</strong> — Button labels are not sentences.',
+    ]),
+    stringLength: `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-cluster">
                 <button class="heavy-btn heavy-btn--primary">OK</button>
@@ -1007,16 +979,12 @@ function buttonsContent() {
                 <button class="heavy-btn heavy-btn--primary heavy-btn--block">Save all current changes to project</button>
               </div>
             </div>
-          </div>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Short labels grow naturally</strong> — Buttons are inline-flex and size to their content. Single-word labels produce compact buttons.</li>
-              <li><strong>Long labels stretch the button</strong> — There is no truncation or overflow. The button keeps growing, which breaks layouts. Keep labels to 3 words max.</li>
-              <li><strong>Block buttons absorb any length</strong> — Full-width buttons handle long labels gracefully, but short labels leave excess whitespace.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+          </div>` + '\n' + guidelines([
+      '<strong>Short labels grow naturally</strong> — Buttons are inline-flex and size to their content. Single-word labels produce compact buttons.',
+      '<strong>Long labels stretch the button</strong> — There is no truncation or overflow. The button keeps growing, which breaks layouts. Keep labels to 3 words max.',
+      '<strong>Block buttons absorb any length</strong> — Full-width buttons handle long labels gracefully, but short labels leave excess whitespace.',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1041,163 +1009,116 @@ function buttonsContent() {
                 <td>Moves focus to the previous focusable element</td>
               </tr>
             </tbody>
-          </table>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Disabled buttons are removed from the tab order. Use <code>aria-disabled="true"</code> instead of the <code>disabled</code> attribute when the button needs to remain discoverable.</li>
-            </ul>
-          </div>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="button-icon.html">Button Icon</a></strong> — For compact, icon-only actions.</li>
-              <li><strong><a href="button-group.html">Button Group</a></strong> — For grouping related actions.</li>
-              <li><strong><a href="chips.html">Chips</a></strong> — For toggling filters or selecting from a set of options.</li>
-              <li><strong><a href="nav-links.html">Nav Links</a></strong> — For navigating between pages or views.</li>
-              <li><strong><a href="tabs.html">Tabs</a></strong> — For switching between content panels within a view.</li>
-            </ul>
-          </div>`,
+          </table>` + '\n' + guidelines([
+      'Disabled buttons are removed from the tab order. Use <code>aria-disabled="true"</code> instead of the <code>disabled</code> attribute when the button needs to remain discoverable.',
+    ]),
+    related: guidelines([
+      '<strong><a href="button-icon.html">Button Icon</a></strong> — For compact, icon-only actions.',
+      '<strong><a href="button-group.html">Button Group</a></strong> — For grouping related actions.',
+      '<strong><a href="chips.html">Chips</a></strong> — For toggling filters or selecting from a set of options.',
+      '<strong><a href="nav-links.html">Nav Links</a></strong> — For navigating between pages or views.',
+      '<strong><a href="tabs.html">Tabs</a></strong> — For switching between content panels within a view.',
+    ]),
   });
 }
 
 function buttonIconContent() {
   return componentPage('Button Icon', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A compact button that communicates its action through an icon alone. Used for common, recognizable actions where a text label would add clutter.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>The action is universally understood from the icon (close, settings, menu, delete).</li>
-              <li>Space is constrained — toolbars, table rows, card headers.</li>
-              <li>The button repeats in a list and a label would be redundant.</li>
-            </ul>
+    description: description('A compact button that communicates its action through an icon alone. Used for common, recognizable actions where a text label would add clutter.'),
+    whenToUse: guidelines([
+      'The action is universally understood from the icon (close, settings, menu, delete).',
+      'Space is constrained — toolbars, table rows, card headers.',
+      'The button repeats in a list and a label would be redundant.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Ambiguous actions</strong> — If the icon could mean more than one thing, use a labeled <a href="button.html">button</a> instead.',
+      '<strong>Primary CTA</strong> — Primary actions need a visible label. Don\'t rely on an icon alone for the most important action on a page.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
+            <button class="heavy-btn-icon" aria-label="Settings">&#9881;</button>
+            <button class="heavy-btn-icon" aria-label="Close">&#10005;</button>
+            <button class="heavy-btn-icon" aria-label="Menu">&#9776;</button>
           </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Ambiguous actions</strong> — If the icon could mean more than one thing, use a labeled <a href="button.html">button</a> instead.</li>
-              <li><strong>Primary CTA</strong> — Primary actions need a visible label. Don't rely on an icon alone for the most important action on a page.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
-            <div class="heavy-cluster">
-              <button class="heavy-btn-icon" aria-label="Settings">&#9881;</button>
-              <button class="heavy-btn-icon" aria-label="Close">&#10005;</button>
-              <button class="heavy-btn-icon" aria-label="Menu">&#9776;</button>
-            </div>
-          </div>
-          ${codeBlock('<button class="heavy-btn-icon" aria-label="Settings">&#9881;</button>')}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>aria-label is required</strong> — Every icon button must have an <code>aria-label</code> that describes the action, not the icon. "Close dialog" not "X".</li>
-              <li><strong>Tooltip recommended</strong> — Sighted users also benefit from a text label on hover.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Same as Button — <code>Enter</code> and <code>Space</code> activate, <code>Tab</code> moves focus.</li>
-            </ul>
-          </div>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="button.html">Button</a></strong> — Use when the action needs a visible text label.</li>
-              <li><strong><a href="button-group.html">Button Group</a></strong> — For grouping related actions.</li>
-            </ul>
-          </div>`,
+      '<button class="heavy-btn-icon" aria-label="Settings">&#9881;</button>'
+    ),
+    content: guidelines([
+      '<strong>aria-label is required</strong> — Every icon button must have an <code>aria-label</code> that describes the action, not the icon. "Close dialog" not "X".',
+      '<strong>Tooltip recommended</strong> — Sighted users also benefit from a text label on hover.',
+    ]),
+    keyboard: guidelines([
+      'Same as Button — <code>Enter</code> and <code>Space</code> activate, <code>Tab</code> moves focus.',
+    ]),
+    related: guidelines([
+      '<strong><a href="button.html">Button</a></strong> — Use when the action needs a visible text label.',
+      '<strong><a href="button-group.html">Button Group</a></strong> — For grouping related actions.',
+    ]),
   });
 }
 
 function buttonGroupContent() {
   return componentPage('Button Group', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A horizontal row of related buttons with tightened spacing. Groups actions that operate on the same object or belong to the same workflow step.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Two or more actions that share the same context — "Save" and "Cancel", "Approve" and "Reject".</li>
-              <li>Segmented controls where buttons toggle between views or modes.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Unrelated actions</strong> — Don't group buttons that act on different objects. Use layout spacing instead.</li>
-              <li><strong>Navigation</strong> — Use tabs or nav links for switching between pages or panels.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
+    description: description('A horizontal row of related buttons with tightened spacing. Groups actions that operate on the same object or belong to the same workflow step.'),
+    whenToUse: guidelines([
+      'Two or more actions that share the same context — "Save" and "Cancel", "Approve" and "Reject".',
+      'Segmented controls where buttons toggle between views or modes.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Unrelated actions</strong> — Don\'t group buttons that act on different objects. Use layout spacing instead.',
+      '<strong>Navigation</strong> — Use tabs or nav links for switching between pages or panels.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <div class="heavy-btn-group">
               <button class="heavy-btn heavy-btn--secondary">Left</button>
               <button class="heavy-btn heavy-btn--secondary">Center</button>
               <button class="heavy-btn heavy-btn--secondary">Right</button>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-btn-group">
+          </div>`,
+      `<div class="heavy-btn-group">
   <button class="heavy-btn heavy-btn--secondary">Left</button>
   <button class="heavy-btn heavy-btn--secondary">Center</button>
   <button class="heavy-btn heavy-btn--secondary">Right</button>
-</div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Parallel structure</strong> — Use the same part of speech for all labels. "Save / Cancel" not "Save / Go back".</li>
-              <li><strong>Consistent variant</strong> — All buttons in a group should use the same variant. Mix primary + secondary only for a clear primary/secondary hierarchy.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><code>Tab</code> moves focus through each button in the group sequentially.</li>
-            </ul>
-          </div>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="button.html">Button</a></strong> — The building block used inside groups.</li>
-              <li><strong><a href="button-icon.html">Button Icon</a></strong> — For compact, icon-only actions.</li>
-              <li><strong><a href="chips.html">Chips</a></strong> — For filter selection where multiple options can be active.</li>
-            </ul>
-          </div>`,
+</div>`
+    ),
+    content: guidelines([
+      '<strong>Parallel structure</strong> — Use the same part of speech for all labels. "Save / Cancel" not "Save / Go back".',
+      '<strong>Consistent variant</strong> — All buttons in a group should use the same variant. Mix primary + secondary only for a clear primary/secondary hierarchy.',
+    ]),
+    keyboard: guidelines([
+      '<code>Tab</code> moves focus through each button in the group sequentially.',
+    ]),
+    related: guidelines([
+      '<strong><a href="button.html">Button</a></strong> — The building block used inside groups.',
+      '<strong><a href="button-icon.html">Button Icon</a></strong> — For compact, icon-only actions.',
+      '<strong><a href="chips.html">Chips</a></strong> — For filter selection where multiple options can be active.',
+    ]),
   });
 }
 
 function chipsContent() {
   return componentPage('Chips', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Compact elements for filtering content or selecting from a set of options. Chips toggle between active and inactive states, letting users refine what they see.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Filtering a list or grid by category, tag, or attribute.</li>
-              <li>Selecting one or more options from a small, visible set.</li>
-            </ul>
+    description: description('Compact elements for filtering content or selecting from a set of options. Chips toggle between active and inactive states, letting users refine what they see.'),
+    whenToUse: guidelines([
+      'Filtering a list or grid by category, tag, or attribute.',
+      'Selecting one or more options from a small, visible set.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Actions</strong> — Use a <a href="button.html">button</a> for triggering operations like save or delete.',
+      '<strong>Navigation</strong> — Use <a href="tabs.html">tabs</a> or <a href="nav-links.html">nav links</a> instead.',
+      '<strong>Many options</strong> — If the set has more than 8–10 items, use a <a href="selects.html">select</a> instead.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
+            <button class="heavy-chip heavy-chip--active">All</button>
+            <button class="heavy-chip">Design</button>
+            <button class="heavy-chip">Development</button>
+            <button class="heavy-chip">Research</button>
           </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Actions</strong> — Use a <a href="button.html">button</a> for triggering operations like save or delete.</li>
-              <li><strong>Navigation</strong> — Use <a href="tabs.html">tabs</a> or <a href="nav-links.html">nav links</a> instead.</li>
-              <li><strong>Many options</strong> — If the set has more than 8–10 items, use a <a href="selects.html">select</a> instead.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
-            <div class="heavy-cluster">
-              <button class="heavy-chip heavy-chip--active">All</button>
-              <button class="heavy-chip">Design</button>
-              <button class="heavy-chip">Development</button>
-              <button class="heavy-chip">Research</button>
-            </div>
-          </div>
-          ${codeBlock(`<button class="heavy-chip heavy-chip--active">All</button>
-<button class="heavy-chip">Design</button>`)}`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+      `<button class="heavy-chip heavy-chip--active">All</button>
+<button class="heavy-chip">Design</button>`
+    ),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1215,54 +1136,40 @@ function chipsContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="button.html">Button</a></strong> — For triggering actions rather than filtering.</li>
-              <li><strong><a href="tabs.html">Tabs</a></strong> — For switching between content panels.</li>
-              <li><strong><a href="toggles.html">Toggles</a></strong> — For binary on/off settings.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="button.html">Button</a></strong> — For triggering actions rather than filtering.',
+      '<strong><a href="tabs.html">Tabs</a></strong> — For switching between content panels.',
+      '<strong><a href="toggles.html">Toggles</a></strong> — For binary on/off settings.',
+    ]),
   });
 }
 
 function dataDisplayContent() {
   return componentPage('Data Display', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A collection of components for presenting read-only data — badges for status labels, stats for key metrics, key-value pairs for metadata, lists for ordered items, and progress bars for completion.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Displaying status, metrics, metadata, or progress in dashboards, detail views, or cards.</li>
-              <li>Presenting structured data that users read but don't edit directly.</li>
-            </ul>
+    description: description('A collection of components for presenting read-only data — badges for status labels, stats for key metrics, key-value pairs for metadata, lists for ordered items, and progress bars for completion.'),
+    whenToUse: guidelines([
+      'Displaying status, metrics, metadata, or progress in dashboards, detail views, or cards.',
+      'Presenting structured data that users read but don\'t edit directly.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Editable data</strong> — Use <a href="inputs.html">inputs</a> or forms for data the user modifies.',
+      '<strong>Actions</strong> — Use <a href="button.html">buttons</a> for interactive operations. Badges and stats are not clickable.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
+            <span class="heavy-badge">Default</span>
+            <span class="heavy-badge heavy-badge--success">Success</span>
+            <span class="heavy-badge heavy-badge--warning">Warning</span>
+            <span class="heavy-badge heavy-badge--danger">Danger</span>
+            <span class="heavy-badge heavy-badge--info">Info</span>
           </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Editable data</strong> — Use <a href="inputs.html">inputs</a> or forms for data the user modifies.</li>
-              <li><strong>Actions</strong> — Use <a href="button.html">buttons</a> for interactive operations. Badges and stats are not clickable.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Badges</h3>
-          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-cluster">
-                <span class="heavy-badge">Default</span>
-                <span class="heavy-badge heavy-badge--success">Success</span>
-                <span class="heavy-badge heavy-badge--warning">Warning</span>
-                <span class="heavy-badge heavy-badge--danger">Danger</span>
-                <span class="heavy-badge heavy-badge--info">Info</span>
-              </div>
-            </div>
-          </div>
-          ${codeBlock(`<span class="heavy-badge">Default</span>
+      `<span class="heavy-badge">Default</span>
 <span class="heavy-badge heavy-badge--success">Success</span>
 <span class="heavy-badge heavy-badge--warning">Warning</span>
 <span class="heavy-badge heavy-badge--danger">Danger</span>
-<span class="heavy-badge heavy-badge--info">Info</span>`)}
-          <h3 class="style-guide-section-name">Stats</h3>
-          <div>
+<span class="heavy-badge heavy-badge--info">Info</span>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-grid heavy-grid--3">
                 <div class="heavy-stat">
@@ -1281,14 +1188,14 @@ function dataDisplayContent() {
                 </div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-stat">
+          </div>`,
+      `<div class="heavy-stat">
   <div class="heavy-stat-value">98<span class="heavy-stat-unit">%</span></div>
   <div class="heavy-stat-label">Uptime</div>
   <div class="heavy-stat-delta heavy-stat-delta--positive">+2.3%</div>
-</div>`)}
-          <h3 class="style-guide-section-name">Key-Value</h3>
-          <div>
+</div>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div>
                 <div class="heavy-kv"><span class="heavy-kv-key">Version</span><span class="heavy-kv-value">2.4.1</span></div>
@@ -1296,13 +1203,13 @@ function dataDisplayContent() {
                 <div class="heavy-kv"><span class="heavy-kv-key">Last Deploy</span><span class="heavy-kv-value">2 hours ago</span></div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-kv">
+          </div>`,
+      `<div class="heavy-kv">
   <span class="heavy-kv-key">Version</span>
   <span class="heavy-kv-value">2.4.1</span>
-</div>`)}
-          <h3 class="style-guide-section-name">Lists</h3>
-          <div>
+</div>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div>
                 <div class="heavy-list-item">First list item</div>
@@ -1310,10 +1217,10 @@ function dataDisplayContent() {
                 <div class="heavy-list-item">Third list item</div>
               </div>
             </div>
-          </div>
-          ${codeBlock('<div class="heavy-list-item">List item</div>')}
-          <h3 class="style-guide-section-name">Progress</h3>
-          <div>
+          </div>`,
+      '<div class="heavy-list-item">List item</div>'
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-stack heavy-stack--sm">
                 <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 75%"></div></div>
@@ -1321,40 +1228,31 @@ function dataDisplayContent() {
                 <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 90%"></div></div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-progress">
-  <div class="heavy-progress-bar" style="width: 75%"></div>
-</div>`)}`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="feedback.html">Feedback</a></strong> — For status messages, loading states, and empty states.</li>
-            </ul>
           </div>`,
+      `<div class="heavy-progress">
+  <div class="heavy-progress-bar" style="width: 75%"></div>
+</div>`
+    ),
+    related: guidelines([
+      '<strong><a href="feedback.html">Feedback</a></strong> — For status messages, loading states, and empty states.',
+    ]),
   });
 }
 
 function feedbackContent() {
   return componentPage('Feedback', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Components that communicate system status to the user — status messages for operation results, empty states for zero-data views, and loading indicators for pending operations.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Status messages</strong> — After an operation completes (success, error, warning) or to surface system information.</li>
-              <li><strong>Empty states</strong> — When a list, table, or view has no data to display.</li>
-              <li><strong>Loading</strong> — While waiting for data to load or an operation to complete.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Inline validation</strong> — Use <a href="form-validation.html">form validation</a> for field-level errors.</li>
-              <li><strong>Static labels</strong> — Use <a href="data-display.html">badges</a> for persistent status indicators that don't represent a recent event.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Status Messages</h3>
-          <div>
+    description: description('Components that communicate system status to the user — status messages for operation results, empty states for zero-data views, and loading indicators for pending operations.'),
+    whenToUse: guidelines([
+      '<strong>Status messages</strong> — After an operation completes (success, error, warning) or to surface system information.',
+      '<strong>Empty states</strong> — When a list, table, or view has no data to display.',
+      '<strong>Loading</strong> — While waiting for data to load or an operation to complete.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Inline validation</strong> — Use <a href="form-validation.html">form validation</a> for field-level errors.',
+      '<strong>Static labels</strong> — Use <a href="data-display.html">badges</a> for persistent status indicators that don\'t represent a recent event.',
+    ]),
+    variants: playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-stack heavy-stack--sm">
                 <div class="heavy-status-msg heavy-status-msg--success">Operation completed successfully.</div>
@@ -1363,34 +1261,34 @@ function feedbackContent() {
                 <div class="heavy-status-msg heavy-status-msg--info">A new version is available.</div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-status-msg heavy-status-msg--success">Operation completed successfully.</div>
-<div class="heavy-status-msg heavy-status-msg--error">Something went wrong. Please try again.</div>`)}
-          <h3 class="style-guide-section-name">Empty State</h3>
-          <div>
+          </div>`,
+      `<div class="heavy-status-msg heavy-status-msg--success">Operation completed successfully.</div>
+<div class="heavy-status-msg heavy-status-msg--error">Something went wrong. Please try again.</div>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-empty-state">
                 <div class="heavy-empty-state-title">No results found</div>
                 <div class="heavy-empty-state-description">Try adjusting your search or filters.</div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-empty-state">
+          </div>`,
+      `<div class="heavy-empty-state">
   <div class="heavy-empty-state-title">No results found</div>
   <div class="heavy-empty-state-description">Try adjusting your search or filters.</div>
-</div>`)}
-          <h3 class="style-guide-section-name">Spinner</h3>
-          <div>
+</div>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-cluster">
                 <div class="heavy-spinner"></div>
                 <span class="body-sm text-muted">Loading...</span>
               </div>
             </div>
-          </div>
-          ${codeBlock('<div class="heavy-spinner"></div>')}
-          <h3 class="style-guide-section-name">Skeleton</h3>
-          <div>
+          </div>`,
+      '<div class="heavy-spinner"></div>'
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-stack heavy-stack--sm">
                 <div class="heavy-skeleton" style="height: 16px; width: 60%"></div>
@@ -1398,46 +1296,34 @@ function feedbackContent() {
                 <div class="heavy-skeleton" style="height: 16px; width: 40%"></div>
               </div>
             </div>
-          </div>
-          ${codeBlock('<div class="heavy-skeleton" style="height: 16px; width: 60%"></div>')}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Messages are sentences</strong> — End with a period. "Operation completed successfully."</li>
-              <li><strong>Error messages suggest next steps</strong> — "Something went wrong. Please try again." not just "Error".</li>
-              <li><strong>Empty states are helpful</strong> — Include a description and, when possible, a call to action.</li>
-            </ul>
           </div>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="data-display.html">Data Display</a></strong> — For badges, stats, and other static data presentation.</li>
-              <li><strong><a href="form-validation.html">Form Validation</a></strong> — For field-level validation feedback.</li>
-            </ul>
-          </div>`,
+      '<div class="heavy-skeleton" style="height: 16px; width: 60%"></div>'
+    ),
+    content: guidelines([
+      '<strong>Messages are sentences</strong> — End with a period. "Operation completed successfully."',
+      '<strong>Error messages suggest next steps</strong> — "Something went wrong. Please try again." not just "Error".',
+      '<strong>Empty states are helpful</strong> — Include a description and, when possible, a call to action.',
+    ]),
+    related: guidelines([
+      '<strong><a href="data-display.html">Data Display</a></strong> — For badges, stats, and other static data presentation.',
+      '<strong><a href="form-validation.html">Form Validation</a></strong> — For field-level validation feedback.',
+    ]),
   });
 }
 
 function fileUploadContent() {
   return componentPage('File Upload', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A styled file input that replaces the browser's default file picker with a consistent button trigger. The native file input is hidden and the label acts as the clickable element.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Uploading documents, images, or other files from the user's device.</li>
-              <li>Forms that require file attachments.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Text content</strong> — Use an <a href="inputs.html">input</a> or textarea for typed content.</li>
-              <li><strong>Drag-and-drop</strong> — For bulk uploads, build a dedicated dropzone component instead.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Sizes</h3>
-          <div class="style-guide-variants">
+    description: description('A styled file input that replaces the browser\'s default file picker with a consistent button trigger. The native file input is hidden and the label acts as the clickable element.'),
+    whenToUse: guidelines([
+      'Uploading documents, images, or other files from the user\'s device.',
+      'Forms that require file attachments.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Text content</strong> — Use an <a href="inputs.html">input</a> or textarea for typed content.',
+      '<strong>Drag-and-drop</strong> — For bulk uploads, build a dedicated dropzone component instead.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <div class="heavy-form-file heavy-form-file--xs">
               <input type="file" id="file-xs">
               <label class="heavy-form-file-trigger" for="file-xs">X-Small</label>
@@ -1454,20 +1340,17 @@ function fileUploadContent() {
               <input type="file" id="file-lg">
               <label class="heavy-form-file-trigger" for="file-lg">Large</label>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-form-file">
+          </div>`,
+      `<div class="heavy-form-file">
   <input type="file" id="file-upload">
   <label class="heavy-form-file-trigger" for="file-upload">Choose file</label>
-</div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Label the trigger</strong> — "Choose file", "Upload image", or "Attach document". Be specific about what's expected.</li>
-              <li><strong>Show file name after selection</strong> — Confirm the user's choice by displaying the selected file name.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</div>`
+    ),
+    content: guidelines([
+      '<strong>Label the trigger</strong> — "Choose file", "Upload image", or "Attach document". Be specific about what\'s expected.',
+      '<strong>Show file name after selection</strong> — Confirm the user\'s choice by displaying the selected file name.',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1485,52 +1368,47 @@ function fileUploadContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — For text-based form fields.</li>
-              <li><strong><a href="button.html">Button</a></strong> — For general actions that don't involve file selection.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="inputs.html">Inputs</a></strong> — For text-based form fields.',
+      '<strong><a href="button.html">Button</a></strong> — For general actions that don\'t involve file selection.',
+    ]),
   });
 }
 
 function inputsContent() {
   return componentPage('Inputs', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Text fields for entering and editing single-line or multi-line content. Includes labels, placeholder text, hint text, and validation states for building accessible forms.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Collecting free-form text — names, emails, passwords, descriptions.</li>
-              <li>Any form field where the user types rather than selects.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Predefined options</strong> — Use a <a href="selects.html">select</a> or <a href="chips.html">chips</a> instead.</li>
-              <li><strong>On/off choices</strong> — Use a <a href="toggles.html">toggle</a> or checkbox.</li>
-              <li><strong>Search</strong> — Use the <a href="search.html">search</a> component for global search triggers.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Sizes</h3>
-          <div class="style-guide-variants">
+    description: description('Text fields for entering and editing single-line or multi-line content. Includes labels, placeholder text, hint text, and validation states for building accessible forms.'),
+    whenToUse: guidelines([
+      'Collecting free-form text — names, emails, passwords, descriptions.',
+      'Any form field where the user types rather than selects.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Predefined options</strong> — Use a <a href="selects.html">select</a> or <a href="chips.html">chips</a> instead.',
+      '<strong>On/off choices</strong> — Use a <a href="toggles.html">toggle</a> or checkbox.',
+      '<strong>Search</strong> — Use the <a href="search.html">search</a> component for global search triggers.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <input class="heavy-form-input heavy-form-input--xs heavy-col-span-2" type="text" placeholder="X-Small">
             <input class="heavy-form-input heavy-form-input--sm heavy-col-span-2" type="text" placeholder="Small">
             <input class="heavy-form-input heavy-col-span-2" type="text" placeholder="Medium">
             <input class="heavy-form-input heavy-form-input--lg heavy-col-span-2" type="text" placeholder="Large">
-          </div>
-          ${codeBlock('<input class="heavy-form-input" type="text" placeholder="Placeholder">')}
-          <h3 class="style-guide-section-name">States</h3>
-          <div class="style-guide-variants">
+          </div>`,
+      '<input class="heavy-form-input" type="text" placeholder="Placeholder">'
+    ) + '\n' + playground(
+      `          <div class="style-guide-variant-row">
             <input class="heavy-form-input heavy-col-span-2" type="text" placeholder="Default">
             <input class="heavy-form-input is-hover heavy-col-span-2" type="text" placeholder="Hover">
             <input class="heavy-form-input is-focus heavy-col-span-2" type="text" placeholder="Focus">
             <input class="heavy-form-input is-disabled heavy-col-span-2" type="text" placeholder="Disabled" disabled>
-          </div>
-          <h3 class="style-guide-section-name">Validation</h3>
-          <div class="style-guide-variants">
+          </div>`,
+      `<div class="heavy-form-group">
+  <label class="heavy-form-label">Email</label>
+  <input class="heavy-form-input heavy-form-input--error" type="text" value="not-an-email">
+  <span class="heavy-form-hint heavy-form-hint--error">Please enter a valid email address</span>
+</div>`
+    ) + '\n' + playground(
+      `          <div class="style-guide-variant-row">
             <div class="heavy-form-group heavy-col-span-3">
               <label class="heavy-form-label">Email</label>
               <input class="heavy-form-input heavy-form-input--error" type="text" placeholder="Enter email" value="not-an-email">
@@ -1541,39 +1419,37 @@ function inputsContent() {
               <input class="heavy-form-input heavy-form-input--success" type="text" placeholder="Choose username" value="keithbarney">
               <span class="heavy-form-hint heavy-form-hint--success">Username is available</span>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-form-group">
+          </div>`,
+      `<div class="heavy-form-group">
   <label class="heavy-form-label">Email</label>
   <input class="heavy-form-input heavy-form-input--error" type="text" value="not-an-email">
   <span class="heavy-form-hint heavy-form-hint--error">Please enter a valid email address</span>
-</div>`)}
-          <h3 class="style-guide-section-name">Textarea</h3>
-          <div class="heavy-col-span-4">
+</div>`
+    ) + '\n' + playground(
+      `          <div class="heavy-col-span-4">
             <textarea class="heavy-form-input heavy-form-textarea" placeholder="Write something..."></textarea>
-          </div>
-          ${codeBlock('<textarea class="heavy-form-input heavy-form-textarea" placeholder="Write something..."></textarea>')}`,
-    formatting: `          <h3 class="style-guide-section-name">Form group</h3>
-          <div class="heavy-form-group heavy-col-span-3">
+          </div>`,
+      '<textarea class="heavy-form-input heavy-form-textarea" placeholder="Write something..."></textarea>'
+    ),
+    formatting: playground(
+      `          <div class="heavy-form-group heavy-col-span-3">
             <label class="heavy-form-label">Label</label>
             <input class="heavy-form-input" type="text" placeholder="Placeholder">
             <span class="heavy-form-hint">Hint text goes here</span>
-          </div>
-          ${codeBlock(`<div class="heavy-form-group">
+          </div>`,
+      `<div class="heavy-form-group">
   <label class="heavy-form-label">Label</label>
   <input class="heavy-form-input" type="text" placeholder="Placeholder">
   <span class="heavy-form-hint">Hint text goes here</span>
-</div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Labels are required</strong> — Every input needs a visible label. Don't rely on placeholder text alone.</li>
-              <li><strong>Placeholder is a hint, not a label</strong> — Use it to show format ("name@example.com") not purpose.</li>
-              <li><strong>Hint text for constraints</strong> — Show format rules, character limits, or requirements below the field.</li>
-              <li><strong>Error messages are specific</strong> — "Please enter a valid email" not "Invalid input".</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</div>`
+    ),
+    content: guidelines([
+      '<strong>Labels are required</strong> — Every input needs a visible label. Don\'t rely on placeholder text alone.',
+      '<strong>Placeholder is a hint, not a label</strong> — Use it to show format ("name@example.com") not purpose.',
+      '<strong>Hint text for constraints</strong> — Show format rules, character limits, or requirements below the field.',
+      '<strong>Error messages are specific</strong> — "Please enter a valid email" not "Invalid input".',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1591,51 +1467,39 @@ function inputsContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="selects.html">Selects</a></strong> — For choosing from predefined options.</li>
-              <li><strong><a href="toggles.html">Toggles</a></strong> — For boolean choices.</li>
-              <li><strong><a href="file-upload.html">File Upload</a></strong> — For uploading files.</li>
-              <li><strong><a href="form-validation.html">Form Validation</a></strong> — For client-side validation patterns.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="selects.html">Selects</a></strong> — For choosing from predefined options.',
+      '<strong><a href="toggles.html">Toggles</a></strong> — For boolean choices.',
+      '<strong><a href="file-upload.html">File Upload</a></strong> — For uploading files.',
+      '<strong><a href="form-validation.html">Form Validation</a></strong> — For client-side validation patterns.',
+    ]),
   });
 }
 
 function navLinksContent() {
   return componentPage('Nav Links', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Horizontal navigation links for moving between top-level pages or sections. One link is marked active to show the user's current location.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Top-level navigation between major sections of an application.</li>
-              <li>Secondary navigation within a section header.</li>
-            </ul>
+    description: description('Horizontal navigation links for moving between top-level pages or sections. One link is marked active to show the user\'s current location.'),
+    whenToUse: guidelines([
+      'Top-level navigation between major sections of an application.',
+      'Secondary navigation within a section header.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Content switching</strong> — Use <a href="tabs.html">tabs</a> when toggling between views on the same page.',
+      '<strong>Hierarchical navigation</strong> — Use <a href="breadcrumbs.html">breadcrumbs</a> for showing depth.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
+            <a class="heavy-nav-link heavy-nav-link--active" href="#">Dashboard</a>
+            <a class="heavy-nav-link" href="#">Settings</a>
+            <a class="heavy-nav-link" href="#">Profile</a>
           </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Content switching</strong> — Use <a href="tabs.html">tabs</a> when toggling between views on the same page.</li>
-              <li><strong>Hierarchical navigation</strong> — Use <a href="breadcrumbs.html">breadcrumbs</a> for showing depth.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
-            <div class="heavy-cluster" style="gap: var(--space-24)">
-              <a class="heavy-nav-link heavy-nav-link--active" href="#">Dashboard</a>
-              <a class="heavy-nav-link" href="#">Settings</a>
-              <a class="heavy-nav-link" href="#">Profile</a>
-            </div>
-          </div>
-          ${codeBlock(`<nav>
+      `<nav>
   <a class="heavy-nav-link heavy-nav-link--active" href="#">Dashboard</a>
   <a class="heavy-nav-link" href="#">Settings</a>
   <a class="heavy-nav-link" href="#">Profile</a>
-</nav>`)}`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</nav>`
+    ),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1653,53 +1517,42 @@ function navLinksContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="tabs.html">Tabs</a></strong> — For switching content panels within a page.</li>
-              <li><strong><a href="breadcrumbs.html">Breadcrumbs</a></strong> — For showing hierarchical location.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="tabs.html">Tabs</a></strong> — For switching content panels within a page.',
+      '<strong><a href="breadcrumbs.html">Breadcrumbs</a></strong> — For showing hierarchical location.',
+    ]),
   });
 }
 
 function searchContent() {
   return componentPage('Search', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A text input with a built-in search icon for filtering or querying content. Available in four sizes to match surrounding UI density. Wraps a native input element for full keyboard and assistive technology support.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Filtering a list, table, or set of results by keyword.</li>
-              <li>Global search in a header or sidebar.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Structured input</strong> — Use an <a href="inputs.html">input</a> with a label for collecting specific data like names or emails.</li>
-              <li><strong>Filtering by category</strong> — Use <a href="chips.html">chips</a> for filtering by predefined tags.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Sizes</h3>
-          <div class="style-guide-variants">
+    description: description('A text input with a built-in search icon for filtering or querying content. Available in four sizes to match surrounding UI density. Wraps a native input element for full keyboard and assistive technology support.'),
+    whenToUse: guidelines([
+      'Filtering a list, table, or set of results by keyword.',
+      'Global search in a header or sidebar.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Structured input</strong> — Use an <a href="inputs.html">input</a> with a label for collecting specific data like names or emails.',
+      '<strong>Filtering by category</strong> — Use <a href="chips.html">chips</a> for filtering by predefined tags.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <label class="heavy-search heavy-search--xs heavy-col-span-2"><input type="search" placeholder="X-Small"></label>
             <label class="heavy-search heavy-search--sm heavy-col-span-2"><input type="search" placeholder="Small"></label>
             <label class="heavy-search heavy-col-span-2"><input type="search" placeholder="Medium"></label>
             <label class="heavy-search heavy-search--lg heavy-col-span-2"><input type="search" placeholder="Large"></label>
           </div>
-          ${codeBlock(`<label class="heavy-search">
-  <input type="search" placeholder="Search...">
-</label>`)}
-          <h3 class="style-guide-section-name">States</h3>
-          <div class="style-guide-variants">
+          <div class="style-guide-variant-row">
             <label class="heavy-search heavy-col-span-2"><input type="search" placeholder="Default"></label>
             <label class="heavy-search is-hover heavy-col-span-2"><input type="search" placeholder="Hover"></label>
             <label class="heavy-search is-focus heavy-col-span-2"><input type="search" placeholder="Focus"></label>
             <label class="heavy-search is-disabled heavy-col-span-2"><input type="search" placeholder="Disabled" disabled></label>
           </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+      `<label class="heavy-search">
+  <input type="search" placeholder="Search...">
+</label>`
+    ),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1717,66 +1570,56 @@ function searchContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — For general text entry and form fields.</li>
-              <li><strong><a href="chips.html">Chips</a></strong> — For filtering by predefined categories.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="inputs.html">Inputs</a></strong> — For general text entry and form fields.',
+      '<strong><a href="chips.html">Chips</a></strong> — For filtering by predefined categories.',
+    ]),
   });
 }
 
 function selectsContent() {
   return componentPage('Selects', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A native dropdown for choosing one option from a list. Uses the browser's built-in select element with custom styling for consistency across platforms.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Choosing from 5 or more predefined options.</li>
-              <li>Form fields where space is limited and the option list is long.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Few options</strong> — Use <a href="chips.html">chips</a> or radio buttons for 2–4 visible choices.</li>
-              <li><strong>Multiple selection</strong> — Use checkboxes or a multi-select pattern instead.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Sizes</h3>
-          <div class="style-guide-variants">
+    description: description('A native dropdown for choosing one option from a list. Uses the browser\'s built-in select element with custom styling for consistency across platforms.'),
+    whenToUse: guidelines([
+      'Choosing from 5 or more predefined options.',
+      'Form fields where space is limited and the option list is long.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Few options</strong> — Use <a href="chips.html">chips</a> or radio buttons for 2–4 visible choices.',
+      '<strong>Multiple selection</strong> — Use checkboxes or a multi-select pattern instead.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <select class="heavy-select heavy-select--xs heavy-col-span-2"><option>X-Small</option></select>
             <select class="heavy-select heavy-select--sm heavy-col-span-2"><option>Small</option></select>
             <select class="heavy-select heavy-col-span-2"><option>Medium</option></select>
             <select class="heavy-select heavy-select--lg heavy-col-span-2"><option>Large</option></select>
           </div>
-          ${codeBlock(`<select class="heavy-select">
-  <option>Select an option</option>
-</select>`)}
-          <h3 class="style-guide-section-name">States</h3>
-          <div class="style-guide-variants">
+          <div class="style-guide-variant-row">
             <select class="heavy-select heavy-col-span-2"><option>Default</option></select>
             <select class="heavy-select is-hover heavy-col-span-2"><option>Hover</option></select>
             <select class="heavy-select is-focus heavy-col-span-2"><option>Focus</option></select>
             <select class="heavy-select is-disabled heavy-col-span-2" disabled><option>Disabled</option></select>
           </div>`,
-    formatting: `          <h3 class="style-guide-section-name">Form group</h3>
-          <div class="heavy-form-group heavy-col-span-3">
+      `<select class="heavy-select">
+  <option>Select an option</option>
+</select>`
+    ),
+    formatting: playground(
+      `          <div class="heavy-form-group heavy-col-span-3">
             <label class="heavy-form-label">Label</label>
             <select class="heavy-select"><option>Select an option</option></select>
             <span class="heavy-form-hint">Hint text goes here</span>
-          </div>
-          ${codeBlock(`<div class="heavy-form-group">
+          </div>`,
+      `<div class="heavy-form-group">
   <label class="heavy-form-label">Label</label>
   <select class="heavy-select">
     <option>Select an option</option>
   </select>
   <span class="heavy-form-hint">Hint text goes here</span>
-</div>`)}`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</div>`
+    ),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1798,58 +1641,45 @@ function selectsContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="chips.html">Chips</a></strong> — For visible selection from a small set.</li>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — For free-form text entry.</li>
-              <li><strong><a href="toggles.html">Toggles</a></strong> — For binary on/off choices.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="chips.html">Chips</a></strong> — For visible selection from a small set.',
+      '<strong><a href="inputs.html">Inputs</a></strong> — For free-form text entry.',
+      '<strong><a href="toggles.html">Toggles</a></strong> — For binary on/off choices.',
+    ]),
   });
 }
 
 function tabsContent() {
   return componentPage('Tabs', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A row of labeled controls that switch between content panels. Only one tab is active at a time, and its associated panel is visible while others are hidden.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Organizing related content into parallel views within a single page.</li>
-              <li>Reducing page length by hiding secondary content behind a tab.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Sequential steps</strong> — Use a stepper or wizard for ordered processes.</li>
-              <li><strong>Page navigation</strong> — Use <a href="nav-links.html">nav links</a> for moving between separate pages.</li>
-              <li><strong>Filtering</strong> — Use <a href="chips.html">chips</a> for narrowing a content list.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
+    description: description('A row of labeled controls that switch between content panels. Only one tab is active at a time, and its associated panel is visible while others are hidden.'),
+    whenToUse: guidelines([
+      'Organizing related content into parallel views within a single page.',
+      'Reducing page length by hiding secondary content behind a tab.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Sequential steps</strong> — Use a stepper or wizard for ordered processes.',
+      '<strong>Page navigation</strong> — Use <a href="nav-links.html">nav links</a> for moving between separate pages.',
+      '<strong>Filtering</strong> — Use <a href="chips.html">chips</a> for narrowing a content list.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
             <div class="heavy-tabs">
               <button class="heavy-tab heavy-tab--active">Overview</button>
               <button class="heavy-tab">Details</button>
               <button class="heavy-tab">Settings</button>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-tabs">
+          </div>`,
+      `<div class="heavy-tabs">
   <button class="heavy-tab heavy-tab--active">Overview</button>
   <button class="heavy-tab">Details</button>
   <button class="heavy-tab">Settings</button>
-</div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>One word preferred</strong> — "Overview", "Settings", "Activity". Keep labels short enough that all tabs fit on one line.</li>
-              <li><strong>Parallel structure</strong> — All tabs at the same grammatical level. Don't mix nouns and verbs.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</div>`
+    ),
+    content: guidelines([
+      '<strong>One word preferred</strong> — "Overview", "Settings", "Activity". Keep labels short enough that all tabs fit on one line.',
+      '<strong>Parallel structure</strong> — All tabs at the same grammatical level. Don\'t mix nouns and verbs.',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1871,71 +1701,59 @@ function tabsContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="nav-links.html">Nav Links</a></strong> — For navigating between separate pages.</li>
-              <li><strong><a href="chips.html">Chips</a></strong> — For filtering content within a single view.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="nav-links.html">Nav Links</a></strong> — For navigating between separate pages.',
+      '<strong><a href="chips.html">Chips</a></strong> — For filtering content within a single view.',
+    ]),
   });
 }
 
 function togglesContent() {
   return componentPage('Toggles', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Controls for binary and multiple-choice selections. Includes toggle switches for on/off settings, checkboxes for multi-select, and radio buttons for single-select from a group.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Toggle</strong> — Instant on/off settings that take effect immediately (dark mode, notifications).</li>
-              <li><strong>Checkbox</strong> — Selecting one or more options from a list, or agreeing to terms.</li>
-              <li><strong>Radio</strong> — Choosing exactly one option from a mutually exclusive set.</li>
-            </ul>
+    description: description('Controls for binary and multiple-choice selections. Includes toggle switches for on/off settings, checkboxes for multi-select, and radio buttons for single-select from a group.'),
+    whenToUse: guidelines([
+      '<strong>Toggle</strong> — Instant on/off settings that take effect immediately (dark mode, notifications).',
+      '<strong>Checkbox</strong> — Selecting one or more options from a list, or agreeing to terms.',
+      '<strong>Radio</strong> — Choosing exactly one option from a mutually exclusive set.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Actions</strong> — Use a <a href="button.html">button</a> for operations like save or submit.',
+      '<strong>Navigation</strong> — Use <a href="tabs.html">tabs</a> or <a href="chips.html">chips</a> for switching views.',
+      '<strong>Many options</strong> — Use a <a href="selects.html">select</a> for long lists.',
+    ]),
+    variants: playground(
+      `          <div class="style-guide-variant-row">
+            <label class="heavy-form-toggle">
+              <input type="checkbox">
+              <span class="heavy-form-toggle-track"></span>
+              <span>Off</span>
+            </label>
+            <label class="heavy-form-toggle">
+              <input type="checkbox" checked>
+              <span class="heavy-form-toggle-track"></span>
+              <span>On</span>
+            </label>
           </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Actions</strong> — Use a <a href="button.html">button</a> for operations like save or submit.</li>
-              <li><strong>Navigation</strong> — Use <a href="tabs.html">tabs</a> or <a href="chips.html">chips</a> for switching views.</li>
-              <li><strong>Many options</strong> — Use a <a href="selects.html">select</a> for long lists.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Toggle Switch</h3>
-          <div>
-            <div class="heavy-cluster">
-              <label class="heavy-form-toggle">
-                <input type="checkbox">
-                <span class="heavy-form-toggle-track"></span>
-                <span>Off</span>
-              </label>
-              <label class="heavy-form-toggle">
-                <input type="checkbox" checked>
-                <span class="heavy-form-toggle-track"></span>
-                <span>On</span>
-              </label>
-            </div>
-          </div>
-          ${codeBlock(`<label class="heavy-form-toggle">
+      `<label class="heavy-form-toggle">
   <input type="checkbox">
   <span class="heavy-form-toggle-track"></span>
   <span>Off</span>
-</label>`)}
-          <h3 class="style-guide-section-name">Checkbox</h3>
-          <div>
+</label>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack">
               <div class="heavy-form-check">
                 <input class="heavy-form-check-input" type="checkbox" id="check1" checked>
                 <label class="heavy-form-label" for="check1">Checkbox option</label>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-form-check">
+          </div>`,
+      `<div class="heavy-form-check">
   <input class="heavy-form-check-input" type="checkbox" id="check1">
   <label class="heavy-form-label" for="check1">Checkbox option</label>
-</div>`)}
-          <h3 class="style-guide-section-name">Radio</h3>
-          <div>
+</div>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack">
               <div class="heavy-form-check">
                 <input class="heavy-form-check-input" type="radio" name="radio" id="radio1" checked>
@@ -1946,21 +1764,18 @@ function togglesContent() {
                 <label class="heavy-form-label" for="radio2">Radio option B</label>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-form-check">
+          </div>`,
+      `<div class="heavy-form-check">
   <input class="heavy-form-check-input" type="radio" name="group" id="radio1">
   <label class="heavy-form-label" for="radio1">Radio option A</label>
-</div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Toggle labels describe the setting</strong> — "Dark mode", "Send notifications". The on/off state is communicated visually.</li>
-              <li><strong>Checkbox labels are positive</strong> — "Enable feature" not "Disable feature". Avoid double negatives.</li>
-              <li><strong>Radio labels are parallel</strong> — Same grammatical structure for all options in the group.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</div>`
+    ),
+    content: guidelines([
+      '<strong>Toggle labels describe the setting</strong> — "Dark mode", "Send notifications". The on/off state is communicated visually.',
+      '<strong>Checkbox labels are positive</strong> — "Enable feature" not "Disable feature". Avoid double negatives.',
+      '<strong>Radio labels are parallel</strong> — Same grammatical structure for all options in the group.',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1982,37 +1797,26 @@ function togglesContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="chips.html">Chips</a></strong> — For visible multi-select filtering.</li>
-              <li><strong><a href="selects.html">Selects</a></strong> — For single choice from a long list.</li>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — For free-form text entry.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="chips.html">Chips</a></strong> — For visible multi-select filtering.',
+      '<strong><a href="selects.html">Selects</a></strong> — For single choice from a long list.',
+      '<strong><a href="inputs.html">Inputs</a></strong> — For free-form text entry.',
+    ]),
   });
 }
 
 function formValidationContent() {
   return componentPage('Form Validation', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Client-side validation pattern for form fields. Uses data attributes to declare validation rules and applies error/success states with hint text on blur. Validates required fields, email format, minimum length, and select choices.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Any form that submits data — validate before sending to catch errors early.</li>
-              <li>Fields with format requirements (email, password length, required fields).</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Server-only validation</strong> — Always validate on the server too. Client-side validation is a convenience, not a security measure.</li>
-              <li><strong>Real-time search</strong> — Don't validate search inputs. Let users type freely.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Live example</h3>
-          <div class="heavy-col-span-4">
+    description: description('Client-side validation pattern for form fields. Uses data attributes to declare validation rules and applies error/success states with hint text on blur. Validates required fields, email format, minimum length, and select choices.'),
+    whenToUse: guidelines([
+      'Any form that submits data — validate before sending to catch errors early.',
+      'Fields with format requirements (email, password length, required fields).',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Server-only validation</strong> — Always validate on the server too. Client-side validation is a convenience, not a security measure.',
+      '<strong>Real-time search</strong> — Don\'t validate search inputs. Let users type freely.',
+    ]),
+    variants: `          <div class="heavy-col-span-4">
             <div class="heavy-stack">
               <div class="heavy-form-group" data-validate="required">
                 <label class="heavy-form-label">Name</label>
@@ -2052,36 +1856,27 @@ function formValidationContent() {
   <input class="heavy-form-input" type="text" placeholder="Enter your email">
   <span class="heavy-form-hint">Must be a valid email</span>
 </div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Hint text shows the rule</strong> — "Minimum 8 characters", "Must be a valid email". Tell users the constraint upfront.</li>
-              <li><strong>Error messages are specific</strong> — Repeat or rephrase the rule. "Please enter a valid email" not "Invalid field".</li>
-              <li><strong>Validate on blur</strong> — Don't interrupt typing. Check when the user leaves the field.</li>
-            </ul>
-          </div>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — The base text field component with validation states.</li>
-              <li><strong><a href="selects.html">Selects</a></strong> — Dropdowns that participate in form validation.</li>
-              <li><strong><a href="feedback.html">Feedback</a></strong> — For form-level success/error messages after submission.</li>
-            </ul>
-          </div>`,
+    content: guidelines([
+      '<strong>Hint text shows the rule</strong> — "Minimum 8 characters", "Must be a valid email". Tell users the constraint upfront.',
+      '<strong>Error messages are specific</strong> — Repeat or rephrase the rule. "Please enter a valid email" not "Invalid field".',
+      '<strong>Validate on blur</strong> — Don\'t interrupt typing. Check when the user leaves the field.',
+    ]),
+    related: guidelines([
+      '<strong><a href="inputs.html">Inputs</a></strong> — The base text field component with validation states.',
+      '<strong><a href="selects.html">Selects</a></strong> — Dropdowns that participate in form validation.',
+      '<strong><a href="feedback.html">Feedback</a></strong> — For form-level success/error messages after submission.',
+    ]),
   });
 }
 
 function searchPatternContent() {
   return componentPage('Search', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">Interactive search pattern. Type in any field below to test the search component at different sizes and in different contexts.</p></div>`,
-    variants: `          <h3 class="style-guide-section-name">Standalone</h3>
-          <div>
+    description: description('Interactive search pattern. Type in any field below to test the search component at different sizes and in different contexts.'),
+    variants: `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <label class="heavy-search heavy-search--lg"><input type="search" placeholder="Search everything..."></label>
             </div>
           </div>
-          <h3 class="style-guide-section-name">In a header</h3>
           <div>
             <div class="heavy-stack heavy-stack--lg">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); padding: var(--space-16); background: var(--ui-surface-default); border-radius: var(--radius-md);">
@@ -2091,7 +1886,6 @@ function searchPatternContent() {
               </div>
             </div>
           </div>
-          <h3 class="style-guide-section-name">In a sidebar</h3>
           <div>
             <div class="heavy-stack heavy-stack--lg">
               <div style="max-width: 280px; padding: var(--space-16); background: var(--ui-surface-default); border-radius: var(--radius-md);">
@@ -2105,50 +1899,38 @@ function searchPatternContent() {
               </div>
             </div>
           </div>
-          <h3 class="style-guide-section-name">Full width</h3>
           <div>
             <div class="heavy-stack heavy-stack--lg">
               <label class="heavy-search" style="display: flex;"><input type="search" placeholder="Search across all projects, files, and settings..."></label>
             </div>
           </div>
-          <h3 class="style-guide-section-name">Disabled</h3>
           <div>
             <div class="heavy-stack heavy-stack--lg">
               <label class="heavy-search"><input type="search" placeholder="Search unavailable" disabled></label>
             </div>
           </div>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="search.html">Search Component</a></strong> — API reference, sizes, states, and keyboard docs.</li>
-              <li><strong><a href="inputs.html">Inputs</a></strong> — For general text entry and form fields.</li>
-              <li><strong><a href="chips.html">Chips</a></strong> — For filtering by predefined categories.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="search.html">Search Component</a></strong> — API reference, sizes, states, and keyboard docs.',
+      '<strong><a href="inputs.html">Inputs</a></strong> — For general text entry and form fields.',
+      '<strong><a href="chips.html">Chips</a></strong> — For filtering by predefined categories.',
+    ]),
   });
 }
 
 function cardContent() {
   return componentPage('Card', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A container that groups related content and actions. Cards create visual hierarchy by separating content into distinct sections with borders or elevation.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Grouping related form fields or settings into a distinct section.</li>
-              <li>Displaying a summary of an item (e.g., a branch, project, or user) in a list or grid.</li>
-              <li>Creating dashboard panels with a header, body, and optional footer.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Full-page content</strong> — Don't wrap entire page content in a card. Cards are for contained sections.</li>
-              <li><strong>Overlays</strong> — Use a <a href="modal.html">modal</a> for content that interrupts the user's flow.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
+    description: description('A container that groups related content and actions. Cards create visual hierarchy by separating content into distinct sections with borders or elevation.'),
+    whenToUse: guidelines([
+      'Grouping related form fields or settings into a distinct section.',
+      'Displaying a summary of an item (e.g., a branch, project, or user) in a list or grid.',
+      'Creating dashboard panels with a header, body, and optional footer.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Full-page content</strong> — Don\'t wrap entire page content in a card. Cards are for contained sections.',
+      '<strong>Overlays</strong> — Use a <a href="modal.html">modal</a> for content that interrupts the user\'s flow.',
+    ]),
+    variants: playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-card" style="max-width: 360px;">
                 <div class="heavy-card-header">
@@ -2166,8 +1948,8 @@ function cardContent() {
                 </div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-card">
+          </div>`,
+      `<div class="heavy-card">
   <div class="heavy-card-header">
     <div class="heavy-card-title">Card Title</div>
     <div class="heavy-card-subtitle">Optional subtitle</div>
@@ -2179,9 +1961,9 @@ function cardContent() {
     <button class="heavy-btn heavy-btn--sm">Cancel</button>
     <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Save</button>
   </div>
-</div>`)}
-          <h3 class="style-guide-section-name">Elevated</h3>
-          <div>
+</div>`
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-card heavy-card--elevated" style="max-width: 360px;">
                 <div class="heavy-card-body">
@@ -2190,10 +1972,10 @@ function cardContent() {
                 </div>
               </div>
             </div>
-          </div>
-          ${codeBlock('<div class="heavy-card heavy-card--elevated">...</div>')}
-          <h3 class="style-guide-section-name">Interactive</h3>
-          <div>
+          </div>`,
+      '<div class="heavy-card heavy-card--elevated">...</div>'
+    ) + '\n' + playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div class="heavy-card heavy-card--interactive" style="max-width: 360px;">
                 <div class="heavy-card-body">
@@ -2202,40 +1984,31 @@ function cardContent() {
                 </div>
               </div>
             </div>
-          </div>
-          ${codeBlock('<div class="heavy-card heavy-card--interactive">...</div>')}`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="modal.html">Modal</a></strong> — For content that interrupts the user's flow and requires a decision.</li>
-              <li><strong><a href="data-display.html">Data Display</a></strong> — For badges, stats, and key-value pairs inside cards.</li>
-            </ul>
           </div>`,
+      '<div class="heavy-card heavy-card--interactive">...</div>'
+    ),
+    related: guidelines([
+      '<strong><a href="modal.html">Modal</a></strong> — For content that interrupts the user\'s flow and requires a decision.',
+      '<strong><a href="data-display.html">Data Display</a></strong> — For badges, stats, and key-value pairs inside cards.',
+    ]),
   });
 }
 
 function modalContent() {
   return componentPage('Modal', {
-    description: `          <h3 class="style-guide-section-name">Description</h3>
-          <div><p class="style-guide-description">A dialog overlay that focuses the user's attention on a specific task or decision. Modals appear on top of a dimmed backdrop and block interaction with the underlying page until dismissed.</p></div>`,
-    whenToUse: `          <h3 class="style-guide-section-name">When to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li>Confirming a destructive or irreversible action (e.g., delete, disconnect).</li>
-              <li>Collecting a small amount of input without navigating away from the current context.</li>
-              <li>Presenting a choice from a short list of options.</li>
-            </ul>
-          </div>`,
-    whenNotToUse: `          <h3 class="style-guide-section-name">When not to use</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Long forms</strong> — Use a dedicated page or inline expansion instead.</li>
-              <li><strong>Non-blocking info</strong> — Use <a href="feedback.html">status messages</a> for notifications that don't require a decision.</li>
-              <li><strong>Content grouping</strong> — Use a <a href="card.html">card</a> for sections within a page.</li>
-            </ul>
-          </div>`,
-    variants: `          <h3 class="style-guide-section-name">Default</h3>
-          <div>
+    description: description('A dialog overlay that focuses the user\'s attention on a specific task or decision. Modals appear on top of a dimmed backdrop and block interaction with the underlying page until dismissed.'),
+    whenToUse: guidelines([
+      'Confirming a destructive or irreversible action (e.g., delete, disconnect).',
+      'Collecting a small amount of input without navigating away from the current context.',
+      'Presenting a choice from a short list of options.',
+    ]),
+    whenNotToUse: guidelines([
+      '<strong>Long forms</strong> — Use a dedicated page or inline expansion instead.',
+      '<strong>Non-blocking info</strong> — Use <a href="feedback.html">status messages</a> for notifications that don\'t require a decision.',
+      '<strong>Content grouping</strong> — Use a <a href="card.html">card</a> for sections within a page.',
+    ]),
+    variants: playground(
+      `          <div>
             <div class="heavy-stack heavy-stack--lg">
               <div style="position: relative; height: 320px; background: var(--ui-bg-default); border-radius: var(--radius-md); overflow: hidden;">
                 <div class="heavy-modal-backdrop" style="position: absolute;">
@@ -2254,8 +2027,8 @@ function modalContent() {
                 </div>
               </div>
             </div>
-          </div>
-          ${codeBlock(`<div class="heavy-modal-backdrop">
+          </div>`,
+      `<div class="heavy-modal-backdrop">
   <div class="heavy-modal">
     <div class="heavy-modal-header">
       <div class="heavy-modal-title">Confirm Action</div>
@@ -2268,18 +2041,15 @@ function modalContent() {
       <button class="heavy-btn heavy-btn--danger heavy-btn--sm">Delete</button>
     </div>
   </div>
-</div>`)}`,
-    content: `          <h3 class="style-guide-section-name">Content</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong>Title is required</strong> — Always include a clear, concise title that describes what the modal is about.</li>
-              <li><strong>Keep it brief</strong> — Modal body should be scannable. If it needs scrolling, consider a different pattern.</li>
-              <li><strong>Primary action on the right</strong> — Cancel on the left, confirm/destructive action on the right.</li>
-              <li><strong>Destructive actions use danger buttons</strong> — Make the consequences visually clear.</li>
-            </ul>
-          </div>`,
-    keyboard: `          <h3 class="style-guide-section-name">Keyboard</h3>
-          <table class="style-guide-data-table">
+</div>`
+    ),
+    content: guidelines([
+      '<strong>Title is required</strong> — Always include a clear, concise title that describes what the modal is about.',
+      '<strong>Keep it brief</strong> — Modal body should be scannable. If it needs scrolling, consider a different pattern.',
+      '<strong>Primary action on the right</strong> — Cancel on the left, confirm/destructive action on the right.',
+      '<strong>Destructive actions use danger buttons</strong> — Make the consequences visually clear.',
+    ]),
+    keyboard: `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -2297,13 +2067,10 @@ function modalContent() {
               </tr>
             </tbody>
           </table>`,
-    related: `          <h3 class="style-guide-section-name">Related</h3>
-          <div class="style-guide-guidelines">
-            <ul>
-              <li><strong><a href="card.html">Card</a></strong> — For non-blocking content grouping within a page.</li>
-              <li><strong><a href="feedback.html">Feedback</a></strong> — For status messages that don't require user action.</li>
-            </ul>
-          </div>`,
+    related: guidelines([
+      '<strong><a href="card.html">Card</a></strong> — For non-blocking content grouping within a page.',
+      '<strong><a href="feedback.html">Feedback</a></strong> — For status messages that don\'t require user action.',
+    ]),
   });
 }
 

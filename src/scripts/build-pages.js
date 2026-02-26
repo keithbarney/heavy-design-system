@@ -304,58 +304,28 @@ const builder = createPageBuilder({
   customScripts: VALIDATION_SCRIPT,
 });
 
-const { esc, codeBlock, componentPage, foundationPage, section, wrapPage } = builder;
+const { esc, codeBlock, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, baseScaleTable } = builder;
 
 // ===== Content Functions =====
 
 function colorsContent(tokens) {
-  const colorSections = tokens.colorFamilies.map(f => {
-    const rows = f.stops.map(s =>
-      `          <tr>
-            <td>${s.stop}</td>
-            <td><div class="style-guide-token-swatch" style="background: ${s.hex}"></div></td>
-            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('color.${f.name}.${s.stop}', this)">color.${f.name}.${s.stop}</span></td>
-            <td>${s.hex}</td>
-          </tr>`
-    ).join('\n');
-    return section(f.name, `      <table class="style-guide-data-table style-guide-data-table--visual">
-        <thead>
-          <tr>
-            <th>Stop</th>
-            <th>Visual</th>
-            <th>Token</th>
-            <th>Hex</th>
-          </tr>
-        </thead>
-        <tbody>
-${rows}
-        </tbody>
-      </table>`);
-  }).join('\n');
+  const colorSections = tokens.colorFamilies.map(f =>
+    section(f.name, colorTable(f.stops.map(s => ({
+      tokenName: `color.${f.name}.${s.stop}`,
+      copyValue: `color.${f.name}.${s.stop}`,
+      sampleColor: s.hex,
+      value: s.hex,
+    }))))
+  ).join('\n');
 
-  const uiColorSections = tokens.uiColorGroups.map(group => {
-    const rows = group.tokens.map(t =>
-      `          <tr>
-            <td><div class="style-guide-token-swatch" style="background: ${t.lightHex}"></div></td>
-            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
-            <td>${esc(t.lightRef)}</td>
-            <td>${esc(t.darkRef)}</td>
-          </tr>`
-    ).join('\n');
-    return section(group.group, `      <table class="style-guide-data-table style-guide-data-table--visual">
-        <thead>
-          <tr>
-            <th>Visual</th>
-            <th>Token</th>
-            <th>Light</th>
-            <th>Dark</th>
-          </tr>
-        </thead>
-        <tbody>
-${rows}
-        </tbody>
-      </table>`);
-  }).join('\n');
+  const uiColorSections = tokens.uiColorGroups.map(group =>
+    section(group.group, colorTable(group.tokens.map(t => ({
+      tokenName: t.name,
+      copyValue: t.css,
+      sampleColor: t.lightHex,
+      value: `${t.lightRef} / ${t.darkRef}`,
+    }))))
+  ).join('\n');
 
   return foundationPage('Colors', 'Base color families and semantic UI color tokens for light and dark themes.', [
     colorSections,
@@ -364,109 +334,50 @@ ${rows}
 }
 
 function typographyContent(tokens) {
-  const familyRows = tokens.fontFamilies.map(f =>
-    `                <tr>
-                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.token)}', this)">${esc(f.token)}</span></td>
-                  <td>${esc(f.value)}</td>
-                </tr>`
-  ).join('\n');
-
-  const weightRows = tokens.fontWeights.map(w =>
-    `                <tr>
-                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(w.token)}', this)">${esc(w.token)}</span></td>
-                  <td><span style="font-size: var(--font-size-body-xlg); font-weight: ${w.value}">Aa</span></td>
-                  <td>${w.value}</td>
-                </tr>`
-  ).join('\n');
-
-  const fontSizeRows = tokens.fontSizes.map(f => {
-    return `                <tr>
-                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.css)}', this)">${esc(f.name)}</span></td>
-                  <td><span style="font-size: ${f.value}">Aa</span></td>
-                  <td class="body-xsm text-muted">${f.ref}</td>
-                  <td>${f.value}</td>
-                </tr>`;
-  }).join('\n');
-
   return foundationPage('Typography', 'Font families, weights, and size scale tokens.', [
-    section('Font Families', `      <table class="style-guide-data-table">
-        <thead><tr><th>Token</th><th>Value</th></tr></thead>
-        <tbody>${familyRows}</tbody>
-      </table>`),
-    section('Font Weights', `      <table class="style-guide-data-table">
-        <thead><tr><th>Token</th><th>Sample</th><th>Value</th></tr></thead>
-        <tbody>${weightRows}</tbody>
-      </table>`),
-    section('Font Sizes', `      <table class="style-guide-data-table">
-        <thead><tr><th>Token</th><th>Sample</th><th>Base Token</th><th>Value</th></tr></thead>
-        <tbody>${fontSizeRows}</tbody>
-      </table>`),
+    section('Font Families', baseScaleTable(tokens.fontFamilies.map(f => ({
+      tokenName: f.token,
+      copyValue: f.token,
+      value: f.value,
+      sampleContent: f.value,
+    })), 'Inter')),
+    section('Font Weights', baseScaleTable(tokens.fontWeights.map(w => ({
+      tokenName: w.token,
+      copyValue: w.token,
+      value: String(w.value),
+      sampleStyle: `font-size: var(--font-size-body-xlg); font-weight: ${w.value}`,
+    })))),
+    section('Font Sizes', baseScaleTable(tokens.fontSizes.map(f => ({
+      tokenName: f.name,
+      copyValue: f.css,
+      value: f.value,
+      sampleStyle: `font-size: ${f.value}`,
+    })))),
   ]);
 }
 
 function spacingContent(tokens) {
-  const uiRows = tokens.uiScale.map(t =>
-    `                <tr>
-                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.token)}', this)">${esc(t.token)}</span></td>
-                  <td><div class="style-guide-token-bar" style="width: ${t.value}"></div></td>
-                  <td>${t.value}</td>
-                </tr>`
-  ).join('\n');
-
-  const gapUiMap = {
-    'spacing.none': 'ui.0',
-    'spacing.xxs': 'ui.2',
-    'spacing.xsm': 'ui.4',
-    'spacing.sm': 'ui.8',
-    'spacing.md': 'ui.12',
-    'spacing.lg': 'ui.16',
-    'spacing.xl': 'ui.24',
-    'spacing.2xl': 'ui.32',
-    'spacing.3xl': 'ui.48'
-  };
-  const gapRows = tokens.gaps.map(g =>
-    `                <tr>
-                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(g.css)}', this)">${esc(g.name)}</span></td>
-                  <td><div class="style-guide-token-bar" style="width: ${g.value}"></div></td>
-                  <td class="body-xsm text-muted">${gapUiMap[g.name] || ''}</td>
-                  <td>${g.value}</td>
-                </tr>`
-  ).join('\n');
-
   return foundationPage('Spacing', 'UI scale values and semantic spacing aliases.', [
-    section('UI Scale', `      <table class="style-guide-data-table">
-        <thead><tr><th>Token</th><th>Visual</th><th>Value</th></tr></thead>
-        <tbody>${uiRows}</tbody>
-      </table>`),
-    section('Spacing Aliases', `      <table class="style-guide-data-table">
-        <thead><tr><th>Token</th><th>Visual</th><th>Base Token</th><th>Value</th></tr></thead>
-        <tbody>${gapRows}</tbody>
-      </table>`),
+    section('UI Scale', spacingTable(tokens.uiScale.map(t => ({
+      tokenName: t.token,
+      copyValue: t.token,
+      value: t.value,
+    })))),
+    section('Spacing Aliases', spacingTable(tokens.gaps.map(g => ({
+      tokenName: g.name,
+      copyValue: g.css,
+      value: g.value,
+    })))),
   ]);
 }
 
 function radiusContent(tokens) {
-  const radiusUiMap = {
-    'radius.none': 'ui.0',
-    'radius.sm': 'ui.4',
-    'radius.md': 'ui.8',
-    'radius.lg': 'ui.12',
-    'radius.full': '\u2014'
-  };
-  const radiusRows = tokens.radii.map(r =>
-    `                <tr>
-                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(r.css)}', this)">${esc(r.name)}</span></td>
-                  <td><div class="style-guide-token-radius-sample" style="border-radius: ${r.value}"></div></td>
-                  <td class="body-xsm text-muted">${radiusUiMap[r.name] || ''}</td>
-                  <td>${r.value}</td>
-                </tr>`
-  ).join('\n');
-
   return foundationPage('Radius', 'Border-radius tokens from none to fully round.', [
-    section('Radius Scale', `      <table class="style-guide-data-table">
-        <thead><tr><th>Token</th><th>Visual</th><th>Base Token</th><th>Value</th></tr></thead>
-        <tbody>${radiusRows}</tbody>
-      </table>`),
+    section('Radius Scale', radiusTable(tokens.radii.map(r => ({
+      tokenName: r.name,
+      copyValue: r.css,
+      value: r.value,
+    })))),
   ]);
 }
 

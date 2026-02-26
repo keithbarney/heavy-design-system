@@ -12,6 +12,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createPageBuilder } from '../../../design-system-style-guide/src/node/page-builder.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '../../dist');
@@ -28,6 +29,7 @@ const PAGES = [
   { file: 'animation.html', id: 'animation', label: 'Animation', group: 'Foundations' },
   { file: 'breadcrumbs.html', id: 'breadcrumbs', label: 'Breadcrumbs', group: 'Components' },
   { file: 'button.html', id: 'button', label: 'Button', group: 'Components' },
+  { file: 'card.html', id: 'card', label: 'Card', group: 'Components' },
   { file: 'button-group.html', id: 'button-group', label: 'Button Group', group: 'Components' },
   { file: 'button-icon.html', id: 'button-icon', label: 'Button Icon', group: 'Components' },
   { file: 'chips.html', id: 'chips', label: 'Chips', group: 'Components' },
@@ -35,6 +37,7 @@ const PAGES = [
   { file: 'feedback.html', id: 'feedback', label: 'Feedback', group: 'Components' },
   { file: 'file-upload.html', id: 'file-upload', label: 'File Upload', group: 'Components' },
   { file: 'inputs.html', id: 'inputs', label: 'Inputs', group: 'Components' },
+  { file: 'modal.html', id: 'modal', label: 'Modal', group: 'Components' },
   { file: 'nav-links.html', id: 'nav-links', label: 'Nav Links', group: 'Components' },
   { file: 'search.html', id: 'search', label: 'Search', group: 'Components' },
   { file: 'selects.html', id: 'selects', label: 'Selects', group: 'Components' },
@@ -234,116 +237,9 @@ function readTokens() {
   };
 }
 
-// ===== Shared HTML Partials =====
+// ===== Page Builder (from heavy-style-guide framework) =====
 
-function head(title, description) {
-  const fullTitle = title ? `${title} — Heavy Design System` : 'Heavy Design System';
-  const desc = description || 'Heavy Design System — Style Guide';
-  return `<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="${desc}">
-  <title>${fullTitle}</title>
-  <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="style-guide.css">
-</head>`;
-}
-
-function sidebar(currentPageId) {
-  const groups = ['Foundations', 'Components', 'Patterns'];
-
-  let nav = '';
-  for (const group of groups) {
-    nav += `      <span class="style-guide-sidebar-label">${group}</span>\n`;
-    const groupPages = PAGES.filter(p => p.group === group);
-    for (const pg of groupPages) {
-      const active = currentPageId === pg.id ? ' class="active"' : '';
-      nav += `      <a href="${pg.file}"${active}>${pg.label}</a>\n`;
-    }
-  }
-
-  return `  <aside class="style-guide-sidebar">
-    <a class="style-guide-brand" href="index.html">Heavy Design System</a>
-    <nav>
-${nav}    </nav>
-    <div class="style-guide-sidebar-controls">
-      <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>
-    </div>
-  </aside>`;
-}
-
-function footer() {
-  const year = new Date().getFullYear();
-  return `<footer class="style-guide-footer">
-  <span>Heavy Design System &copy; ${year}</span>
-</footer>`;
-}
-
-function scripts() {
-  return `<script>
-(function() {
-  var toggle = document.getElementById('theme-toggle');
-  var html = document.documentElement;
-  var stored = localStorage.getItem('hds-theme');
-  if (stored) {
-    html.setAttribute('data-theme', stored);
-    toggle.textContent = stored === 'dark' ? 'Dark' : 'Light';
-  }
-  toggle.addEventListener('click', function() {
-    var current = html.getAttribute('data-theme');
-    var next = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    toggle.textContent = next === 'dark' ? 'Dark' : 'Light';
-    localStorage.setItem('hds-theme', next);
-  });
-})();
-</script>
-<script>
-(function() {
-  var links = document.querySelectorAll('.style-guide-sidebar a[href^="#"]');
-  if (!links.length) return;
-  var sections = [];
-  links.forEach(function(link) {
-    var id = link.getAttribute('href').slice(1);
-    var el = document.getElementById(id);
-    if (el) sections.push({ link: link, el: el });
-  });
-
-  function onScroll() {
-    var atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
-    var active;
-    if (atBottom) {
-      active = sections[sections.length - 1];
-    } else {
-      active = sections[0];
-      for (var i = 0; i < sections.length; i++) {
-        if (sections[i].el.getBoundingClientRect().top <= 120) active = sections[i];
-      }
-    }
-    links.forEach(function(l) { l.classList.remove('active'); });
-    if (active) active.link.classList.add('active');
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-})();
-</script>
-<script>
-function copyToken(name, el) {
-  navigator.clipboard.writeText(name).then(function() {
-    el.classList.add('copied');
-    setTimeout(function() { el.classList.remove('copied'); }, 500);
-  });
-}
-function copyCode(btn) {
-  var code = btn.parentElement.querySelector('code').textContent;
-  navigator.clipboard.writeText(code).then(function() {
-    btn.textContent = 'Copied';
-    btn.classList.add('copied');
-    setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1000);
-  });
-}
-</script>
-<script>
+const VALIDATION_SCRIPT = `<script>
 (function() {
   var groups = document.querySelectorAll('[data-validate]');
   groups.forEach(function(group) {
@@ -364,7 +260,7 @@ function copyCode(btn) {
         msg = valid ? 'Looks good' : 'This field is required';
       } else if (rule === 'email') {
         if (!val) { reset(); return; }
-        valid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(val);
+        valid = /^[^\\\\s@]+@[^\\\\s@]+\\\\.[^\\\\s@]+$/.test(val);
         msg = valid ? 'Valid email' : 'Please enter a valid email';
       } else if (rule === 'minlength') {
         if (!val) { reset(); return; }
@@ -401,88 +297,14 @@ function copyCode(btn) {
   });
 })();
 </script>`;
-}
 
-// ===== Escape HTML =====
+const builder = createPageBuilder({
+  brandName: 'Heavy Design System',
+  pages: PAGES,
+  customScripts: VALIDATION_SCRIPT,
+});
 
-function esc(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-// ===== Component Page Template =====
-
-/**
- * Section order for component documentation pages.
- * Reorder this array to change the stacking order across ALL component pages.
- */
-const COMPONENT_SECTIONS = [
-  'description',
-  'whenToUse',
-  'whenNotToUse',
-  'variants',
-  'formatting',
-  'usage',
-  'content',
-  'stringLength',
-  'keyboard',
-  'related',
-];
-
-/**
- * Renders a component documentation page from named sections.
- * Sections are rendered in COMPONENT_SECTIONS order, regardless of
- * the order they're defined in the sections object. Missing sections are skipped.
- */
-function componentPage(title, sections) {
-  let html = `        <section class="style-guide-section">\n          <h2>${title}</h2>`;
-  for (const key of COMPONENT_SECTIONS) {
-    if (sections[key]) html += '\n' + sections[key];
-  }
-  html += '\n        </section>';
-  return html;
-}
-
-/**
- * Renders a foundation documentation page from an ordered array of subsections.
- * Unlike componentPage which uses named keys, foundation pages have free-form
- * subsections rendered in the order provided.
- */
-function foundationPage(title, subsections) {
-  let html = `        <section class="style-guide-section">\n          <h2>${title}</h2>`;
-  for (const section of subsections) {
-    html += '\n' + section;
-  }
-  html += '\n        </section>';
-  return html;
-}
-
-// ===== Code Block Helper =====
-
-function codeBlock(html) {
-  return `<div class="style-guide-code-block">
-            <button class="style-guide-code-copy" onclick="copyCode(this)" aria-label="Copy code">Copy</button>
-            <pre class="style-guide-code"><code>${esc(html.trim())}</code></pre>
-          </div>`;
-}
-
-// ===== Page Wrapper =====
-
-function wrapPage(title, contentHtml, currentPageId) {
-  return `<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-${head(title, title ? `${title} — Heavy Design System` : 'Heavy Design System — Token-driven design system for all projects')}
-<body>
-<div class="style-guide-shell">
-${sidebar(currentPageId)}
-  <main class="style-guide-content">
-${contentHtml}
-  </main>
-  ${footer()}
-</div>
-${scripts()}
-</body>
-</html>`;
-}
+const { esc, codeBlock, componentPage, foundationPage, wrapPage } = builder;
 
 // ===== Content Functions =====
 
@@ -491,13 +313,13 @@ function colorsContent(tokens) {
     const rows = f.stops.map(s =>
       `                    <tr>
                       <td>${s.stop}</td>
-                      <td><div class="token-swatch" style="background: ${s.hex}"></div></td>
-                      <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('color.${f.name}.${s.stop}', this)">color.${f.name}.${s.stop}</span></td>
+                      <td><div class="style-guide-token-swatch" style="background: ${s.hex}"></div></td>
+                      <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('color.${f.name}.${s.stop}', this)">color.${f.name}.${s.stop}</span></td>
                       <td>${s.hex}</td>
                     </tr>`
     ).join('\n');
     return `            <h3 class="heavy-label">${f.name}</h3>
-            <table class="data-table data-table--visual">
+            <table class="style-guide-data-table style-guide-data-table--visual">
               <thead>
                 <tr>
                   <th>Stop</th>
@@ -515,8 +337,8 @@ ${rows}
   const uiColorRows = tokens.uiColorGroups.map(group => {
     return group.tokens.map(t =>
       `                <tr>
-                  <td><div class="token-swatch" style="background: ${t.lightHex}"></div></td>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
+                  <td><div class="style-guide-token-swatch" style="background: ${t.lightHex}"></div></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
                   <td class="body-xsm">${esc(t.lightRef)}</td>
                   <td class="body-xsm">${esc(t.darkRef)}</td>
                 </tr>`
@@ -526,7 +348,7 @@ ${rows}
   return foundationPage('Colors', [
     colorSections,
     `          <h3 class="heavy-label">UI Colors</h3>
-          <table class="data-table data-table--visual">
+          <table class="style-guide-data-table style-guide-data-table--visual">
             <thead>
               <tr>
                 <th>Visual</th>
@@ -545,14 +367,14 @@ ${uiColorRows}
 function typographyContent(tokens) {
   const familyRows = tokens.fontFamilies.map(f =>
     `                <tr>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.token)}', this)">${esc(f.token)}</span></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.token)}', this)">${esc(f.token)}</span></td>
                   <td>${esc(f.value)}</td>
                 </tr>`
   ).join('\n');
 
   const weightRows = tokens.fontWeights.map(w =>
     `                <tr>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(w.token)}', this)">${esc(w.token)}</span></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(w.token)}', this)">${esc(w.token)}</span></td>
                   <td><span style="font-size: var(--font-size-body-xlg); font-weight: ${w.value}">Aa</span></td>
                   <td>${w.value}</td>
                 </tr>`
@@ -560,7 +382,7 @@ function typographyContent(tokens) {
 
   const fontSizeRows = tokens.fontSizes.map(f => {
     return `                <tr>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.css)}', this)">${esc(f.name)}</span></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(f.css)}', this)">${esc(f.name)}</span></td>
                   <td><span style="font-size: ${f.value}">Aa</span></td>
                   <td class="body-xsm text-muted">${f.ref}</td>
                   <td>${f.value}</td>
@@ -569,7 +391,7 @@ function typographyContent(tokens) {
 
   return foundationPage('Typography', [
     `          <h3 class="heavy-label">Font Families</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -581,7 +403,7 @@ ${familyRows}
             </tbody>
           </table>`,
     `          <h3 class="heavy-label">Font Weights</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -594,7 +416,7 @@ ${weightRows}
             </tbody>
           </table>`,
     `          <h3 class="heavy-label">Font Sizes</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -613,8 +435,8 @@ ${fontSizeRows}
 function spacingContent(tokens) {
   const uiRows = tokens.uiScale.map(t =>
     `                <tr>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.token)}', this)">${esc(t.token)}</span></td>
-                  <td><div class="token-bar" style="width: ${t.value}"></div></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.token)}', this)">${esc(t.token)}</span></td>
+                  <td><div class="style-guide-token-bar" style="width: ${t.value}"></div></td>
                   <td>${t.value}</td>
                 </tr>`
   ).join('\n');
@@ -632,8 +454,8 @@ function spacingContent(tokens) {
   };
   const gapRows = tokens.gaps.map(g =>
     `                <tr>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(g.css)}', this)">${esc(g.name)}</span></td>
-                  <td><div class="token-bar" style="width: ${g.value}"></div></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(g.css)}', this)">${esc(g.name)}</span></td>
+                  <td><div class="style-guide-token-bar" style="width: ${g.value}"></div></td>
                   <td class="body-xsm text-muted">${gapUiMap[g.name] || ''}</td>
                   <td>${g.value}</td>
                 </tr>`
@@ -641,7 +463,7 @@ function spacingContent(tokens) {
 
   return foundationPage('Spacing', [
     `          <h3 class="heavy-label">UI Scale</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -654,7 +476,7 @@ ${uiRows}
             </tbody>
           </table>`,
     `          <h3 class="heavy-label">Spacing Aliases</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -680,15 +502,15 @@ function radiusContent(tokens) {
   };
   const radiusRows = tokens.radii.map(r =>
     `                <tr>
-                  <td><span class="token-copy" role="button" tabindex="0" onclick="copyToken('${esc(r.css)}', this)">${esc(r.name)}</span></td>
-                  <td><div class="token-radius-sample" style="border-radius: ${r.value}"></div></td>
+                  <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(r.css)}', this)">${esc(r.name)}</span></td>
+                  <td><div class="style-guide-token-radius-sample" style="border-radius: ${r.value}"></div></td>
                   <td class="body-xsm text-muted">${radiusUiMap[r.name] || ''}</td>
                   <td>${r.value}</td>
                 </tr>`
   ).join('\n');
 
   return foundationPage('Radius', [
-    `          <table class="data-table">
+    `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Token</th>
@@ -810,7 +632,7 @@ ${gridBoxes}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -832,7 +654,7 @@ ${gridRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -857,7 +679,7 @@ ${stackRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -878,7 +700,7 @@ ${clusterRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Selector</th>
@@ -898,7 +720,7 @@ ${sidebarRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -920,7 +742,7 @@ ${centerRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Selector</th>
@@ -949,7 +771,7 @@ ${coverRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -977,7 +799,7 @@ ${boxRows}
               </div>
             </div>
           </div>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -990,7 +812,7 @@ ${measureRows}
             </tbody>
           </table>
           <h3 class="heavy-label" id="breakpoints">Breakpoints</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -1092,7 +914,7 @@ function animationContent() {
           <h3 class="heavy-label">Utility Classes</h3>
           <div>
             <div class="heavy-stack heavy-stack--lg">
-              <table class="data-table">
+              <table class="style-guide-data-table">
                 <thead>
                   <tr>
                     <th>Class</th>
@@ -1202,7 +1024,7 @@ function breadcrumbsContent() {
             </ul>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1342,7 +1164,7 @@ function buttonsContent() {
             </ul>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1523,7 +1345,7 @@ function chipsContent() {
           ${codeBlock(`<button class="heavy-chip heavy-chip--active">All</button>
 <button class="heavy-chip">Design</button>`)}`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1793,7 +1615,7 @@ function fileUploadContent() {
             </ul>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1899,7 +1721,7 @@ function inputsContent() {
             </ul>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -1961,7 +1783,7 @@ function navLinksContent() {
   <a class="heavy-nav-link" href="#">Profile</a>
 </nav>`)}`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -2025,7 +1847,7 @@ function searchContent() {
             <label class="heavy-search is-disabled heavy-col-span-2"><input type="search" placeholder="Disabled" disabled></label>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -2102,7 +1924,7 @@ function selectsContent() {
   <span class="heavy-form-hint">Hint text goes here</span>
 </div>`)}`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -2175,7 +1997,7 @@ function tabsContent() {
             </ul>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -2286,7 +2108,7 @@ function togglesContent() {
             </ul>
           </div>`,
     keyboard: `          <h3 class="heavy-label">Keyboard</h3>
-          <table class="data-table">
+          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Key</th>
@@ -2454,6 +2276,185 @@ function searchPatternContent() {
   });
 }
 
+function cardContent() {
+  return componentPage('Card', {
+    description: `          <h3 class="heavy-label">Description</h3>
+          <div><p class="style-guide-description">A container that groups related content and actions. Cards create visual hierarchy by separating content into distinct sections with borders or elevation.</p></div>`,
+    whenToUse: `          <h3 class="heavy-label">When to use</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li>Grouping related form fields or settings into a distinct section.</li>
+              <li>Displaying a summary of an item (e.g., a branch, project, or user) in a list or grid.</li>
+              <li>Creating dashboard panels with a header, body, and optional footer.</li>
+            </ul>
+          </div>`,
+    whenNotToUse: `          <h3 class="heavy-label">When not to use</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li><strong>Full-page content</strong> — Don't wrap entire page content in a card. Cards are for contained sections.</li>
+              <li><strong>Overlays</strong> — Use a <a href="modal.html">modal</a> for content that interrupts the user's flow.</li>
+            </ul>
+          </div>`,
+    variants: `          <h3 class="heavy-label">Default</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-card" style="max-width: 360px;">
+                <div class="heavy-card-header">
+                  <div class="heavy-card-title">Card Title</div>
+                  <div class="heavy-card-subtitle">Optional subtitle or description</div>
+                </div>
+                <div class="heavy-card-body">
+                  <p>Card body content goes here. This is where the primary information or form fields live.</p>
+                </div>
+                <div class="heavy-card-footer">
+                  <div class="heavy-cluster">
+                    <button class="heavy-btn heavy-btn--sm">Cancel</button>
+                    <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${codeBlock(`<div class="heavy-card">
+  <div class="heavy-card-header">
+    <div class="heavy-card-title">Card Title</div>
+    <div class="heavy-card-subtitle">Optional subtitle</div>
+  </div>
+  <div class="heavy-card-body">
+    <p>Card body content</p>
+  </div>
+  <div class="heavy-card-footer">
+    <button class="heavy-btn heavy-btn--sm">Cancel</button>
+    <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Save</button>
+  </div>
+</div>`)}
+          <h3 class="heavy-label">Elevated</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-card heavy-card--elevated" style="max-width: 360px;">
+                <div class="heavy-card-body">
+                  <div class="heavy-card-title">Elevated Card</div>
+                  <div class="heavy-card-subtitle">Uses a shadow instead of a border for visual separation.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${codeBlock('<div class="heavy-card heavy-card--elevated">...</div>')}
+          <h3 class="heavy-label">Interactive</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div class="heavy-card heavy-card--interactive" style="max-width: 360px;">
+                <div class="heavy-card-body">
+                  <div class="heavy-card-title">Clickable Card</div>
+                  <div class="heavy-card-subtitle">Hover to see the lift effect. Use for items that navigate to a detail view.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${codeBlock('<div class="heavy-card heavy-card--interactive">...</div>')}`,
+    related: `          <h3 class="heavy-label">Related</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li><strong><a href="modal.html">Modal</a></strong> — For content that interrupts the user's flow and requires a decision.</li>
+              <li><strong><a href="data-display.html">Data Display</a></strong> — For badges, stats, and key-value pairs inside cards.</li>
+            </ul>
+          </div>`,
+  });
+}
+
+function modalContent() {
+  return componentPage('Modal', {
+    description: `          <h3 class="heavy-label">Description</h3>
+          <div><p class="style-guide-description">A dialog overlay that focuses the user's attention on a specific task or decision. Modals appear on top of a dimmed backdrop and block interaction with the underlying page until dismissed.</p></div>`,
+    whenToUse: `          <h3 class="heavy-label">When to use</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li>Confirming a destructive or irreversible action (e.g., delete, disconnect).</li>
+              <li>Collecting a small amount of input without navigating away from the current context.</li>
+              <li>Presenting a choice from a short list of options.</li>
+            </ul>
+          </div>`,
+    whenNotToUse: `          <h3 class="heavy-label">When not to use</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li><strong>Long forms</strong> — Use a dedicated page or inline expansion instead.</li>
+              <li><strong>Non-blocking info</strong> — Use <a href="feedback.html">status messages</a> for notifications that don't require a decision.</li>
+              <li><strong>Content grouping</strong> — Use a <a href="card.html">card</a> for sections within a page.</li>
+            </ul>
+          </div>`,
+    variants: `          <h3 class="heavy-label">Default</h3>
+          <div>
+            <div class="heavy-stack heavy-stack--lg">
+              <div style="position: relative; height: 320px; background: var(--ui-bg-default); border-radius: var(--radius-md); overflow: hidden;">
+                <div class="heavy-modal-backdrop" style="position: absolute;">
+                  <div class="heavy-modal" style="max-width: 360px;">
+                    <div class="heavy-modal-header">
+                      <div class="heavy-modal-title">Confirm Action</div>
+                    </div>
+                    <div class="heavy-modal-body">
+                      <p>Are you sure you want to proceed? This action cannot be undone.</p>
+                    </div>
+                    <div class="heavy-modal-footer">
+                      <button class="heavy-btn heavy-btn--sm">Cancel</button>
+                      <button class="heavy-btn heavy-btn--danger heavy-btn--sm">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${codeBlock(`<div class="heavy-modal-backdrop">
+  <div class="heavy-modal">
+    <div class="heavy-modal-header">
+      <div class="heavy-modal-title">Confirm Action</div>
+    </div>
+    <div class="heavy-modal-body">
+      <p>Are you sure you want to proceed?</p>
+    </div>
+    <div class="heavy-modal-footer">
+      <button class="heavy-btn heavy-btn--sm">Cancel</button>
+      <button class="heavy-btn heavy-btn--danger heavy-btn--sm">Delete</button>
+    </div>
+  </div>
+</div>`)}`,
+    content: `          <h3 class="heavy-label">Content</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li><strong>Title is required</strong> — Always include a clear, concise title that describes what the modal is about.</li>
+              <li><strong>Keep it brief</strong> — Modal body should be scannable. If it needs scrolling, consider a different pattern.</li>
+              <li><strong>Primary action on the right</strong> — Cancel on the left, confirm/destructive action on the right.</li>
+              <li><strong>Destructive actions use danger buttons</strong> — Make the consequences visually clear.</li>
+            </ul>
+          </div>`,
+    keyboard: `          <h3 class="heavy-label">Keyboard</h3>
+          <table class="style-guide-data-table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Escape</code></td>
+                <td>Closes the modal (equivalent to Cancel)</td>
+              </tr>
+              <tr>
+                <td><code>Tab</code></td>
+                <td>Moves focus within the modal (trapped)</td>
+              </tr>
+            </tbody>
+          </table>`,
+    related: `          <h3 class="heavy-label">Related</h3>
+          <div class="style-guide-guidelines">
+            <ul>
+              <li><strong><a href="card.html">Card</a></strong> — For non-blocking content grouping within a page.</li>
+              <li><strong><a href="feedback.html">Feedback</a></strong> — For status messages that don't require user action.</li>
+            </ul>
+          </div>`,
+  });
+}
+
 // ===== Content Map =====
 
 const contentMap = {
@@ -2467,11 +2468,13 @@ const contentMap = {
   'button': () => buttonsContent(),
   'button-group': () => buttonGroupContent(),
   'button-icon': () => buttonIconContent(),
+  'card': () => cardContent(),
   'chips': () => chipsContent(),
   'data-display': () => dataDisplayContent(),
   'feedback': () => feedbackContent(),
   'file-upload': () => fileUploadContent(),
   'inputs': () => inputsContent(),
+  'modal': () => modalContent(),
   'nav-links': () => navLinksContent(),
   'search': () => searchContent(),
   'selects': () => selectsContent(),

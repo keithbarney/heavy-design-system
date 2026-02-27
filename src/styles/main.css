@@ -469,7 +469,7 @@
   --hds-bg-inset: var(--base-color-gray-10);
   --hds-bg-surface: var(--base-color-gray-0);
   --hds-surface-default: var(--base-color-gray-0);
-  --hds-border-default: var(--base-color-gray-10);
+  --hds-border-default: var(--base-color-gray-15);
   --hds-border-strong: var(--base-color-gray-45);
   --hds-text-default: var(--base-color-gray-45);
   --hds-text-strong: var(--base-color-gray-black);
@@ -608,6 +608,13 @@
   --hds-action-danger-text-default: var(--base-color-red-35);
   --hds-action-danger-text-disabled: var(--base-color-red-65);
 
+  /* Toggle Tokens */
+  --hds-toggle-track: var(--base-color-gray-55);
+  --hds-toggle-thumb: var(--base-color-gray-80);
+
+  /* Checkbox/Radio Tokens */
+  --hds-check-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none' stroke='%232b2b2b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 5.5 4 7.5 8 3'/%3E%3C/svg%3E");
+
   /* Forms Input Tokens */
   --hds-forms-input-bg-default: var(--hds-bg-inset);
   --hds-forms-input-text-default: var(--base-color-gray-45);
@@ -650,7 +657,7 @@
   --hds-bg-inset: var(--base-color-gray-10);
   --hds-bg-surface: var(--base-color-gray-0);
   --hds-surface-default: var(--base-color-gray-0);
-  --hds-border-default: var(--base-color-gray-10);
+  --hds-border-default: var(--base-color-gray-15);
   --hds-border-strong: var(--base-color-gray-45);
   --hds-text-default: var(--base-color-gray-45);
   --hds-text-strong: var(--base-color-gray-black);
@@ -1652,9 +1659,47 @@ p, .body {
 }
 
 .hds-form-check-input {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--hds-action-primary);
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--hds-border-strong);
+  border-radius: var(--hds-radius-sm);
+  background: var(--hds-forms-input-bg-default);
+  cursor: pointer;
+  transition: background-color var(--hds-duration-fast) var(--hds-ease-out), border-color var(--hds-duration-fast) var(--hds-ease-out);
+
+  &:checked {
+    background-color: var(--hds-action-primary);
+    border-color: var(--hds-action-primary);
+    background-image: var(--hds-check-icon, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 5.5 4 7.5 8 3'/%3E%3C/svg%3E"));
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--hds-action-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--hds-action-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &[type="radio"] {
+    border-radius: var(--hds-radius-full);
+
+    &:checked {
+      background-image: none;
+      background: var(--hds-action-primary);
+      box-shadow: inset 0 0 0 2px var(--hds-forms-input-bg-default);
+    }
+  }
 }
 
 .hds-form-toggle {
@@ -1675,7 +1720,7 @@ p, .body {
   & .hds-form-toggle-track {
     width: 36px;
     height: 20px;
-    background: var(--hds-border-default);
+    background: var(--hds-toggle-track, var(--hds-border-default));
     border-radius: var(--hds-radius-full);
     position: relative;
     transition: background-color var(--hds-duration-fast) var(--hds-ease-out);
@@ -1687,7 +1732,7 @@ p, .body {
       left: 2px;
       width: 16px;
       height: 16px;
-      background: var(--base-color-gray-white);
+      background: var(--hds-toggle-thumb, var(--base-color-gray-white));
       border-radius: var(--hds-radius-full);
       transition: transform var(--hds-duration-fast) var(--hds-ease-spring);
     }
@@ -1697,6 +1742,29 @@ p, .body {
     background: var(--hds-action-primary);
 
     &::after { transform: translateX(16px); }
+  }
+
+  &:hover .hds-form-toggle-track {
+    background: var(--hds-border-strong);
+  }
+
+  &:hover input:checked + .hds-form-toggle-track {
+    background: var(--hds-action-primary-hover);
+  }
+
+  & input:focus-visible + .hds-form-toggle-track {
+    outline: 2px solid var(--hds-action-primary);
+    outline-offset: 2px;
+  }
+
+  & input:disabled + .hds-form-toggle-track {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &:has(input:disabled) {
+    cursor: not-allowed;
+    color: var(--hds-text-disabled);
   }
 }
 
@@ -2007,6 +2075,21 @@ p, .body {
     cursor: not-allowed;
     pointer-events: none;
   }
+}
+
+.hds-link--xs {
+  font-size: var(--hds-font-size-body-xs);
+  text-underline-offset: 1px;
+}
+
+.hds-link--sm {
+  font-size: var(--hds-font-size-body-sm);
+  text-underline-offset: 2px;
+}
+
+.hds-link--lg {
+  font-size: var(--hds-font-size-body-lg);
+  text-underline-offset: 3px;
 }
 
 /* --- 8e. Navigation --- */

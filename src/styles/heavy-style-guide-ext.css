@@ -114,6 +114,11 @@
 .style-guide-token-copy { font-size: var(--hds-font-size-body-xs); color: var(--hds-text-default); }
 .style-guide-token-copy.is-hover { color: var(--ui-action-primary); }
 
+/* Toggles */
+.hds-form-toggle.is-hover .hds-form-toggle-track { background: var(--hds-border-strong); }
+.hds-form-toggle.is-hover input:checked + .hds-form-toggle-track { background: var(--hds-action-primary-hover); }
+.hds-form-toggle input.is-focus + .hds-form-toggle-track { outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
+
 /* Links */
 .hds-link.is-hover { text-decoration-color: var(--hds-text-strong); }
 .hds-link.is-active { color: var(--hds-text-default); text-decoration-color: var(--hds-text-default); }

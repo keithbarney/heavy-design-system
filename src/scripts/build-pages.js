@@ -66,6 +66,7 @@ const PAGES = [
   { file: 'checkbox.html', id: 'checkbox', label: 'Checkbox', group: 'Components' },
   { file: 'radio.html', id: 'radio', label: 'Radio', group: 'Components' },
   // Patterns (alphabetical)
+  { file: 'form-patterns.html', id: 'form-patterns', label: 'Forms', group: 'Patterns' },
   { file: 'form-validation.html', id: 'form-validation', label: 'Form Validation', group: 'Patterns' },
   { file: 'search-pattern.html', id: 'search-pattern', label: 'Search', group: 'Patterns' },
 ];
@@ -2235,7 +2236,7 @@ function toggleContent() {
     ),
     dimensions: [
       { label: 'States', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="hds-stack hds-stack--lg">
             <label class="hds-form-toggle">
               <input type="checkbox">
               <span class="hds-form-toggle-track"></span>
@@ -2246,17 +2247,39 @@ function toggleContent() {
               <span class="hds-form-toggle-track"></span>
               <span>On</span>
             </label>
+            <label class="hds-form-toggle is-hover">
+              <input type="checkbox">
+              <span class="hds-form-toggle-track"></span>
+              <span>Hover</span>
+            </label>
+            <label class="hds-form-toggle">
+              <input type="checkbox" class="is-focus">
+              <span class="hds-form-toggle-track"></span>
+              <span>Focus</span>
+            </label>
+            <label class="hds-form-toggle">
+              <input type="checkbox" disabled>
+              <span class="hds-form-toggle-track"></span>
+              <span>Disabled off</span>
+            </label>
+            <label class="hds-form-toggle">
+              <input type="checkbox" checked disabled>
+              <span class="hds-form-toggle-track"></span>
+              <span>Disabled on</span>
+            </label>
           </div>`,
-        `<label class="hds-form-toggle">
+        `<!-- Default -->
+<label class="hds-form-toggle">
   <input type="checkbox">
   <span class="hds-form-toggle-track"></span>
   <span>Off</span>
 </label>
 
+<!-- Disabled -->
 <label class="hds-form-toggle">
-  <input type="checkbox" checked>
+  <input type="checkbox" disabled>
   <span class="hds-form-toggle-track"></span>
-  <span>On</span>
+  <span>Disabled</span>
 </label>`
       ) },
     ],
@@ -2342,6 +2365,237 @@ function radioContent() {
   <input class="hds-form-check-input" type="radio" name="group" id="radio2">
   <label class="hds-form-label" for="radio2">Option B</label>
 </div>`
+      ) },
+    ],
+  });
+}
+
+function formPatternsContent() {
+  return componentPage('Forms', {
+    description: 'Complete form layouts that show how inputs, selects, toggles, checkboxes, file uploads, and textareas compose into real-world forms. Three examples progress from minimal to comprehensive.',
+    dimensions: [
+      { label: 'Sign In', content: playground(
+        `          <div class="hds-col-span-4">
+            <form class="hds-stack">
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Email</label>
+                <input class="hds-form-input" type="email" placeholder="you@example.com" required>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Password</label>
+                <input class="hds-form-input" type="password" placeholder="Enter password" required>
+              </div>
+              <label class="hds-form-toggle">
+                <input type="checkbox">
+                <span class="hds-form-toggle-track"></span>
+                <span>Remember me</span>
+              </label>
+              <button class="hds-btn hds-btn--primary hds-btn--block" type="submit">Sign In</button>
+              <a class="hds-link hds-link--sm" href="#" style="text-align: center; margin-top: var(--hds-space-8);">Forgot password?</a>
+            </form>
+          </div>`,
+        `<form class="hds-stack">
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Email</label>
+    <input class="hds-form-input" type="email" placeholder="you@example.com" required>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Password</label>
+    <input class="hds-form-input" type="password" placeholder="Enter password" required>
+  </div>
+  <label class="hds-form-toggle">
+    <input type="checkbox">
+    <span class="hds-form-toggle-track"></span>
+    <span>Remember me</span>
+  </label>
+  <button class="hds-btn hds-btn--primary hds-btn--block" type="submit">Sign In</button>
+  <a class="hds-link hds-link--sm" href="#">Forgot password?</a>
+</form>`
+      ) },
+      { label: 'Contact', content: playground(
+        `          <div class="hds-col-span-6">
+            <form class="hds-stack">
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Name</label>
+                <input class="hds-form-input" type="text" placeholder="Your name" required>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Email</label>
+                <input class="hds-form-input" type="email" placeholder="you@example.com" required>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Subject</label>
+                <select class="hds-select" required>
+                  <option value="">Select a subject</option>
+                  <option value="general">General inquiry</option>
+                  <option value="support">Support</option>
+                  <option value="feedback">Feedback</option>
+                </select>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Message</label>
+                <textarea class="hds-form-input hds-form-textarea" placeholder="Write your message..." required></textarea>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label">Attachment</label>
+                <div class="hds-form-file">
+                  <input type="file" id="contact-file">
+                  <label class="hds-form-file-trigger" for="contact-file">Choose file</label>
+                  <span class="body-sm text-muted" style="margin-left: 8px">No file chosen</span>
+                </div>
+              </div>
+              <div class="hds-cluster" style="justify-content: flex-end;">
+                <button class="hds-btn hds-btn--secondary" type="button">Cancel</button>
+                <button class="hds-btn hds-btn--primary" type="submit">Submit</button>
+              </div>
+            </form>
+          </div>`,
+        `<form class="hds-stack">
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Name</label>
+    <input class="hds-form-input" type="text" placeholder="Your name" required>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Email</label>
+    <input class="hds-form-input" type="email" placeholder="you@example.com" required>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Subject</label>
+    <select class="hds-select" required>
+      <option value="">Select a subject</option>
+      <option value="general">General inquiry</option>
+      <option value="support">Support</option>
+      <option value="feedback">Feedback</option>
+    </select>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Message</label>
+    <textarea class="hds-form-input hds-form-textarea" placeholder="Write your message..." required></textarea>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label">Attachment</label>
+    <div class="hds-form-file">
+      <input type="file" id="file"><label class="hds-form-file-trigger" for="file">Choose file</label>
+    </div>
+  </div>
+  <div class="hds-cluster" style="justify-content: flex-end;">
+    <button class="hds-btn hds-btn--secondary" type="button">Cancel</button>
+    <button class="hds-btn hds-btn--primary" type="submit">Submit</button>
+  </div>
+</form>`
+      ) },
+      { label: 'Profile Settings', content: playground(
+        `          <div class="hds-col-span-6">
+            <form class="hds-stack">
+              <div class="hds-form-group">
+                <label class="hds-form-label">Avatar</label>
+                <div class="hds-form-file">
+                  <input type="file" id="profile-avatar" accept="image/*">
+                  <label class="hds-form-file-trigger" for="profile-avatar">Upload photo</label>
+                  <span class="body-sm text-muted" style="margin-left: 8px">No file chosen</span>
+                </div>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label hds-form-label--required">Full Name</label>
+                <input class="hds-form-input" type="text" placeholder="Your full name" value="Keith Barney" required>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label">Email</label>
+                <input class="hds-form-input is-disabled" type="email" value="keith@example.com" disabled>
+                <span class="hds-form-hint">Contact support to change your email</span>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label">Bio</label>
+                <textarea class="hds-form-input hds-form-textarea" placeholder="Tell us about yourself..."></textarea>
+              </div>
+              <div class="hds-form-group">
+                <label class="hds-form-label">Role</label>
+                <select class="hds-select">
+                  <option value="">Select a role</option>
+                  <option value="designer" selected>Designer</option>
+                  <option value="developer">Developer</option>
+                  <option value="manager">Manager</option>
+                </select>
+              </div>
+              <fieldset class="hds-stack" style="border: none; padding: 0; margin: 0;">
+                <legend class="hds-form-label" style="margin-bottom: var(--hds-space-8);">Notifications</legend>
+                <div class="hds-form-check">
+                  <input class="hds-form-check-input" type="checkbox" id="notify-email" checked>
+                  <label class="hds-form-label" for="notify-email">Email notifications</label>
+                </div>
+                <div class="hds-form-check">
+                  <input class="hds-form-check-input" type="checkbox" id="notify-push" checked>
+                  <label class="hds-form-label" for="notify-push">Push notifications</label>
+                </div>
+                <div class="hds-form-check">
+                  <input class="hds-form-check-input" type="checkbox" id="notify-sms">
+                  <label class="hds-form-label" for="notify-sms">SMS notifications</label>
+                </div>
+              </fieldset>
+              <label class="hds-form-toggle">
+                <input type="checkbox" checked>
+                <span class="hds-form-toggle-track"></span>
+                <span>Dark mode</span>
+              </label>
+              <div class="hds-cluster" style="justify-content: flex-end;">
+                <button class="hds-btn hds-btn--secondary" type="button">Cancel</button>
+                <button class="hds-btn hds-btn--primary" type="submit">Save</button>
+              </div>
+            </form>
+          </div>`,
+        `<form class="hds-stack">
+  <div class="hds-form-group">
+    <label class="hds-form-label">Avatar</label>
+    <div class="hds-form-file">
+      <input type="file" id="avatar" accept="image/*">
+      <label class="hds-form-file-trigger" for="avatar">Upload photo</label>
+    </div>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label hds-form-label--required">Full Name</label>
+    <input class="hds-form-input" type="text" value="Keith Barney" required>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label">Email</label>
+    <input class="hds-form-input" type="email" value="keith@example.com" disabled>
+    <span class="hds-form-hint">Contact support to change your email</span>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label">Bio</label>
+    <textarea class="hds-form-input hds-form-textarea" placeholder="Tell us about yourself..."></textarea>
+  </div>
+  <div class="hds-form-group">
+    <label class="hds-form-label">Role</label>
+    <select class="hds-select">
+      <option value="">Select a role</option>
+      <option value="designer" selected>Designer</option>
+    </select>
+  </div>
+  <fieldset style="border: none; padding: 0; margin: 0;">
+    <legend class="hds-form-label">Notifications</legend>
+    <div class="hds-form-check">
+      <input class="hds-form-check-input" type="checkbox" id="n1" checked>
+      <label class="hds-form-label" for="n1">Email notifications</label>
+    </div>
+    <div class="hds-form-check">
+      <input class="hds-form-check-input" type="checkbox" id="n2" checked>
+      <label class="hds-form-label" for="n2">Push notifications</label>
+    </div>
+    <div class="hds-form-check">
+      <input class="hds-form-check-input" type="checkbox" id="n3">
+      <label class="hds-form-label" for="n3">SMS notifications</label>
+    </div>
+  </fieldset>
+  <label class="hds-form-toggle">
+    <input type="checkbox" checked>
+    <span class="hds-form-toggle-track"></span>
+    <span>Dark mode</span>
+  </label>
+  <div class="hds-cluster" style="justify-content: flex-end;">
+    <button class="hds-btn hds-btn--secondary" type="button">Cancel</button>
+    <button class="hds-btn hds-btn--primary" type="submit">Save</button>
+  </div>
+</form>`
       ) },
     ],
   });
@@ -2697,6 +2951,18 @@ function linkContent() {
       ]
     ),
     dimensions: [
+      { label: 'Size', content: playground(
+        `          <div class="hds-stack hds-stack--lg">
+            <p><a href="#" class="hds-link hds-link--xs">X-Small link</a></p>
+            <p><a href="#" class="hds-link hds-link--sm">Small link</a></p>
+            <p><a href="#" class="hds-link">Medium link (default)</a></p>
+            <p><a href="#" class="hds-link hds-link--lg">Large link</a></p>
+          </div>`,
+        `<a href="#" class="hds-link hds-link--xs">X-Small</a>
+<a href="#" class="hds-link hds-link--sm">Small</a>
+<a href="#" class="hds-link">Medium (default)</a>
+<a href="#" class="hds-link hds-link--lg">Large</a>`
+      ) },
       { label: 'States', content: playground(
         `          <div class="hds-stack hds-stack--lg">
             <p><a href="#" class="hds-link">Default</a></p>
@@ -2842,6 +3108,7 @@ const contentMap = {
   'toggle': () => toggleContent(),
   'checkbox': () => checkboxContent(),
   'radio': () => radioContent(),
+  'form-patterns': () => formPatternsContent(),
   'form-validation': () => formValidationContent(),
   'search-pattern': () => searchPatternContent(),
 };

@@ -21,29 +21,37 @@ const TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/design/tokens');
 // ===== Pages Registry =====
 
 const PAGES = [
-  { file: 'index.html', id: 'colors', label: 'Colors', group: 'Foundations' },
-  { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
-  { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
+  // Foundations (alphabetical)
+  { file: 'index.html', id: 'animation', label: 'Animation', group: 'Foundations' },
+  { file: 'breakpoints.html', id: 'breakpoints', label: 'Breakpoints', group: 'Foundations' },
+  { file: 'colors.html', id: 'colors', label: 'Colors', group: 'Foundations' },
+  { file: 'layout.html', id: 'layout', label: 'Layout', group: 'Foundations' },
   { file: 'radius.html', id: 'radius', label: 'Radius', group: 'Foundations' },
   { file: 'scale.html', id: 'scale', label: 'Scale', group: 'Foundations' },
-  { file: 'layout.html', id: 'layout', label: 'Layout', group: 'Foundations' },
-  { file: 'animation.html', id: 'animation', label: 'Animation', group: 'Foundations' },
+  { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
+  { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
+  // Components (alphabetical)
   { file: 'breadcrumbs.html', id: 'breadcrumbs', label: 'Breadcrumbs', group: 'Components' },
   { file: 'button.html', id: 'button', label: 'Button', group: 'Components' },
-  { file: 'card.html', id: 'card', label: 'Card', group: 'Components' },
   { file: 'button-group.html', id: 'button-group', label: 'Button Group', group: 'Components' },
   { file: 'button-icon.html', id: 'button-icon', label: 'Button Icon', group: 'Components' },
+  { file: 'card.html', id: 'card', label: 'Card', group: 'Components' },
   { file: 'chips.html', id: 'chips', label: 'Chips', group: 'Components' },
+  { file: 'collapsible.html', id: 'collapsible', label: 'Collapsible', group: 'Components' },
   { file: 'data-display.html', id: 'data-display', label: 'Data Display', group: 'Components' },
+  { file: 'divider.html', id: 'divider', label: 'Divider', group: 'Components' },
   { file: 'feedback.html', id: 'feedback', label: 'Feedback', group: 'Components' },
   { file: 'file-upload.html', id: 'file-upload', label: 'File Upload', group: 'Components' },
+  { file: 'icon.html', id: 'icon', label: 'Icon', group: 'Components' },
   { file: 'inputs.html', id: 'inputs', label: 'Inputs', group: 'Components' },
+  { file: 'link.html', id: 'link', label: 'Link', group: 'Components' },
   { file: 'modal.html', id: 'modal', label: 'Modal', group: 'Components' },
   { file: 'nav-links.html', id: 'nav-links', label: 'Nav Links', group: 'Components' },
   { file: 'search.html', id: 'search', label: 'Search', group: 'Components' },
   { file: 'selects.html', id: 'selects', label: 'Selects', group: 'Components' },
   { file: 'tabs.html', id: 'tabs', label: 'Tabs', group: 'Components' },
   { file: 'toggles.html', id: 'toggles', label: 'Toggles', group: 'Components' },
+  // Patterns (alphabetical)
   { file: 'form-validation.html', id: 'form-validation', label: 'Form Validation', group: 'Patterns' },
   { file: 'search-pattern.html', id: 'search-pattern', label: 'Search', group: 'Patterns' },
 ];
@@ -180,7 +188,9 @@ function readTokens() {
     for (const [name, token] of Object.entries(aliasSpacing.space)) {
       if (name.startsWith('$')) continue;
       const px = getNumericValue(token).replace('px', '');
-      gaps.push({ name: `hds-spacing-${px}`, css: `--hds-spacing-${px}`, value: getNumericValue(token) });
+      const ref = getRefName(token);
+      const scaleRef = ref ? `--base-scale-${ref.replace('ui.', '')}` : '';
+      gaps.push({ name: `hds-spacing-${px}`, css: `--hds-spacing-${px}`, value: getNumericValue(token), scaleRef });
     }
   }
 
@@ -247,7 +257,7 @@ const VALIDATION_SCRIPT = `<script>
   groups.forEach(function(group) {
     var rule = group.getAttribute('data-validate');
     var input = group.querySelector('input, select');
-    var hint = group.querySelector('.heavy-form-hint');
+    var hint = group.querySelector('.hds-form-hint');
     if (!input || !hint) return;
 
     var defaultHint = hint.textContent;
@@ -274,22 +284,22 @@ const VALIDATION_SCRIPT = `<script>
         msg = valid ? 'Selected' : 'Please select an option';
       }
 
-      input.classList.remove('heavy-form-input--error', 'heavy-form-input--success');
-      hint.classList.remove('heavy-form-hint--error', 'heavy-form-hint--success');
-      input.classList.add(valid ? 'heavy-form-input--success' : 'heavy-form-input--error');
-      hint.classList.add(valid ? 'heavy-form-hint--success' : 'heavy-form-hint--error');
+      input.classList.remove('hds-form-input--error', 'hds-form-input--success');
+      hint.classList.remove('hds-form-hint--error', 'hds-form-hint--success');
+      input.classList.add(valid ? 'hds-form-input--success' : 'hds-form-input--error');
+      hint.classList.add(valid ? 'hds-form-hint--success' : 'hds-form-hint--error');
       hint.textContent = msg;
     }
 
     function reset() {
-      input.classList.remove('heavy-form-input--error', 'heavy-form-input--success');
-      hint.classList.remove('heavy-form-hint--error', 'heavy-form-hint--success');
+      input.classList.remove('hds-form-input--error', 'hds-form-input--success');
+      hint.classList.remove('hds-form-hint--error', 'hds-form-hint--success');
       hint.textContent = defaultHint;
     }
 
     input.addEventListener('blur', validate);
     input.addEventListener('input', function() {
-      if (input.classList.contains('heavy-form-input--error') || input.classList.contains('heavy-form-input--success')) {
+      if (input.classList.contains('hds-form-input--error') || input.classList.contains('hds-form-input--success')) {
         validate();
       }
     });
@@ -306,7 +316,36 @@ const builder = createPageBuilder({
   customScripts: VALIDATION_SCRIPT,
 });
 
-const { esc, codeBlock, playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, typographyTable, baseScaleTable } = builder;
+const { esc, codeBlock, playground: _playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, typographyTable, baseScaleTable } = builder;
+
+// Syntax highlight escaped HTML code blocks
+// Uses markers (\x01..\x04) to avoid regex cascading, then converts to spans
+function highlightHtml(escaped) {
+  const result = escaped
+    // Tags: &lt;tagname and &lt;/tagname (must run before attrs)
+    .replace(/(&lt;\/?)(\w+)/g, '$1\x07$2\x08')
+    // Strings: &quot;...&quot;
+    .replace(/&quot;(.*?)&quot;/g, '\x03&quot;$1&quot;\x04')
+    // Attributes: word= (only before a string marker)
+    .replace(/([\w-]+)=(?=\x03)/g, '\x01$1\x02=')
+    // Brackets: &lt; &gt;
+    .replace(/&lt;/g, '\x05&lt;\x06')
+    .replace(/&gt;/g, '\x05&gt;\x06');
+
+  return result
+    .replace(/\x07(.*?)\x08/g, '<span class="style-guide-syntax-tag">$1</span>')
+    .replace(/\x01(.*?)\x02/g, '<span class="style-guide-syntax-attr">$1</span>')
+    .replace(/\x03(.*?)\x04/g, '<span class="style-guide-syntax-string">$1</span>')
+    .replace(/\x05(.*?)\x06/g, '<span class="style-guide-syntax-punct">$1</span>');
+}
+
+// Wrap playground to add hds-specific class + syntax highlighting
+const playground = (preview, code) => {
+  let html = _playground(preview, code);
+  html = html.replace('style-guide-playground-code"', 'style-guide-playground-code hds-playground-code"');
+  html = html.replace(/<code>([\s\S]*?)<\/code>/, (_, inner) => `<code>${highlightHtml(inner)}</code>`);
+  return html;
+};
 
 // ===== Content Functions =====
 
@@ -414,16 +453,17 @@ function spacingContent(tokens) {
     section('Spacing Aliases', spacingTable(tokens.gaps.map(g => ({
       tokenName: g.name,
       copyValue: g.css,
-      value: g.value,
+      value: g.scaleRef || g.value,
+      widthPx: parseInt(g.value),
     })))),
   ]);
 }
 
 function radiusContent(tokens) {
   const baseRadii = [
-    { name: 'hds-radius-sm', value: '4px' },
-    { name: 'hds-radius-md', value: '8px' },
-    { name: 'hds-radius-lg', value: '12px' },
+    { name: 'hds-radius-sm', value: '--base-scale-4', sampleValue: '4px' },
+    { name: 'hds-radius-md', value: '--base-scale-8', sampleValue: '8px' },
+    { name: 'hds-radius-lg', value: '--base-scale-12', sampleValue: '12px' },
     { name: 'hds-radius-full', value: '999px' },
   ];
 
@@ -432,6 +472,7 @@ function radiusContent(tokens) {
       tokenName: r.name,
       copyValue: `--${r.name}`,
       value: r.value,
+      sampleValue: r.sampleValue,
     })))),
   ]);
 }
@@ -458,97 +499,35 @@ function layoutContent() {
   ).join('\n');
 
   const gridRows = layoutRows([
-    ['.heavy-grid', 'Base grid container', 'gap: var(--hds-grid-gutter)'],
-    ['.heavy-grid--2', '2 equal columns', 'repeat(2, 1fr)'],
-    ['.heavy-grid--3', '3 equal columns', 'repeat(3, 1fr)'],
-    ['.heavy-grid--4', '4 equal columns', 'repeat(4, 1fr)'],
-    ['.heavy-grid--6', '6 equal columns', 'repeat(6, 1fr)'],
-    ['.heavy-grid--10', '10 equal columns', 'repeat(10, 1fr)'],
-    ['.heavy-grid--12', '12 equal columns', 'repeat(12, 1fr)'],
-    ['.heavy-grid--auto', 'Auto-fit, 300px min', 'minmax(300px, 1fr)'],
-    ['.heavy-grid--auto-sm', 'Auto-fit, 200px min', 'minmax(200px, 1fr)'],
-    ['.heavy-grid--auto-lg', 'Auto-fit, 400px min', 'minmax(400px, 1fr)'],
-    ['.heavy-col-span-{N}', 'Span N columns', 'grid-column: span N'],
-    ['.heavy-col-span-full', 'Span all columns', 'grid-column: 1 / -1'],
-    ['.heavy-gap-1 \u2013 .heavy-gap-6', 'Gap utilities', '8px \u2013 48px'],
+    ['.hds-grid', 'Base grid container', 'gap: var(--hds-grid-gutter)'],
+    ['.hds-grid--2', '2 equal columns', 'repeat(2, 1fr)'],
+    ['.hds-grid--3', '3 equal columns', 'repeat(3, 1fr)'],
+    ['.hds-grid--4', '4 equal columns', 'repeat(4, 1fr)'],
+    ['.hds-grid--6', '6 equal columns', 'repeat(6, 1fr)'],
+    ['.hds-grid--10', '10 equal columns', 'repeat(10, 1fr)'],
+    ['.hds-grid--12', '12 equal columns', 'repeat(12, 1fr)'],
+    ['.hds-grid--auto', 'Auto-fit, 300px min', 'minmax(300px, 1fr)'],
+    ['.hds-grid--auto-sm', 'Auto-fit, 200px min', 'minmax(200px, 1fr)'],
+    ['.hds-grid--auto-lg', 'Auto-fit, 400px min', 'minmax(400px, 1fr)'],
+    ['.hds-col-span-{N}', 'Span N columns', 'grid-column: span N'],
+    ['.hds-col-span-full', 'Span all columns', 'grid-column: 1 / -1'],
+    ['.hds-gap-1 \u2013 .hds-gap-6', 'Gap utilities', '8px \u2013 48px'],
   ]);
 
-  const stackRows = layoutRows([
-    ['.heavy-stack', 'Default vertical rhythm', '16px'],
-    ['.heavy-stack--sm', 'Small gap', '8px'],
-    ['.heavy-stack--md', 'Medium gap', '16px'],
-    ['.heavy-stack--lg', 'Large gap', '24px'],
-    ['.heavy-stack--xl', 'Extra-large gap', '32px'],
-  ]);
-
-  const clusterRows = layoutRows([
-    ['.heavy-cluster', 'display', 'flex'],
-    ['.heavy-cluster', 'flex-wrap', 'wrap'],
-    ['.heavy-cluster', 'gap', 'var(--cluster-space, 16px)'],
-    ['.heavy-cluster', 'align-items', 'center'],
-  ]);
-
-  const sidebarRows = layoutRows([
-    ['.heavy-with-sidebar', 'display', 'flex'],
-    ['.heavy-with-sidebar', 'flex-wrap', 'wrap'],
-    ['.heavy-with-sidebar', 'gap', '24px'],
-    ['&gt; :first-child', 'flex-basis', 'var(--sidebar-width, 280px)'],
-    ['&gt; :first-child', 'flex-grow', '1'],
-    ['&gt; :last-child', 'flex-basis', '0'],
-    ['&gt; :last-child', 'flex-grow', '999'],
-    ['&gt; :last-child', 'min-inline-size', '50%'],
-  ]);
-
-  const centerRows = layoutRows([
-    ['.heavy-center', 'max-inline-size', 'var(--hds-measure) / 65ch'],
-    ['.heavy-center', 'margin-inline', 'auto'],
-    ['.heavy-center', 'padding-inline', '16px'],
-    ['.heavy-center', 'box-sizing', 'content-box'],
-  ]);
-
-  const coverRows = layoutRows([
-    ['.heavy-cover', 'display', 'flex column'],
-    ['.heavy-cover', 'min-block-size', '100vh'],
-    ['.heavy-cover', 'padding', '16px'],
-    ['.heavy-cover &gt; *', 'margin-block', '16px'],
-    ['.heavy-cover__centered', 'margin-block', 'auto'],
-  ]);
-
-  const boxRows = layoutRows([
-    ['.heavy-box', 'Default', '16px'],
-    ['.heavy-box--sm', 'Small', '8px'],
-    ['.heavy-box--lg', 'Large', '24px'],
-    ['.heavy-box--xl', 'Extra-large', '32px'],
-  ]);
-
-  const measureRows = layoutRows([
-    ['.measure', 'Default', '65ch'],
-    ['.measure-narrow', 'Narrow', '45ch'],
-    ['.measure-wide', 'Wide', '75ch'],
-  ]);
-
-  const breakpointRows = layoutRows([
-    ['sm', '480px', 'Small phones'],
-    ['md', '768px', 'Tablets'],
-    ['lg', '1024px', 'Small desktops'],
-    ['xl', '1200px', 'Large desktops'],
-    ['2xl', '1440px', 'Wide screens'],
-  ]);
-
-  return foundationPage('Layout', 'CSS Grid and flexbox layout primitives for building page structure.', [
+  return foundationPage('Layout', 'CSS Grid layout primitives for building page structure.', [
     `          <h3 class="style-guide-section-name">Grid</h3>
           <div>
             <div class="style-guide-demo">
-              <div class="heavy-grid heavy-grid--12">
+              <div class="hds-grid hds-grid--12">
 ${gridBoxes}
               </div>
             </div>
             <div class="style-guide-demo">
-              <div class="heavy-grid heavy-grid--12">
-                <div class="style-guide-demo-box heavy-col-span-4">span 4</div>
-                <div class="style-guide-demo-box heavy-col-span-8">span 8</div>
-                <div class="style-guide-demo-box heavy-col-span-6">span 6</div>
-                <div class="style-guide-demo-box heavy-col-span-6">span 6</div>
+              <div class="hds-grid hds-grid--12">
+                <div class="style-guide-demo-box hds-col-span-4">span 4</div>
+                <div class="style-guide-demo-box hds-col-span-8">span 8</div>
+                <div class="style-guide-demo-box hds-col-span-6">span 6</div>
+                <div class="style-guide-demo-box hds-col-span-6">span 6</div>
               </div>
             </div>
           </div>
@@ -564,175 +543,26 @@ ${gridBoxes}
 ${gridRows}
             </tbody>
           </table>
-          <h3 class="style-guide-section-name" id="stack">Stack</h3>
-          <div>
-            <div class="style-guide-demo">
-              <div class="heavy-stack">
-                <div class="style-guide-demo-box">Item 1</div>
-                <div class="style-guide-demo-box">Item 2</div>
-                <div class="style-guide-demo-box">Item 3</div>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Class</th>
-                <th>Description</th>
-                <th>Gap</th>
-              </tr>
-            </thead>
-            <tbody>
-${stackRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="cluster">Cluster</h3>
-          <div>
-            <div class="style-guide-demo">
-              <div class="heavy-cluster">
-                <div class="style-guide-demo-box">Tag</div>
-                <div class="style-guide-demo-box">Label</div>
-                <div class="style-guide-demo-box">Longer tag</div>
-                <div class="style-guide-demo-box">Item</div>
-                <div class="style-guide-demo-box">Another</div>
-                <div class="style-guide-demo-box">More</div>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Class</th>
-                <th>Property</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${clusterRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="sidebar-layout">Sidebar</h3>
-          <div>
-            <div class="style-guide-demo">
-              <div class="heavy-with-sidebar">
-                <div class="style-guide-demo-box">Sidebar (280px)</div>
-                <div class="style-guide-demo-box">Content (fills remaining)</div>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Selector</th>
-                <th>Property</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${sidebarRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="center">Center</h3>
-          <div>
-            <div class="style-guide-demo" style="background: var(--ui-surface-default)">
-              <div class="heavy-center" style="background: var(--ui-bg-default); padding: var(--hds-space-16); border-radius: var(--hds-radius-sm); text-align: center;">
-                <span class="body-xsm text-muted">Centered \u2014 max-width: var(--hds-measure)</span>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Class</th>
-                <th>Property</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${centerRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="cover">Cover</h3>
-          <div>
-            <div class="style-guide-demo" style="padding: 0">
-              <div class="heavy-cover" style="min-block-size: 240px;">
-                <div class="style-guide-demo-box">Header</div>
-                <div class="style-guide-demo-box heavy-cover__centered">Centered element</div>
-                <div class="style-guide-demo-box">Footer</div>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Selector</th>
-                <th>Property</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-${coverRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="box">Box</h3>
-          <div>
-            <div class="style-guide-demo" style="display: flex; gap: var(--hds-space-16); flex-wrap: wrap; align-items: start">
-              <div class="heavy-box--sm" style="background: var(--ui-surface-default); border-radius: var(--hds-radius-sm)">
-                <div class="style-guide-demo-box">.heavy-box--sm</div>
-              </div>
-              <div class="heavy-box" style="background: var(--ui-surface-default); border-radius: var(--hds-radius-sm)">
-                <div class="style-guide-demo-box">.heavy-box</div>
-              </div>
-              <div class="heavy-box--lg" style="background: var(--ui-surface-default); border-radius: var(--hds-radius-sm)">
-                <div class="style-guide-demo-box">.heavy-box--lg</div>
-              </div>
-              <div class="heavy-box--xl" style="background: var(--ui-surface-default); border-radius: var(--hds-radius-sm)">
-                <div class="style-guide-demo-box">.heavy-box--xl</div>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Class</th>
-                <th>Description</th>
-                <th>Padding</th>
-              </tr>
-            </thead>
-            <tbody>
-${boxRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="measure">Measure</h3>
-          <div>
-            <div class="style-guide-demo">
-              <div class="heavy-stack">
-                <div class="measure-narrow" style="background: var(--ui-surface-default); padding: var(--hds-space-8); border-radius: var(--hds-radius-sm)">
-                  <div class="style-guide-demo-box">.measure-narrow (45ch)</div>
-                </div>
-                <div class="measure" style="background: var(--ui-surface-default); padding: var(--hds-space-8); border-radius: var(--hds-radius-sm)">
-                  <div class="style-guide-demo-box">.measure (65ch)</div>
-                </div>
-                <div class="measure-wide" style="background: var(--ui-surface-default); padding: var(--hds-space-8); border-radius: var(--hds-radius-sm)">
-                  <div class="style-guide-demo-box">.measure-wide (75ch)</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>Class</th>
-                <th>Description</th>
-                <th>Max Width</th>
-              </tr>
-            </thead>
-            <tbody>
-${measureRows}
-            </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="breakpoints">Breakpoints</h3>
-          <table class="style-guide-data-table">
+`,
+  ]);
+}
+
+function breakpointsContent() {
+  const layoutRows = (data) => data.map(([a, b, c]) =>
+    `                <tr><td>${a}</td><td>${b}</td><td>${c}</td></tr>`
+  ).join('\n');
+
+  const rows = layoutRows([
+    ['sm', '480px', 'Small phones'],
+    ['md', '768px', 'Tablets'],
+    ['lg', '1024px', 'Small desktops'],
+    ['xl', '1200px', 'Large desktops'],
+    ['2xl', '1440px', 'Wide screens'],
+  ]);
+
+  return foundationPage('Breakpoints', 'Mobile-first responsive breakpoints used across the system. Apply via inline media queries with native CSS nesting.', [
+    section('Breakpoint Scale',
+      `          <table class="style-guide-data-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -741,60 +571,9 @@ ${measureRows}
               </tr>
             </thead>
             <tbody>
-${breakpointRows}
+${rows}
             </tbody>
-          </table>
-          <h3 class="style-guide-section-name" id="cards">Cards</h3>
-          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-grid heavy-grid--3">
-                <div class="heavy-card">
-                  <div class="heavy-card-header">
-                    <div class="heavy-card-title">Default Card</div>
-                    <div class="heavy-card-subtitle">With subtitle</div>
-                  </div>
-                  <div class="heavy-card-body">
-                    <p class="body-sm">Card body content goes here.</p>
-                  </div>
-                  <div class="heavy-card-footer">
-                    <span class="body-xsm text-muted">Card footer</span>
-                  </div>
-                </div>
-                <div class="heavy-card heavy-card--elevated">
-                  <div class="heavy-card-body">
-                    <div class="heavy-card-title">Elevated Card</div>
-                    <p class="body-sm text-muted" style="margin-top: var(--hds-space-4)">No border, shadow only.</p>
-                  </div>
-                </div>
-                <div class="heavy-card heavy-card--interactive">
-                  <div class="heavy-card-body">
-                    <div class="heavy-card-title">Interactive Card</div>
-                    <p class="body-sm text-muted" style="margin-top: var(--hds-space-4)">Hover to see effect.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <h3 class="style-guide-section-name" id="collapsibles">Collapsibles</h3>
-          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <details class="collapsible">
-                <summary>Collapsible Section</summary>
-                <div>Hidden content revealed when expanded. Built with native &lt;details&gt; and &lt;summary&gt; elements &mdash; no JavaScript needed.</div>
-              </details>
-              <details class="collapsible" open>
-                <summary>Open by Default</summary>
-                <div>This section starts expanded. Click the header to collapse it.</div>
-              </details>
-            </div>
-          </div>
-          <h3 class="style-guide-section-name" id="dividers">Dividers</h3>
-          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <hr class="divider">
-              <div class="heavy-section-header">Section Header</div>
-            </div>
-          </div>`,
+          </table>`),
   ]);
 }
 
@@ -802,30 +581,30 @@ function animationContent() {
   return foundationPage('Animation', 'Motion tokens and utility classes for consistent animation across the system.', [
     `          <h3 class="style-guide-section-name">Timing Functions</h3>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-stack heavy-stack--sm">
-                <div class="heavy-kv"><span class="heavy-kv-key">--ease-out</span><span class="heavy-kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
-                <div class="heavy-kv"><span class="heavy-kv-key">--ease-in-out</span><span class="heavy-kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
-                <div class="heavy-kv"><span class="heavy-kv-key">--ease-spring</span><span class="heavy-kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-stack hds-stack--sm">
+                <div class="hds-kv"><span class="hds-kv-key">--ease-out</span><span class="hds-kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">--ease-in-out</span><span class="hds-kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">--ease-spring</span><span class="hds-kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
               </div>
             </div>
           </div>
           <h3 class="style-guide-section-name">Keyframes</h3>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-cluster">
-                <span class="heavy-badge">fade-in</span>
-                <span class="heavy-badge">slide-up</span>
-                <span class="heavy-badge">slide-down</span>
-                <span class="heavy-badge">scale-in</span>
-                <span class="heavy-badge">spin</span>
-                <span class="heavy-badge">shimmer</span>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-cluster">
+                <span class="hds-badge">fade-in</span>
+                <span class="hds-badge">slide-up</span>
+                <span class="hds-badge">slide-down</span>
+                <span class="hds-badge">scale-in</span>
+                <span class="hds-badge">spin</span>
+                <span class="hds-badge">shimmer</span>
               </div>
             </div>
           </div>
           <h3 class="style-guide-section-name">Utility Classes</h3>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
+            <div class="hds-stack hds-stack--lg">
               <table class="style-guide-data-table">
                 <thead>
                   <tr>
@@ -872,14 +651,14 @@ function animationContent() {
           </div>
           <h3 class="style-guide-section-name">Stagger Children</h3>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="stagger-children heavy-cluster">
-                <span class="heavy-badge heavy-badge--info">1</span>
-                <span class="heavy-badge heavy-badge--info">2</span>
-                <span class="heavy-badge heavy-badge--info">3</span>
-                <span class="heavy-badge heavy-badge--info">4</span>
-                <span class="heavy-badge heavy-badge--info">5</span>
-                <span class="heavy-badge heavy-badge--info">6</span>
+            <div class="hds-stack hds-stack--lg">
+              <div class="stagger-children hds-cluster">
+                <span class="hds-badge hds-badge--info">1</span>
+                <span class="hds-badge hds-badge--info">2</span>
+                <span class="hds-badge hds-badge--info">3</span>
+                <span class="hds-badge hds-badge--info">4</span>
+                <span class="hds-badge hds-badge--info">5</span>
+                <span class="hds-badge hds-badge--info">6</span>
               </div>
             </div>
           </div>`,
@@ -892,20 +671,20 @@ function breadcrumbsContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <div class="heavy-breadcrumbs">
-              <a class="heavy-breadcrumbs-link" href="#">Home</a>
-              <span class="heavy-breadcrumbs-separator">/</span>
-              <a class="heavy-breadcrumbs-link" href="#">Projects</a>
-              <span class="heavy-breadcrumbs-separator">/</span>
-              <span class="heavy-breadcrumbs-current">Design System</span>
+            <div class="hds-breadcrumbs">
+              <a class="heavy-link" href="#">Home</a>
+              <span class="hds-breadcrumbs-separator">/</span>
+              <a class="heavy-link" href="#">Projects</a>
+              <span class="hds-breadcrumbs-separator">/</span>
+              <span class="hds-breadcrumbs-current">Design System</span>
             </div>
           </div>`,
-        `<nav class="heavy-breadcrumbs">
-  <a class="heavy-breadcrumbs-link" href="#">Home</a>
-  <span class="heavy-breadcrumbs-separator">/</span>
-  <a class="heavy-breadcrumbs-link" href="#">Projects</a>
-  <span class="heavy-breadcrumbs-separator">/</span>
-  <span class="heavy-breadcrumbs-current">Design System</span>
+        `<nav class="hds-breadcrumbs">
+  <a class="heavy-link" href="#">Home</a>
+  <span class="hds-breadcrumbs-separator">/</span>
+  <a class="heavy-link" href="#">Projects</a>
+  <span class="hds-breadcrumbs-separator">/</span>
+  <span class="hds-breadcrumbs-current">Design System</span>
 </nav>`
       ) },
     ],
@@ -918,41 +697,41 @@ function buttonsContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="heavy-btn heavy-btn--primary">Primary</button>
-            <button class="heavy-btn heavy-btn--secondary">Secondary</button>
-            <button class="heavy-btn heavy-btn--tertiary">Tertiary</button>
-            <button class="heavy-btn heavy-btn--danger">Danger</button>
+            <button class="hds-btn hds-btn--primary">Primary</button>
+            <button class="hds-btn hds-btn--secondary">Secondary</button>
+            <button class="hds-btn hds-btn--tertiary">Tertiary</button>
+            <button class="hds-btn hds-btn--danger">Danger</button>
           </div>`,
-        `<button class="heavy-btn heavy-btn--primary">Label</button>
-<button class="heavy-btn heavy-btn--secondary">Label</button>
-<button class="heavy-btn heavy-btn--tertiary">Label</button>
-<button class="heavy-btn heavy-btn--danger">Label</button>`
+        `<button class="hds-btn hds-btn--primary">Label</button>
+<button class="hds-btn hds-btn--secondary">Label</button>
+<button class="hds-btn hds-btn--tertiary">Label</button>
+<button class="hds-btn hds-btn--danger">Label</button>`
       ) },
       { label: 'States', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="heavy-btn heavy-btn--primary">Default</button>
-            <button class="heavy-btn heavy-btn--primary is-hover">Hover</button>
-            <button class="heavy-btn heavy-btn--primary is-active">Active</button>
-            <button class="heavy-btn heavy-btn--primary is-focus">Focus</button>
-            <button class="heavy-btn heavy-btn--primary is-disabled" disabled>Disabled</button>
+            <button class="hds-btn hds-btn--primary">Default</button>
+            <button class="hds-btn hds-btn--primary is-hover">Hover</button>
+            <button class="hds-btn hds-btn--primary is-active">Active</button>
+            <button class="hds-btn hds-btn--primary is-focus">Focus</button>
+            <button class="hds-btn hds-btn--primary is-disabled" disabled>Disabled</button>
           </div>`,
-        `<!-- Default -->\n<button class="heavy-btn heavy-btn--primary">Label</button>\n<!-- Hover -->\n<button class="heavy-btn heavy-btn--primary is-hover">Label</button>\n<!-- Active -->\n<button class="heavy-btn heavy-btn--primary is-active">Label</button>\n<!-- Focus -->\n<button class="heavy-btn heavy-btn--primary is-focus">Label</button>\n<!-- Disabled -->\n<button class="heavy-btn heavy-btn--primary" disabled>Label</button>`
+        `<!-- Default -->\n<button class="hds-btn hds-btn--primary">Label</button>\n<!-- Hover -->\n<button class="hds-btn hds-btn--primary is-hover">Label</button>\n<!-- Active -->\n<button class="hds-btn hds-btn--primary is-active">Label</button>\n<!-- Focus -->\n<button class="hds-btn hds-btn--primary is-focus">Label</button>\n<!-- Disabled -->\n<button class="hds-btn hds-btn--primary" disabled>Label</button>`
       ) },
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="heavy-btn heavy-btn--primary heavy-btn--xs">X-Small</button>
-            <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Small</button>
-            <button class="heavy-btn heavy-btn--primary">Medium</button>
-            <button class="heavy-btn heavy-btn--primary heavy-btn--lg">Large</button>
+            <button class="hds-btn hds-btn--primary hds-btn--xs">X-Small</button>
+            <button class="hds-btn hds-btn--primary hds-btn--sm">Small</button>
+            <button class="hds-btn hds-btn--primary">Medium</button>
+            <button class="hds-btn hds-btn--primary hds-btn--lg">Large</button>
           </div>`,
-        `<button class="heavy-btn heavy-btn--primary heavy-btn--xs">Label</button>
-<button class="heavy-btn heavy-btn--primary heavy-btn--sm">Label</button>
-<button class="heavy-btn heavy-btn--primary">Label</button>
-<button class="heavy-btn heavy-btn--primary heavy-btn--lg">Label</button>`
+        `<button class="hds-btn hds-btn--primary hds-btn--xs">Label</button>
+<button class="hds-btn hds-btn--primary hds-btn--sm">Label</button>
+<button class="hds-btn hds-btn--primary">Label</button>
+<button class="hds-btn hds-btn--primary hds-btn--lg">Label</button>`
       ) },
       { label: 'Block', content: playground(
-        `          <button class="heavy-btn heavy-btn--primary heavy-btn--block">Label</button>`,
-        '<button class="heavy-btn heavy-btn--primary heavy-btn--block">Label</button>'
+        `          <button class="hds-btn hds-btn--primary hds-btn--block">Label</button>`,
+        '<button class="hds-btn hds-btn--primary hds-btn--block">Label</button>'
       ) },
     ],
   });
@@ -964,11 +743,23 @@ function buttonIconContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="heavy-btn-icon" aria-label="Settings">&#9881;</button>
-            <button class="heavy-btn-icon" aria-label="Close">&#10005;</button>
-            <button class="heavy-btn-icon" aria-label="Menu">&#9776;</button>
+            <button class="hds-btn-icon" aria-label="Settings">&#9881;</button>
+            <button class="hds-btn-icon" aria-label="Close">&#10005;</button>
+            <button class="hds-btn-icon" aria-label="Menu">&#9776;</button>
           </div>`,
-        '<button class="heavy-btn-icon" aria-label="Settings">&#9881;</button>'
+        '<button class="hds-btn-icon" aria-label="Settings">&#9881;</button>'
+      ) },
+      { label: 'Size', content: playground(
+        `          <div class="style-guide-variant-row">
+            <button class="hds-btn-icon hds-btn-icon--xs" aria-label="Extra small">&#9881;</button>
+            <button class="hds-btn-icon hds-btn-icon--sm" aria-label="Small">&#9881;</button>
+            <button class="hds-btn-icon" aria-label="Medium">&#9881;</button>
+            <button class="hds-btn-icon hds-btn-icon--lg" aria-label="Large">&#9881;</button>
+          </div>`,
+        `<button class="hds-btn-icon hds-btn-icon--xs" aria-label="Action">&#9881;</button>
+<button class="hds-btn-icon hds-btn-icon--sm" aria-label="Action">&#9881;</button>
+<button class="hds-btn-icon" aria-label="Action">&#9881;</button>
+<button class="hds-btn-icon hds-btn-icon--lg" aria-label="Action">&#9881;</button>`
       ) },
     ],
   });
@@ -980,16 +771,16 @@ function buttonGroupContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <div class="heavy-btn-group">
-              <button class="heavy-btn heavy-btn--secondary">Left</button>
-              <button class="heavy-btn heavy-btn--secondary">Center</button>
-              <button class="heavy-btn heavy-btn--secondary">Right</button>
+            <div class="hds-btn-group">
+              <button class="hds-btn hds-btn--secondary">Left</button>
+              <button class="hds-btn hds-btn--secondary">Center</button>
+              <button class="hds-btn hds-btn--secondary">Right</button>
             </div>
           </div>`,
-        `<div class="heavy-btn-group">
-  <button class="heavy-btn heavy-btn--secondary">Left</button>
-  <button class="heavy-btn heavy-btn--secondary">Center</button>
-  <button class="heavy-btn heavy-btn--secondary">Right</button>
+        `<div class="hds-btn-group">
+  <button class="hds-btn hds-btn--secondary">Left</button>
+  <button class="hds-btn hds-btn--secondary">Center</button>
+  <button class="hds-btn hds-btn--secondary">Right</button>
 </div>`
       ) },
     ],
@@ -1002,11 +793,11 @@ function chipsContent() {
     dimensions: [
       { label: 'States', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="heavy-chip heavy-chip--active">Active</button>
-            <button class="heavy-chip">Inactive</button>
+            <button class="hds-chip hds-chip--active">Active</button>
+            <button class="hds-chip">Inactive</button>
           </div>`,
-        `<button class="heavy-chip heavy-chip--active">Active</button>
-<button class="heavy-chip">Inactive</button>`
+        `<button class="hds-chip hds-chip--active">Active</button>
+<button class="hds-chip">Inactive</button>`
       ) },
     ],
   });
@@ -1018,85 +809,130 @@ function dataDisplayContent() {
     dimensions: [
       { label: 'Badge', content: playground(
         `          <div class="style-guide-variant-row">
-            <span class="heavy-badge">Default</span>
-            <span class="heavy-badge heavy-badge--success">Success</span>
-            <span class="heavy-badge heavy-badge--warning">Warning</span>
-            <span class="heavy-badge heavy-badge--danger">Danger</span>
-            <span class="heavy-badge heavy-badge--info">Info</span>
+            <span class="hds-badge">Default</span>
+            <span class="hds-badge hds-badge--success">Success</span>
+            <span class="hds-badge hds-badge--warning">Warning</span>
+            <span class="hds-badge hds-badge--danger">Danger</span>
+            <span class="hds-badge hds-badge--info">Info</span>
           </div>`,
-        `<span class="heavy-badge">Default</span>
-<span class="heavy-badge heavy-badge--success">Success</span>
-<span class="heavy-badge heavy-badge--warning">Warning</span>
-<span class="heavy-badge heavy-badge--danger">Danger</span>
-<span class="heavy-badge heavy-badge--info">Info</span>`
+        `<span class="hds-badge">Default</span>
+<span class="hds-badge hds-badge--success">Success</span>
+<span class="hds-badge hds-badge--warning">Warning</span>
+<span class="hds-badge hds-badge--danger">Danger</span>
+<span class="hds-badge hds-badge--info">Info</span>`
       ) },
       { label: 'Stat', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-grid heavy-grid--3">
-                <div class="heavy-stat">
-                  <div class="heavy-stat-value">1,234</div>
-                  <div class="heavy-stat-label">Total Users</div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-grid hds-grid--3">
+                <div class="hds-stat">
+                  <div class="hds-stat-value">1,234</div>
+                  <div class="hds-stat-label">Total Users</div>
                 </div>
-                <div class="heavy-stat">
-                  <div class="heavy-stat-value">98<span class="heavy-stat-unit">%</span></div>
-                  <div class="heavy-stat-label">Uptime</div>
-                  <div class="heavy-stat-delta heavy-stat-delta--positive">+2.3%</div>
+                <div class="hds-stat">
+                  <div class="hds-stat-value">98<span class="hds-stat-unit">%</span></div>
+                  <div class="hds-stat-label">Uptime</div>
+                  <div class="hds-stat-delta hds-stat-delta--positive">+2.3%</div>
                 </div>
-                <div class="heavy-stat">
-                  <div class="heavy-stat-value">42ms</div>
-                  <div class="heavy-stat-label">Response Time</div>
-                  <div class="heavy-stat-delta heavy-stat-delta--negative">-5ms</div>
+                <div class="hds-stat">
+                  <div class="hds-stat-value">42ms</div>
+                  <div class="hds-stat-label">Response Time</div>
+                  <div class="hds-stat-delta hds-stat-delta--negative">-5ms</div>
                 </div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-stat">
-  <div class="heavy-stat-value">98<span class="heavy-stat-unit">%</span></div>
-  <div class="heavy-stat-label">Uptime</div>
-  <div class="heavy-stat-delta heavy-stat-delta--positive">+2.3%</div>
+        `<div class="hds-stat">
+  <div class="hds-stat-value">98<span class="hds-stat-unit">%</span></div>
+  <div class="hds-stat-label">Uptime</div>
+  <div class="hds-stat-delta hds-stat-delta--positive">+2.3%</div>
 </div>`
       ) },
       { label: 'Key-Value', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
+            <div class="hds-stack hds-stack--lg">
               <div>
-                <div class="heavy-kv"><span class="heavy-kv-key">Version</span><span class="heavy-kv-value">2.4.1</span></div>
-                <div class="heavy-kv"><span class="heavy-kv-key">Status</span><span class="heavy-kv-value">Active</span></div>
-                <div class="heavy-kv"><span class="heavy-kv-key">Last Deploy</span><span class="heavy-kv-value">2 hours ago</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">Version</span><span class="hds-kv-value">2.4.1</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">Status</span><span class="hds-kv-value">Active</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">Last Deploy</span><span class="hds-kv-value">2 hours ago</span></div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-kv">
-  <span class="heavy-kv-key">Version</span>
-  <span class="heavy-kv-value">2.4.1</span>
+        `<div class="hds-kv">
+  <span class="hds-kv-key">Version</span>
+  <span class="hds-kv-value">2.4.1</span>
 </div>`
       ) },
       { label: 'List', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
+            <div class="hds-stack hds-stack--lg">
               <div>
-                <div class="heavy-list-item">First list item</div>
-                <div class="heavy-list-item">Second list item</div>
-                <div class="heavy-list-item">Third list item</div>
+                <div class="hds-list-item">First list item</div>
+                <div class="hds-list-item">Second list item</div>
+                <div class="hds-list-item">Third list item</div>
               </div>
             </div>
           </div>`,
-        '<div class="heavy-list-item">List item</div>'
+        '<div class="hds-list-item">List item</div>'
       ) },
       { label: 'Progress', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-stack heavy-stack--sm">
-                <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 75%"></div></div>
-                <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 45%"></div></div>
-                <div class="heavy-progress"><div class="heavy-progress-bar" style="width: 90%"></div></div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-stack hds-stack--sm">
+                <div class="hds-progress"><div class="hds-progress-bar" style="width: 75%"></div></div>
+                <div class="hds-progress"><div class="hds-progress-bar" style="width: 45%"></div></div>
+                <div class="hds-progress"><div class="hds-progress-bar" style="width: 90%"></div></div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-progress">
-  <div class="heavy-progress-bar" style="width: 75%"></div>
+        `<div class="hds-progress">
+  <div class="hds-progress-bar" style="width: 75%"></div>
 </div>`
+      ) },
+    ],
+  });
+}
+
+function collapsibleContent() {
+  return componentPage('Collapsible', {
+    description: 'A disclosure widget built with native <details> and <summary> elements. Reveals hidden content on click — no JavaScript needed.',
+    dimensions: [
+      { label: 'States', content: playground(
+        `          <div class="hds-stack hds-stack--lg">
+            <details class="collapsible">
+              <summary>Collapsed</summary>
+              <div>Hidden content revealed when expanded.</div>
+            </details>
+            <details class="collapsible" open>
+              <summary>Open by Default</summary>
+              <div>This section starts expanded. Click the header to collapse it.</div>
+            </details>
+          </div>`,
+        `<details class="collapsible">
+  <summary>Collapsed</summary>
+  <div>Content here.</div>
+</details>
+
+<details class="collapsible" open>
+  <summary>Open by Default</summary>
+  <div>Content here.</div>
+</details>`
+      ) },
+    ],
+  });
+}
+
+function dividerContent() {
+  return componentPage('Divider', {
+    description: 'A horizontal rule that separates content into distinct sections. Pair with section headers for labeled divisions.',
+    dimensions: [
+      { label: 'Type', content: playground(
+        `          <div class="hds-stack hds-stack--lg">
+            <hr class="divider">
+            <div class="hds-section-header">Section Header</div>
+          </div>`,
+        `<hr class="divider">
+<div class="hds-section-header">Section Header</div>`
       ) },
     ],
   });
@@ -1108,54 +944,54 @@ function feedbackContent() {
     dimensions: [
       { label: 'Status Message', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-stack heavy-stack--sm">
-                <div class="heavy-status-msg heavy-status-msg--success">Operation completed successfully.</div>
-                <div class="heavy-status-msg heavy-status-msg--error">Something went wrong. Please try again.</div>
-                <div class="heavy-status-msg heavy-status-msg--warning">Your session will expire in 5 minutes.</div>
-                <div class="heavy-status-msg heavy-status-msg--info">A new version is available.</div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-stack hds-stack--sm">
+                <div class="hds-status-msg hds-status-msg--success">Operation completed successfully.</div>
+                <div class="hds-status-msg hds-status-msg--error">Something went wrong. Please try again.</div>
+                <div class="hds-status-msg hds-status-msg--warning">Your session will expire in 5 minutes.</div>
+                <div class="hds-status-msg hds-status-msg--info">A new version is available.</div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-status-msg heavy-status-msg--success">Operation completed successfully.</div>
-<div class="heavy-status-msg heavy-status-msg--error">Something went wrong. Please try again.</div>`
+        `<div class="hds-status-msg hds-status-msg--success">Operation completed successfully.</div>
+<div class="hds-status-msg hds-status-msg--error">Something went wrong. Please try again.</div>`
       ) },
       { label: 'Empty State', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-empty-state">
-                <div class="heavy-empty-state-title">No results found</div>
-                <div class="heavy-empty-state-description">Try adjusting your search or filters.</div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-empty-state">
+                <div class="hds-empty-state-title">No results found</div>
+                <div class="hds-empty-state-description">Try adjusting your search or filters.</div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-empty-state">
-  <div class="heavy-empty-state-title">No results found</div>
-  <div class="heavy-empty-state-description">Try adjusting your search or filters.</div>
+        `<div class="hds-empty-state">
+  <div class="hds-empty-state-title">No results found</div>
+  <div class="hds-empty-state-description">Try adjusting your search or filters.</div>
 </div>`
       ) },
       { label: 'Spinner', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-cluster">
-                <div class="heavy-spinner"></div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-cluster">
+                <div class="hds-spinner"></div>
                 <span class="body-sm text-muted">Loading...</span>
               </div>
             </div>
           </div>`,
-        '<div class="heavy-spinner"></div>'
+        '<div class="hds-spinner"></div>'
       ) },
       { label: 'Skeleton', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-stack heavy-stack--sm">
-                <div class="heavy-skeleton" style="height: 16px; width: 60%"></div>
-                <div class="heavy-skeleton" style="height: 16px; width: 80%"></div>
-                <div class="heavy-skeleton" style="height: 16px; width: 40%"></div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-stack hds-stack--sm">
+                <div class="hds-skeleton" style="height: 16px; width: 60%"></div>
+                <div class="hds-skeleton" style="height: 16px; width: 80%"></div>
+                <div class="hds-skeleton" style="height: 16px; width: 40%"></div>
               </div>
             </div>
           </div>`,
-        '<div class="heavy-skeleton" style="height: 16px; width: 60%"></div>'
+        '<div class="hds-skeleton" style="height: 16px; width: 60%"></div>'
       ) },
     ],
   });
@@ -1167,27 +1003,45 @@ function fileUploadContent() {
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
-            <div class="heavy-form-file heavy-form-file--xs">
+            <div class="hds-form-file hds-form-file--xs">
               <input type="file" id="file-xs">
-              <label class="heavy-form-file-trigger" for="file-xs">X-Small</label>
+              <label class="hds-form-file-trigger" for="file-xs">X-Small</label>
             </div>
-            <div class="heavy-form-file heavy-form-file--sm">
+            <div class="hds-form-file hds-form-file--sm">
               <input type="file" id="file-sm">
-              <label class="heavy-form-file-trigger" for="file-sm">Small</label>
+              <label class="hds-form-file-trigger" for="file-sm">Small</label>
             </div>
-            <div class="heavy-form-file">
+            <div class="hds-form-file">
               <input type="file" id="file-md">
-              <label class="heavy-form-file-trigger" for="file-md">Medium</label>
+              <label class="hds-form-file-trigger" for="file-md">Medium</label>
             </div>
-            <div class="heavy-form-file heavy-form-file--lg">
+            <div class="hds-form-file hds-form-file--lg">
               <input type="file" id="file-lg">
-              <label class="heavy-form-file-trigger" for="file-lg">Large</label>
+              <label class="hds-form-file-trigger" for="file-lg">Large</label>
             </div>
           </div>`,
-        `<div class="heavy-form-file heavy-form-file--xs"><input type="file" id="f-xs"><label class="heavy-form-file-trigger" for="f-xs">Choose file</label></div>
-<div class="heavy-form-file heavy-form-file--sm"><input type="file" id="f-sm"><label class="heavy-form-file-trigger" for="f-sm">Choose file</label></div>
-<div class="heavy-form-file"><input type="file" id="f-md"><label class="heavy-form-file-trigger" for="f-md">Choose file</label></div>
-<div class="heavy-form-file heavy-form-file--lg"><input type="file" id="f-lg"><label class="heavy-form-file-trigger" for="f-lg">Choose file</label></div>`
+        `<div class="hds-form-file hds-form-file--xs"><input type="file" id="f-xs"><label class="hds-form-file-trigger" for="f-xs">Choose file</label></div>
+<div class="hds-form-file hds-form-file--sm"><input type="file" id="f-sm"><label class="hds-form-file-trigger" for="f-sm">Choose file</label></div>
+<div class="hds-form-file"><input type="file" id="f-md"><label class="hds-form-file-trigger" for="f-md">Choose file</label></div>
+<div class="hds-form-file hds-form-file--lg"><input type="file" id="f-lg"><label class="hds-form-file-trigger" for="f-lg">Choose file</label></div>`
+      ) },
+    ],
+  });
+}
+
+function iconContent() {
+  return componentPage('Icon', {
+    description: 'A sized container for inline SVG icons. Three sizes map directly to base scale tokens: 16, 20 (default), and 24.',
+    dimensions: [
+      { label: 'Size', content: playground(
+        `          <div class="style-guide-variant-row">
+            <span class="hds-icon hds-icon--sm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.25"/></svg></span>
+            <span class="hds-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.25"/></svg></span>
+            <span class="hds-icon hds-icon--lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10.25"/></svg></span>
+          </div>`,
+        `<span class="hds-icon hds-icon--sm"><!-- 16×16 --></span>
+<span class="hds-icon"><!-- 20×20 (default) --></span>
+<span class="hds-icon hds-icon--lg"><!-- 24×24 --></span>`
       ) },
     ],
   });
@@ -1199,61 +1053,61 @@ function inputsContent() {
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
-            <input class="heavy-form-input heavy-form-input--xs heavy-col-span-2" type="text" placeholder="X-Small">
-            <input class="heavy-form-input heavy-form-input--sm heavy-col-span-2" type="text" placeholder="Small">
-            <input class="heavy-form-input heavy-col-span-2" type="text" placeholder="Medium">
-            <input class="heavy-form-input heavy-form-input--lg heavy-col-span-2" type="text" placeholder="Large">
+            <input class="hds-form-input hds-form-input--xs hds-col-span-2" type="text" placeholder="X-Small">
+            <input class="hds-form-input hds-form-input--sm hds-col-span-2" type="text" placeholder="Small">
+            <input class="hds-form-input hds-col-span-2" type="text" placeholder="Medium">
+            <input class="hds-form-input hds-form-input--lg hds-col-span-2" type="text" placeholder="Large">
           </div>`,
-        '<input class="heavy-form-input" type="text" placeholder="Placeholder">'
+        '<input class="hds-form-input" type="text" placeholder="Placeholder">'
       ) },
       { label: 'States', content: playground(
         `          <div class="style-guide-variant-row">
-            <input class="heavy-form-input heavy-col-span-2" type="text" placeholder="Default">
-            <input class="heavy-form-input is-hover heavy-col-span-2" type="text" placeholder="Hover">
-            <input class="heavy-form-input is-focus heavy-col-span-2" type="text" placeholder="Focus">
-            <input class="heavy-form-input is-disabled heavy-col-span-2" type="text" placeholder="Disabled" disabled>
+            <input class="hds-form-input hds-col-span-2" type="text" placeholder="Default">
+            <input class="hds-form-input is-hover hds-col-span-2" type="text" placeholder="Hover">
+            <input class="hds-form-input is-focus hds-col-span-2" type="text" placeholder="Focus">
+            <input class="hds-form-input is-disabled hds-col-span-2" type="text" placeholder="Disabled" disabled>
           </div>`,
-        `<div class="heavy-form-group">
-  <label class="heavy-form-label">Email</label>
-  <input class="heavy-form-input heavy-form-input--error" type="text" value="not-an-email">
-  <span class="heavy-form-hint heavy-form-hint--error">Please enter a valid email address</span>
+        `<div class="hds-form-group">
+  <label class="hds-form-label">Email</label>
+  <input class="hds-form-input hds-form-input--error" type="text" value="not-an-email">
+  <span class="hds-form-hint hds-form-hint--error">Please enter a valid email address</span>
 </div>`
       ) },
       { label: 'Validation', content: playground(
         `          <div class="style-guide-variant-row">
-            <div class="heavy-form-group heavy-col-span-3">
-              <label class="heavy-form-label">Email</label>
-              <input class="heavy-form-input heavy-form-input--error" type="text" placeholder="Enter email" value="not-an-email">
-              <span class="heavy-form-hint heavy-form-hint--error">Please enter a valid email address</span>
+            <div class="hds-form-group hds-col-span-3">
+              <label class="hds-form-label">Email</label>
+              <input class="hds-form-input hds-form-input--error" type="text" placeholder="Enter email" value="not-an-email">
+              <span class="hds-form-hint hds-form-hint--error">Please enter a valid email address</span>
             </div>
-            <div class="heavy-form-group heavy-col-span-3">
-              <label class="heavy-form-label">Username</label>
-              <input class="heavy-form-input heavy-form-input--success" type="text" placeholder="Choose username" value="keithbarney">
-              <span class="heavy-form-hint heavy-form-hint--success">Username is available</span>
+            <div class="hds-form-group hds-col-span-3">
+              <label class="hds-form-label">Username</label>
+              <input class="hds-form-input hds-form-input--success" type="text" placeholder="Choose username" value="keithbarney">
+              <span class="hds-form-hint hds-form-hint--success">Username is available</span>
             </div>
           </div>`,
-        `<div class="heavy-form-group">
-  <label class="heavy-form-label">Email</label>
-  <input class="heavy-form-input heavy-form-input--error" type="text" value="not-an-email">
-  <span class="heavy-form-hint heavy-form-hint--error">Please enter a valid email address</span>
+        `<div class="hds-form-group">
+  <label class="hds-form-label">Email</label>
+  <input class="hds-form-input hds-form-input--error" type="text" value="not-an-email">
+  <span class="hds-form-hint hds-form-hint--error">Please enter a valid email address</span>
 </div>`
       ) },
       { label: 'Textarea', content: playground(
-        `          <div class="heavy-col-span-4">
-            <textarea class="heavy-form-input heavy-form-textarea" placeholder="Write something..."></textarea>
+        `          <div class="hds-col-span-4">
+            <textarea class="hds-form-input hds-form-textarea" placeholder="Write something..."></textarea>
           </div>`,
-        '<textarea class="heavy-form-input heavy-form-textarea" placeholder="Write something..."></textarea>'
+        '<textarea class="hds-form-input hds-form-textarea" placeholder="Write something..."></textarea>'
       ) },
       { label: 'Form Group', content: playground(
-        `          <div class="heavy-form-group heavy-col-span-3">
-            <label class="heavy-form-label">Label</label>
-            <input class="heavy-form-input" type="text" placeholder="Placeholder">
-            <span class="heavy-form-hint">Hint text goes here</span>
+        `          <div class="hds-form-group hds-col-span-3">
+            <label class="hds-form-label">Label</label>
+            <input class="hds-form-input" type="text" placeholder="Placeholder">
+            <span class="hds-form-hint">Hint text goes here</span>
           </div>`,
-        `<div class="heavy-form-group">
-  <label class="heavy-form-label">Label</label>
-  <input class="heavy-form-input" type="text" placeholder="Placeholder">
-  <span class="heavy-form-hint">Hint text goes here</span>
+        `<div class="hds-form-group">
+  <label class="hds-form-label">Label</label>
+  <input class="hds-form-input" type="text" placeholder="Placeholder">
+  <span class="hds-form-hint">Hint text goes here</span>
 </div>`
       ) },
     ],
@@ -1266,14 +1120,14 @@ function navLinksContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <a class="heavy-nav-link heavy-nav-link--active" href="#">Dashboard</a>
-            <a class="heavy-nav-link" href="#">Settings</a>
-            <a class="heavy-nav-link" href="#">Profile</a>
+            <a class="hds-nav-link hds-nav-link--active" href="#">Dashboard</a>
+            <a class="hds-nav-link" href="#">Settings</a>
+            <a class="hds-nav-link" href="#">Profile</a>
           </div>`,
         `<nav>
-  <a class="heavy-nav-link heavy-nav-link--active" href="#">Dashboard</a>
-  <a class="heavy-nav-link" href="#">Settings</a>
-  <a class="heavy-nav-link" href="#">Profile</a>
+  <a class="hds-nav-link hds-nav-link--active" href="#">Dashboard</a>
+  <a class="hds-nav-link" href="#">Settings</a>
+  <a class="hds-nav-link" href="#">Profile</a>
 </nav>`
       ) },
     ],
@@ -1286,24 +1140,24 @@ function searchContent() {
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
-            <label class="heavy-search heavy-search--xs heavy-col-span-2"><input type="search" placeholder="X-Small"></label>
-            <label class="heavy-search heavy-search--sm heavy-col-span-2"><input type="search" placeholder="Small"></label>
-            <label class="heavy-search heavy-col-span-2"><input type="search" placeholder="Medium"></label>
-            <label class="heavy-search heavy-search--lg heavy-col-span-2"><input type="search" placeholder="Large"></label>
+            <label class="hds-search hds-search--xs hds-col-span-2"><input type="search" placeholder="X-Small"></label>
+            <label class="hds-search hds-search--sm hds-col-span-2"><input type="search" placeholder="Small"></label>
+            <label class="hds-search hds-col-span-2"><input type="search" placeholder="Medium"></label>
+            <label class="hds-search hds-search--lg hds-col-span-2"><input type="search" placeholder="Large"></label>
           </div>`,
-        `<label class="heavy-search heavy-search--xs"><input type="search" placeholder="Search..."></label>
-<label class="heavy-search heavy-search--sm"><input type="search" placeholder="Search..."></label>
-<label class="heavy-search"><input type="search" placeholder="Search..."></label>
-<label class="heavy-search heavy-search--lg"><input type="search" placeholder="Search..."></label>`
+        `<label class="hds-search hds-search--xs"><input type="search" placeholder="Search..."></label>
+<label class="hds-search hds-search--sm"><input type="search" placeholder="Search..."></label>
+<label class="hds-search"><input type="search" placeholder="Search..."></label>
+<label class="hds-search hds-search--lg"><input type="search" placeholder="Search..."></label>`
       ) },
       { label: 'States', content: playground(
         `          <div class="style-guide-variant-row">
-            <label class="heavy-search heavy-col-span-2"><input type="search" placeholder="Default"></label>
-            <label class="heavy-search is-hover heavy-col-span-2"><input type="search" placeholder="Hover"></label>
-            <label class="heavy-search is-focus heavy-col-span-2"><input type="search" placeholder="Focus"></label>
-            <label class="heavy-search is-disabled heavy-col-span-2"><input type="search" placeholder="Disabled" disabled></label>
+            <label class="hds-search hds-col-span-2"><input type="search" placeholder="Default"></label>
+            <label class="hds-search is-hover hds-col-span-2"><input type="search" placeholder="Hover"></label>
+            <label class="hds-search is-focus hds-col-span-2"><input type="search" placeholder="Focus"></label>
+            <label class="hds-search is-disabled hds-col-span-2"><input type="search" placeholder="Disabled" disabled></label>
           </div>`,
-        `<!-- Default -->\n<label class="heavy-search"><input type="search" placeholder="Search..."></label>\n<!-- Hover -->\n<label class="heavy-search is-hover"><input type="search" placeholder="Search..."></label>\n<!-- Focus -->\n<label class="heavy-search is-focus"><input type="search" placeholder="Search..."></label>\n<!-- Disabled -->\n<label class="heavy-search" disabled><input type="search" placeholder="Search..." disabled></label>`
+        `<!-- Default -->\n<label class="hds-search"><input type="search" placeholder="Search..."></label>\n<!-- Hover -->\n<label class="hds-search is-hover"><input type="search" placeholder="Search..."></label>\n<!-- Focus -->\n<label class="hds-search is-focus"><input type="search" placeholder="Search..."></label>\n<!-- Disabled -->\n<label class="hds-search" disabled><input type="search" placeholder="Search..." disabled></label>`
       ) },
     ],
   });
@@ -1315,37 +1169,37 @@ function selectsContent() {
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
-            <select class="heavy-select heavy-select--xs heavy-col-span-2"><option>X-Small</option></select>
-            <select class="heavy-select heavy-select--sm heavy-col-span-2"><option>Small</option></select>
-            <select class="heavy-select heavy-col-span-2"><option>Medium</option></select>
-            <select class="heavy-select heavy-select--lg heavy-col-span-2"><option>Large</option></select>
+            <select class="hds-select hds-select--xs hds-col-span-2"><option>X-Small</option></select>
+            <select class="hds-select hds-select--sm hds-col-span-2"><option>Small</option></select>
+            <select class="hds-select hds-col-span-2"><option>Medium</option></select>
+            <select class="hds-select hds-select--lg hds-col-span-2"><option>Large</option></select>
           </div>`,
-        `<select class="heavy-select heavy-select--xs"><option>X-Small</option></select>
-<select class="heavy-select heavy-select--sm"><option>Small</option></select>
-<select class="heavy-select"><option>Medium</option></select>
-<select class="heavy-select heavy-select--lg"><option>Large</option></select>`
+        `<select class="hds-select hds-select--xs"><option>X-Small</option></select>
+<select class="hds-select hds-select--sm"><option>Small</option></select>
+<select class="hds-select"><option>Medium</option></select>
+<select class="hds-select hds-select--lg"><option>Large</option></select>`
       ) },
       { label: 'States', content: playground(
         `          <div class="style-guide-variant-row">
-            <select class="heavy-select heavy-col-span-2"><option>Default</option></select>
-            <select class="heavy-select is-hover heavy-col-span-2"><option>Hover</option></select>
-            <select class="heavy-select is-focus heavy-col-span-2"><option>Focus</option></select>
-            <select class="heavy-select is-disabled heavy-col-span-2" disabled><option>Disabled</option></select>
+            <select class="hds-select hds-col-span-2"><option>Default</option></select>
+            <select class="hds-select is-hover hds-col-span-2"><option>Hover</option></select>
+            <select class="hds-select is-focus hds-col-span-2"><option>Focus</option></select>
+            <select class="hds-select is-disabled hds-col-span-2" disabled><option>Disabled</option></select>
           </div>`,
-        `<!-- Default -->\n<select class="heavy-select"><option>Select an option</option></select>\n<!-- Hover -->\n<select class="heavy-select is-hover"><option>Select an option</option></select>\n<!-- Focus -->\n<select class="heavy-select is-focus"><option>Select an option</option></select>\n<!-- Disabled -->\n<select class="heavy-select" disabled><option>Select an option</option></select>`
+        `<!-- Default -->\n<select class="hds-select"><option>Select an option</option></select>\n<!-- Hover -->\n<select class="hds-select is-hover"><option>Select an option</option></select>\n<!-- Focus -->\n<select class="hds-select is-focus"><option>Select an option</option></select>\n<!-- Disabled -->\n<select class="hds-select" disabled><option>Select an option</option></select>`
       ) },
       { label: 'Form Group', content: playground(
-        `          <div class="heavy-form-group heavy-col-span-3">
-            <label class="heavy-form-label">Label</label>
-            <select class="heavy-select"><option>Select an option</option></select>
-            <span class="heavy-form-hint">Hint text goes here</span>
+        `          <div class="hds-form-group hds-col-span-3">
+            <label class="hds-form-label">Label</label>
+            <select class="hds-select"><option>Select an option</option></select>
+            <span class="hds-form-hint">Hint text goes here</span>
           </div>`,
-        `<div class="heavy-form-group">
-  <label class="heavy-form-label">Label</label>
-  <select class="heavy-select">
+        `<div class="hds-form-group">
+  <label class="hds-form-label">Label</label>
+  <select class="hds-select">
     <option>Select an option</option>
   </select>
-  <span class="heavy-form-hint">Hint text goes here</span>
+  <span class="hds-form-hint">Hint text goes here</span>
 </div>`
       ) },
     ],
@@ -1358,16 +1212,16 @@ function tabsContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <div class="heavy-tabs">
-              <button class="heavy-tab heavy-tab--active">Overview</button>
-              <button class="heavy-tab">Details</button>
-              <button class="heavy-tab">Settings</button>
+            <div class="hds-tabs">
+              <button class="hds-tab hds-tab--active">Overview</button>
+              <button class="hds-tab">Details</button>
+              <button class="hds-tab">Settings</button>
             </div>
           </div>`,
-        `<div class="heavy-tabs">
-  <button class="heavy-tab heavy-tab--active">Overview</button>
-  <button class="heavy-tab">Details</button>
-  <button class="heavy-tab">Settings</button>
+        `<div class="hds-tabs">
+  <button class="hds-tab hds-tab--active">Overview</button>
+  <button class="hds-tab">Details</button>
+  <button class="hds-tab">Settings</button>
 </div>`
       ) },
     ],
@@ -1380,53 +1234,53 @@ function togglesContent() {
     dimensions: [
       { label: 'Toggle', content: playground(
         `          <div class="style-guide-variant-row">
-            <label class="heavy-form-toggle">
+            <label class="hds-form-toggle">
               <input type="checkbox">
-              <span class="heavy-form-toggle-track"></span>
+              <span class="hds-form-toggle-track"></span>
               <span>Off</span>
             </label>
-            <label class="heavy-form-toggle">
+            <label class="hds-form-toggle">
               <input type="checkbox" checked>
-              <span class="heavy-form-toggle-track"></span>
+              <span class="hds-form-toggle-track"></span>
               <span>On</span>
             </label>
           </div>`,
-        `<label class="heavy-form-toggle">
+        `<label class="hds-form-toggle">
   <input type="checkbox">
-  <span class="heavy-form-toggle-track"></span>
+  <span class="hds-form-toggle-track"></span>
   <span>Off</span>
 </label>`
       ) },
       { label: 'Checkbox', content: playground(
         `          <div>
-            <div class="heavy-stack">
-              <div class="heavy-form-check">
-                <input class="heavy-form-check-input" type="checkbox" id="check1" checked>
-                <label class="heavy-form-label" for="check1">Checkbox option</label>
+            <div class="hds-stack">
+              <div class="hds-form-check">
+                <input class="hds-form-check-input" type="checkbox" id="check1" checked>
+                <label class="hds-form-label" for="check1">Checkbox option</label>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-form-check">
-  <input class="heavy-form-check-input" type="checkbox" id="check1">
-  <label class="heavy-form-label" for="check1">Checkbox option</label>
+        `<div class="hds-form-check">
+  <input class="hds-form-check-input" type="checkbox" id="check1">
+  <label class="hds-form-label" for="check1">Checkbox option</label>
 </div>`
       ) },
       { label: 'Radio', content: playground(
         `          <div>
-            <div class="heavy-stack">
-              <div class="heavy-form-check">
-                <input class="heavy-form-check-input" type="radio" name="radio" id="radio1" checked>
-                <label class="heavy-form-label" for="radio1">Radio option A</label>
+            <div class="hds-stack">
+              <div class="hds-form-check">
+                <input class="hds-form-check-input" type="radio" name="radio" id="radio1" checked>
+                <label class="hds-form-label" for="radio1">Radio option A</label>
               </div>
-              <div class="heavy-form-check">
-                <input class="heavy-form-check-input" type="radio" name="radio" id="radio2">
-                <label class="heavy-form-label" for="radio2">Radio option B</label>
+              <div class="hds-form-check">
+                <input class="hds-form-check-input" type="radio" name="radio" id="radio2">
+                <label class="hds-form-label" for="radio2">Radio option B</label>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-form-check">
-  <input class="heavy-form-check-input" type="radio" name="group" id="radio1">
-  <label class="heavy-form-label" for="radio1">Radio option A</label>
+        `<div class="hds-form-check">
+  <input class="hds-form-check-input" type="radio" name="group" id="radio1">
+  <label class="hds-form-label" for="radio1">Radio option A</label>
 </div>`
       ) },
     ],
@@ -1437,45 +1291,45 @@ function formValidationContent() {
   return componentPage('Form Validation', {
     description: 'Client-side validation pattern for form fields. Uses data attributes to declare validation rules and applies error/success states with hint text on blur. Validates required fields, email format, minimum length, and select choices.',
     dimensions: [
-      { label: 'Type', content: `          <div class="heavy-col-span-4">
-            <div class="heavy-stack">
-              <div class="heavy-form-group" data-validate="required">
-                <label class="heavy-form-label">Name</label>
-                <input class="heavy-form-input" type="text" placeholder="Enter your name">
-                <span class="heavy-form-hint">Required field</span>
+      { label: 'Type', content: `          <div class="hds-col-span-4">
+            <div class="hds-stack">
+              <div class="hds-form-group" data-validate="required">
+                <label class="hds-form-label">Name</label>
+                <input class="hds-form-input" type="text" placeholder="Enter your name">
+                <span class="hds-form-hint">Required field</span>
               </div>
-              <div class="heavy-form-group" data-validate="email">
-                <label class="heavy-form-label">Email</label>
-                <input class="heavy-form-input" type="text" placeholder="Enter your email">
-                <span class="heavy-form-hint">Must be a valid email</span>
+              <div class="hds-form-group" data-validate="email">
+                <label class="hds-form-label">Email</label>
+                <input class="hds-form-input" type="text" placeholder="Enter your email">
+                <span class="hds-form-hint">Must be a valid email</span>
               </div>
-              <div class="heavy-form-group" data-validate="minlength" data-minlength="8">
-                <label class="heavy-form-label">Password</label>
-                <input class="heavy-form-input" type="password" placeholder="Choose a password">
-                <span class="heavy-form-hint">Minimum 8 characters</span>
+              <div class="hds-form-group" data-validate="minlength" data-minlength="8">
+                <label class="hds-form-label">Password</label>
+                <input class="hds-form-input" type="password" placeholder="Choose a password">
+                <span class="hds-form-hint">Minimum 8 characters</span>
               </div>
-              <div class="heavy-form-group" data-validate="select">
-                <label class="heavy-form-label">Role</label>
-                <select class="heavy-select">
+              <div class="hds-form-group" data-validate="select">
+                <label class="hds-form-label">Role</label>
+                <select class="hds-select">
                   <option value="">Select a role</option>
                   <option value="designer">Designer</option>
                   <option value="developer">Developer</option>
                   <option value="manager">Manager</option>
                 </select>
-                <span class="heavy-form-hint">Choose one option</span>
+                <span class="hds-form-hint">Choose one option</span>
               </div>
             </div>
           </div>
-          ${codeBlock(`<div class="heavy-form-group" data-validate="required">
-  <label class="heavy-form-label">Name</label>
-  <input class="heavy-form-input" type="text" placeholder="Enter your name">
-  <span class="heavy-form-hint">Required field</span>
+          ${codeBlock(`<div class="hds-form-group" data-validate="required">
+  <label class="hds-form-label">Name</label>
+  <input class="hds-form-input" type="text" placeholder="Enter your name">
+  <span class="hds-form-hint">Required field</span>
 </div>
 
-<div class="heavy-form-group" data-validate="email">
-  <label class="heavy-form-label">Email</label>
-  <input class="heavy-form-input" type="text" placeholder="Enter your email">
-  <span class="heavy-form-hint">Must be a valid email</span>
+<div class="hds-form-group" data-validate="email">
+  <label class="hds-form-label">Email</label>
+  <input class="hds-form-input" type="text" placeholder="Enter your email">
+  <span class="hds-form-hint">Must be a valid email</span>
 </div>`)}` },
     ],
   });
@@ -1486,40 +1340,40 @@ function searchPatternContent() {
     description: 'Interactive search pattern. Type in any field below to test the search component at different sizes and in different contexts.',
     dimensions: [
       { label: 'Type', content: `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <label class="heavy-search heavy-search--lg"><input type="search" placeholder="Search everything..."></label>
+            <div class="hds-stack hds-stack--lg">
+              <label class="hds-search hds-search--lg"><input type="search" placeholder="Search everything..."></label>
             </div>
           </div>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
+            <div class="hds-stack hds-stack--lg">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--hds-space-16); padding: var(--hds-space-16); background: var(--ui-surface-default); border-radius: var(--hds-radius-md);">
                 <span class="style-guide-section-name" style="margin: 0;">App Name</span>
-                <label class="heavy-search heavy-search--sm" style="flex: 1; max-width: 320px;"><input type="search" placeholder="Search..."></label>
-                <button class="heavy-btn heavy-btn--tertiary heavy-btn--sm">Settings</button>
+                <label class="hds-search hds-search--sm" style="flex: 1; max-width: 320px;"><input type="search" placeholder="Search..."></label>
+                <button class="hds-btn hds-btn--tertiary hds-btn--sm">Settings</button>
               </div>
             </div>
           </div>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
+            <div class="hds-stack hds-stack--lg">
               <div style="max-width: 280px; padding: var(--hds-space-16); background: var(--ui-surface-default); border-radius: var(--hds-radius-md);">
-                <div class="heavy-stack">
-                  <label class="heavy-search heavy-search--sm"><input type="search" placeholder="Filter items..."></label>
-                  <div class="heavy-list-item">Dashboard</div>
-                  <div class="heavy-list-item">Projects</div>
-                  <div class="heavy-list-item">Settings</div>
-                  <div class="heavy-list-item">Profile</div>
+                <div class="hds-stack">
+                  <label class="hds-search hds-search--sm"><input type="search" placeholder="Filter items..."></label>
+                  <div class="hds-list-item">Dashboard</div>
+                  <div class="hds-list-item">Projects</div>
+                  <div class="hds-list-item">Settings</div>
+                  <div class="hds-list-item">Profile</div>
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <label class="heavy-search" style="display: flex;"><input type="search" placeholder="Search across all projects, files, and settings..."></label>
+            <div class="hds-stack hds-stack--lg">
+              <label class="hds-search" style="display: flex;"><input type="search" placeholder="Search across all projects, files, and settings..."></label>
             </div>
           </div>
           <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <label class="heavy-search"><input type="search" placeholder="Search unavailable" disabled></label>
+            <div class="hds-stack hds-stack--lg">
+              <label class="hds-search"><input type="search" placeholder="Search unavailable" disabled></label>
             </div>
           </div>` },
     ],
@@ -1532,63 +1386,82 @@ function cardContent() {
     dimensions: [
       { label: 'Default', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-card" style="max-width: 360px;">
-                <div class="heavy-card-header">
-                  <div class="heavy-card-title">Card Title</div>
-                  <div class="heavy-card-subtitle">Optional subtitle or description</div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-card" style="max-width: 360px;">
+                <div class="hds-card-header">
+                  <div class="hds-card-title">Card Title</div>
+                  <div class="hds-card-subtitle">Optional subtitle or description</div>
                 </div>
-                <div class="heavy-card-body">
+                <div class="hds-card-body">
                   <p>Card body content goes here. This is where the primary information or form fields live.</p>
                 </div>
-                <div class="heavy-card-footer">
-                  <div class="heavy-cluster">
-                    <button class="heavy-btn heavy-btn--sm">Cancel</button>
-                    <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Save</button>
+                <div class="hds-card-footer">
+                  <div class="hds-cluster">
+                    <button class="hds-btn hds-btn--sm">Cancel</button>
+                    <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-card">
-  <div class="heavy-card-header">
-    <div class="heavy-card-title">Card Title</div>
-    <div class="heavy-card-subtitle">Optional subtitle</div>
+        `<div class="hds-card">
+  <div class="hds-card-header">
+    <div class="hds-card-title">Card Title</div>
+    <div class="hds-card-subtitle">Optional subtitle</div>
   </div>
-  <div class="heavy-card-body">
+  <div class="hds-card-body">
     <p>Card body content</p>
   </div>
-  <div class="heavy-card-footer">
-    <button class="heavy-btn heavy-btn--sm">Cancel</button>
-    <button class="heavy-btn heavy-btn--primary heavy-btn--sm">Save</button>
+  <div class="hds-card-footer">
+    <button class="hds-btn hds-btn--sm">Cancel</button>
+    <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
   </div>
 </div>`
       ) },
       { label: 'Elevated', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-card heavy-card--elevated" style="max-width: 360px;">
-                <div class="heavy-card-body">
-                  <div class="heavy-card-title">Elevated Card</div>
-                  <div class="heavy-card-subtitle">Uses a shadow instead of a border for visual separation.</div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-card hds-card--elevated" style="max-width: 360px;">
+                <div class="hds-card-body">
+                  <div class="hds-card-title">Elevated Card</div>
+                  <div class="hds-card-subtitle">Uses a shadow instead of a border for visual separation.</div>
                 </div>
               </div>
             </div>
           </div>`,
-        '<div class="heavy-card heavy-card--elevated">...</div>'
+        '<div class="hds-card hds-card--elevated">...</div>'
       ) },
       { label: 'Interactive', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
-              <div class="heavy-card heavy-card--interactive" style="max-width: 360px;">
-                <div class="heavy-card-body">
-                  <div class="heavy-card-title">Clickable Card</div>
-                  <div class="heavy-card-subtitle">Hover to see the lift effect. Use for items that navigate to a detail view.</div>
+            <div class="hds-stack hds-stack--lg">
+              <div class="hds-card hds-card--interactive" style="max-width: 360px;">
+                <div class="hds-card-body">
+                  <div class="hds-card-title">Clickable Card</div>
+                  <div class="hds-card-subtitle">Hover to see the lift effect. Use for items that navigate to a detail view.</div>
                 </div>
               </div>
             </div>
           </div>`,
-        '<div class="heavy-card heavy-card--interactive">...</div>'
+        '<div class="hds-card hds-card--interactive">...</div>'
+      ) },
+    ],
+  });
+}
+
+function linkContent() {
+  return componentPage('Link', {
+    description: 'Inline text link for navigation. Underlined with a subtle decoration color that strengthens on hover.',
+    dimensions: [
+      { label: 'States', content: playground(
+        `          <div class="hds-stack hds-stack--lg">
+            <p><a href="#" class="hds-link">Default</a></p>
+            <p><a href="#" class="hds-link is-hover">Hover</a></p>
+            <p><a href="#" class="hds-link is-active">Active</a></p>
+            <p><a href="#" class="hds-link is-focus">Focus</a></p>
+            <p><a href="#" class="hds-link is-visited">Visited</a></p>
+            <p><a class="hds-link is-disabled" aria-disabled="true">Disabled</a></p>
+          </div>`,
+        `<a href="#" class="hds-link">Link text</a>`
       ) },
     ],
   });
@@ -1600,36 +1473,36 @@ function modalContent() {
     dimensions: [
       { label: 'Type', content: playground(
         `          <div>
-            <div class="heavy-stack heavy-stack--lg">
+            <div class="hds-stack hds-stack--lg">
               <div style="position: relative; height: 320px; background: var(--ui-bg-default); border-radius: var(--hds-radius-md); overflow: hidden;">
-                <div class="heavy-modal-backdrop" style="position: absolute;">
-                  <div class="heavy-modal" style="max-width: 360px;">
-                    <div class="heavy-modal-header">
-                      <div class="heavy-modal-title">Confirm Action</div>
+                <div class="hds-modal-backdrop" style="position: absolute;">
+                  <div class="hds-modal" style="max-width: 360px;">
+                    <div class="hds-modal-header">
+                      <div class="hds-modal-title">Confirm Action</div>
                     </div>
-                    <div class="heavy-modal-body">
+                    <div class="hds-modal-body">
                       <p>Are you sure you want to proceed? This action cannot be undone.</p>
                     </div>
-                    <div class="heavy-modal-footer">
-                      <button class="heavy-btn heavy-btn--sm">Cancel</button>
-                      <button class="heavy-btn heavy-btn--danger heavy-btn--sm">Delete</button>
+                    <div class="hds-modal-footer">
+                      <button class="hds-btn hds-btn--sm">Cancel</button>
+                      <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>`,
-        `<div class="heavy-modal-backdrop">
-  <div class="heavy-modal">
-    <div class="heavy-modal-header">
-      <div class="heavy-modal-title">Confirm Action</div>
+        `<div class="hds-modal-backdrop">
+  <div class="hds-modal">
+    <div class="hds-modal-header">
+      <div class="hds-modal-title">Confirm Action</div>
     </div>
-    <div class="heavy-modal-body">
+    <div class="hds-modal-body">
       <p>Are you sure you want to proceed?</p>
     </div>
-    <div class="heavy-modal-footer">
-      <button class="heavy-btn heavy-btn--sm">Cancel</button>
-      <button class="heavy-btn heavy-btn--danger heavy-btn--sm">Delete</button>
+    <div class="hds-modal-footer">
+      <button class="hds-btn hds-btn--sm">Cancel</button>
+      <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
     </div>
   </div>
 </div>`
@@ -1647,6 +1520,7 @@ const contentMap = {
   'radius': (tokens) => radiusContent(tokens),
   'scale': () => scaleContent(),
   'layout': () => layoutContent(),
+  'breakpoints': () => breakpointsContent(),
   'animation': () => animationContent(),
   'breadcrumbs': () => breadcrumbsContent(),
   'button': () => buttonsContent(),
@@ -1654,10 +1528,14 @@ const contentMap = {
   'button-icon': () => buttonIconContent(),
   'card': () => cardContent(),
   'chips': () => chipsContent(),
+  'collapsible': () => collapsibleContent(),
   'data-display': () => dataDisplayContent(),
+  'divider': () => dividerContent(),
   'feedback': () => feedbackContent(),
   'file-upload': () => fileUploadContent(),
+  'icon': () => iconContent(),
   'inputs': () => inputsContent(),
+  'link': () => linkContent(),
   'modal': () => modalContent(),
   'nav-links': () => navLinksContent(),
   'search': () => searchContent(),
@@ -1691,7 +1569,7 @@ function main() {
   }
 
   // Clean stale pages from previous structure
-  const stalePages = ['colors.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
+  const stalePages = ['animation.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {

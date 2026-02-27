@@ -44,12 +44,14 @@ const PAGES = [
   { file: 'divider.html', id: 'divider', label: 'Divider', group: 'Components' },
   { file: 'empty-state.html', id: 'empty-state', label: 'Empty State', group: 'Components' },
   { file: 'file-upload.html', id: 'file-upload', label: 'File Upload', group: 'Components' },
+  { file: 'form-group.html', id: 'form-group', label: 'Form Group', group: 'Components' },
   { file: 'icon.html', id: 'icon', label: 'Icon', group: 'Components' },
   { file: 'inputs.html', id: 'inputs', label: 'Inputs', group: 'Components' },
   { file: 'link.html', id: 'link', label: 'Link', group: 'Components' },
   { file: 'list.html', id: 'list', label: 'List', group: 'Components' },
   { file: 'modal.html', id: 'modal', label: 'Modal', group: 'Components' },
   { file: 'nav-links.html', id: 'nav-links', label: 'Nav Links', group: 'Components' },
+  { file: 'playground.html', id: 'playground', label: 'Playground', group: 'Components' },
   { file: 'progress.html', id: 'progress', label: 'Progress', group: 'Components' },
   { file: 'search.html', id: 'search', label: 'Search', group: 'Components' },
   { file: 'selects.html', id: 'selects', label: 'Selects', group: 'Components' },
@@ -58,7 +60,11 @@ const PAGES = [
   { file: 'stat.html', id: 'stat', label: 'Stat', group: 'Components' },
   { file: 'status-message.html', id: 'status-message', label: 'Status Message', group: 'Components' },
   { file: 'tabs.html', id: 'tabs', label: 'Tabs', group: 'Components' },
-  { file: 'toggles.html', id: 'toggles', label: 'Toggles', group: 'Components' },
+  { file: 'textarea.html', id: 'textarea', label: 'Textarea', group: 'Components' },
+  { file: 'toggle.html', id: 'toggle', label: 'Toggle', group: 'Components' },
+  { file: 'token-copy.html', id: 'token-copy', label: 'Token Copy', group: 'Components' },
+  { file: 'checkbox.html', id: 'checkbox', label: 'Checkbox', group: 'Components' },
+  { file: 'radio.html', id: 'radio', label: 'Radio', group: 'Components' },
   // Patterns (alphabetical)
   { file: 'form-validation.html', id: 'form-validation', label: 'Form Validation', group: 'Patterns' },
   { file: 'search-pattern.html', id: 'search-pattern', label: 'Search', group: 'Patterns' },
@@ -223,7 +229,7 @@ function readTokens() {
       action: 'Action',
       feedback: 'Feedback'
     };
-    const groupOrder = ['bg', 'text', 'border'];
+    const groupOrder = ['text', 'bg', 'border'];
     const sortedKeys = Object.keys(uiLight.ui)
       .filter(k => !k.startsWith('$'))
       .sort((a, b) => {
@@ -248,6 +254,47 @@ function readTokens() {
       }
       uiColorGroups.push({ group: groupName, tokens });
     }
+  }
+
+  // Parse action colors (nested: action.primary.bg.default, etc.)
+  if (uiLight && uiLight.action) {
+    for (const [actionType, actionVariants] of Object.entries(uiLight.action)) {
+      if (actionType.startsWith('$')) continue;
+      const groupName = `Action — ${actionType.charAt(0).toUpperCase() + actionType.slice(1)}`;
+      const tokens = [];
+      for (const [propGroup, propValues] of Object.entries(actionVariants)) {
+        if (propGroup.startsWith('$')) continue;
+        for (const [variant, token] of Object.entries(propValues)) {
+          if (variant.startsWith('$')) continue;
+          const tokenName = `hds.action.${actionType}.${propGroup}.${variant}`;
+          const cssVar = `--hds-action-${actionType}-${propGroup}-${variant}`;
+          const lightHex = getHex(token);
+          const lightRef = getRefName(token);
+          const darkToken = uiDark?.action?.[actionType]?.[propGroup]?.[variant];
+          const darkHex = darkToken ? getHex(darkToken) : '';
+          const darkRef = darkToken ? getRefName(darkToken) : '';
+          tokens.push({ name: tokenName, css: cssVar, lightHex, lightRef, darkHex, darkRef });
+        }
+      }
+      uiColorGroups.push({ group: groupName, tokens });
+    }
+  }
+
+  // Parse feedback colors (flat: feedback.success, etc.)
+  if (uiLight && uiLight.feedback) {
+    const tokens = [];
+    for (const [variant, token] of Object.entries(uiLight.feedback)) {
+      if (variant.startsWith('$')) continue;
+      const tokenName = `hds.feedback.${variant}`;
+      const cssVar = `--hds-feedback-${variant}`;
+      const lightHex = getHex(token);
+      const lightRef = getRefName(token);
+      const darkToken = uiDark?.feedback?.[variant];
+      const darkHex = darkToken ? getHex(darkToken) : '';
+      const darkRef = darkToken ? getRefName(darkToken) : '';
+      tokens.push({ name: tokenName, css: cssVar, lightHex, lightRef, darkHex, darkRef });
+    }
+    uiColorGroups.push({ group: 'Feedback', tokens });
   }
 
   return {
@@ -336,14 +383,239 @@ function togglePlaygroundTheme(btn) {
 })();
 </script>`;
 
+const CMD_K_SCRIPT = `<script>
+(function() {
+  // Build page list from sidebar links
+  var pages = [];
+  var currentGroup = '';
+  var sidebar = document.querySelector('.style-guide-sidebar nav');
+  if (!sidebar) return;
+  var children = sidebar.children;
+  for (var i = 0; i < children.length; i++) {
+    var el = children[i];
+    if (el.classList.contains('style-guide-sidebar-label')) {
+      currentGroup = el.textContent.trim();
+    } else if (el.tagName === 'A') {
+      pages.push({ label: el.textContent.trim(), href: el.getAttribute('href'), group: currentGroup, isActive: el.classList.contains('active') });
+    }
+  }
+
+  var backdrop = null;
+
+  function open() {
+    if (backdrop) return;
+    backdrop = document.createElement('div');
+    backdrop.className = 'command-palette-backdrop';
+    backdrop.innerHTML =
+      '<div class="command-palette">' +
+        '<input class="command-palette-input" type="text" placeholder="Jump to page\\u2026" autocomplete="off" spellcheck="false">' +
+        '<div class="command-palette-results"></div>' +
+      '</div>';
+    document.body.appendChild(backdrop);
+
+    var input = backdrop.querySelector('.command-palette-input');
+    var results = backdrop.querySelector('.command-palette-results');
+    var activeIndex = 0;
+
+    function render(query) {
+      var filtered = pages;
+      if (query) {
+        var q = query.toLowerCase();
+        filtered = pages.filter(function(p) { return p.label.toLowerCase().indexOf(q) !== -1; });
+      }
+
+      if (filtered.length === 0) {
+        results.innerHTML = '<div class="command-palette-empty">No results</div>';
+        activeIndex = -1;
+        return;
+      }
+
+      var html = '';
+      var itemIndex = 0;
+      var lastGroup = '';
+      for (var i = 0; i < filtered.length; i++) {
+        var p = filtered[i];
+        if (p.group !== lastGroup) {
+          html += '<div class="command-palette-group">' + p.group + '</div>';
+          lastGroup = p.group;
+        }
+        var cls = 'command-palette-item';
+        if (itemIndex === activeIndex) cls += ' is-active';
+        if (p.isActive) cls += ' is-current';
+        html += '<div class="' + cls + '" data-href="' + p.href + '" data-index="' + itemIndex + '">' + p.label + '</div>';
+        itemIndex++;
+      }
+      results.innerHTML = html;
+    }
+
+    function getItems() { return results.querySelectorAll('.command-palette-item'); }
+
+    function setActive(idx) {
+      var items = getItems();
+      if (items.length === 0) return;
+      if (idx < 0) idx = items.length - 1;
+      if (idx >= items.length) idx = 0;
+      for (var i = 0; i < items.length; i++) items[i].classList.remove('is-active');
+      items[idx].classList.add('is-active');
+      items[idx].scrollIntoView({ block: 'nearest' });
+      activeIndex = idx;
+    }
+
+    function navigate() {
+      var items = getItems();
+      if (items.length === 0 || activeIndex < 0) return;
+      var href = items[activeIndex].getAttribute('data-href');
+      if (href) window.location.href = href;
+    }
+
+    render('');
+    input.focus();
+
+    input.addEventListener('input', function() {
+      activeIndex = 0;
+      render(input.value);
+    });
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(activeIndex + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(activeIndex - 1); }
+      else if (e.key === 'Enter') { e.preventDefault(); navigate(); }
+      else if (e.key === 'Escape') { e.preventDefault(); close(); }
+    });
+
+    results.addEventListener('click', function(e) {
+      var item = e.target.closest('.command-palette-item');
+      if (item) {
+        var href = item.getAttribute('data-href');
+        if (href) window.location.href = href;
+      }
+    });
+
+    backdrop.addEventListener('click', function(e) {
+      if (e.target === backdrop) close();
+    });
+  }
+
+  function close() {
+    if (!backdrop) return;
+    backdrop.remove();
+    backdrop = null;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      if (backdrop) close(); else open();
+    }
+  });
+
+  // Wire up sidebar shortcut badge
+  var badge = document.querySelector('.command-palette-shortcut');
+  if (badge) badge.addEventListener('click', open);
+})();
+</script>`;
+
+const ANATOMY_SCRIPT = `<script>
+(function() {
+  var BADGE_SIZE = 20;
+  var OUTLINE_PAD = 2;
+  var ROW_HEIGHTS = [-30, -56, -82];
+
+  function initAnatomy() {
+    var containers = document.querySelectorAll('.style-guide-anatomy-component');
+    containers.forEach(function(container) {
+      var encoded = container.getAttribute('data-markers');
+      if (!encoded) return;
+      var markerDefs = encoded.split('||').map(function(s) {
+        var el = document.createElement('div');
+        el.innerHTML = '<i ' + s + '></i>';
+        var i = el.firstChild;
+        return {
+          target: i.getAttribute('data-marker-target'),
+          index: parseInt(i.getAttribute('data-marker-index')),
+          primary: i.hasAttribute('data-primary')
+        };
+      });
+
+      var containerRect = container.getBoundingClientRect();
+      var placements = [];
+
+      markerDefs.forEach(function(def) {
+        var targetEl = container.querySelector('[data-anatomy="' + def.target + '"]');
+        if (!targetEl) return;
+        var targetRect = targetEl.getBoundingClientRect();
+        var rect = {
+          top: targetRect.top - containerRect.top,
+          left: targetRect.left - containerRect.left,
+          width: targetRect.width,
+          height: targetRect.height
+        };
+
+        // Create outline
+        var outline = document.createElement('div');
+        outline.className = 'style-guide-anatomy-outline';
+        if (def.primary) outline.setAttribute('data-primary', '');
+        outline.style.top = (rect.top - OUTLINE_PAD) + 'px';
+        outline.style.left = (rect.left - OUTLINE_PAD) + 'px';
+        outline.style.width = (rect.width + OUTLINE_PAD * 2) + 'px';
+        outline.style.height = (rect.height + OUTLINE_PAD * 2) + 'px';
+        container.appendChild(outline);
+
+        // Assign row (collision avoidance)
+        var cx = rect.left + rect.width / 2;
+        var row = 0;
+        for (var r = 0; r < ROW_HEIGHTS.length; r++) {
+          var collision = false;
+          for (var p = 0; p < placements.length; p++) {
+            if (placements[p].row === r && Math.abs(placements[p].cx - cx) < 30) {
+              collision = true;
+              break;
+            }
+          }
+          if (!collision) { row = r; break; }
+        }
+        placements.push({ row: row, cx: cx });
+
+        // Create marker badge
+        var badge = document.createElement('div');
+        badge.className = 'style-guide-anatomy-marker';
+        if (def.primary) badge.setAttribute('data-primary', '');
+        badge.textContent = def.index;
+
+        var badgeTop = ROW_HEIGHTS[row];
+        var badgeLeft = cx - BADGE_SIZE / 2;
+        badge.style.top = badgeTop + 'px';
+        badge.style.left = badgeLeft + 'px';
+
+        // Stem from badge down to outline top
+        var outlineTop = rect.top - OUTLINE_PAD;
+        var stemLength = outlineTop - (badgeTop + BADGE_SIZE);
+        if (stemLength > 0) {
+          badge.setAttribute('data-stem', 'down');
+          badge.style.setProperty('--stem-length', stemLength + 'px');
+        }
+
+        container.appendChild(badge);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnatomy);
+  } else {
+    initAnatomy();
+  }
+})();
+</script>`;
+
 const builder = createPageBuilder({
   brandName: 'Heavy Design System',
   pages: PAGES,
-  sidebarControls: '<button class="hds-btn hds-btn--tertiary hds-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>',
-  customScripts: VALIDATION_SCRIPT + PLAYGROUND_THEME_SCRIPT,
+  sidebarControls: '<div class="hds-btn-group"><button class="hds-btn hds-btn--tertiary hds-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button><button class="hds-btn hds-btn--tertiary hds-btn--sm command-palette-shortcut" title="Quick jump (⌘K)">⌘K</button></div>',
+  customScripts: VALIDATION_SCRIPT + PLAYGROUND_THEME_SCRIPT + CMD_K_SCRIPT + ANATOMY_SCRIPT,
 });
 
-const { esc, codeBlock, playground: _playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, typographyTable, baseScaleTable } = builder;
+const { esc, codeBlock, anatomy, playground: _playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, typographyTable, baseScaleTable } = builder;
 
 // Syntax highlight escaped HTML code blocks
 // Uses markers (\x01..\x04) to avoid regex cascading, then converts to spans
@@ -390,10 +662,10 @@ const playgroundWide = (preview, code) => {
 
 function colorSample(hex, groupKey, bgHex) {
   if (groupKey === 'text') {
-    return `<span style="color: ${hex}; font-size: 14px; font-weight: 500">Lorem ipsum</span>`;
+    return `<span style="color: ${hex}; font-size: 14px; font-weight: 500">Lorem ipsum dolor</span>`;
   }
   if (groupKey === 'border') {
-    return `<div style="width: 24px; height: 24px; border: 2px solid ${hex}; border-radius: 4px; background: ${bgHex || 'transparent'}"></div>`;
+    return `<div style="width: 24px; height: 24px; border: 1px solid ${hex}; border-radius: 4px"></div>`;
   }
   // bg, surface, action, feedback — filled swatch
   return `<div class="style-guide-token-bar" style="background: ${hex}"></div>`;
@@ -418,15 +690,14 @@ function colorsContent(tokens) {
   const uiColorSections = tokens.uiColorGroups.map(group => {
     const groupKey = group.group.toLowerCase();
     const rows = group.tokens.map(t => `          <tr>
-            <td>${colorSample(t.darkHex, groupKey, darkBgHex)}</td>
             <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
-            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.darkRef)}', this)">${esc(t.darkRef)}</span></td>
             <td>${colorSample(t.lightHex, groupKey, lightBgHex)}</td>
-            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
             <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.lightRef)}', this)">${esc(t.lightRef)}</span></td>
+            <td>${colorSample(t.darkHex, groupKey, darkBgHex)}</td>
+            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.darkRef)}', this)">${esc(t.darkRef)}</span></td>
           </tr>`).join('\n');
     const table = `      <table class="style-guide-data-table style-guide-data-table--visual style-guide-data-table--dual">
-        <thead><tr><th>Sample Dark</th><th>Token</th><th>Value</th><th>Sample Light</th><th>Token</th><th>Value</th></tr></thead>
+        <thead><tr><th>Token</th><th>Light</th><th>Value</th><th>Dark</th><th>Value</th></tr></thead>
         <tbody>
 ${rows}
         </tbody>
@@ -498,6 +769,18 @@ function typographyContent(tokens) {
       copyValue: `--${s.name}`,
       value: s.value,
       sampleStyle: `font-size: ${s.value}`,
+    })))),
+
+    section('Font Weights', baseScaleTable([
+      { name: 'base-font-weights-light', value: '100' },
+      { name: 'base-font-weights-regular', value: '400' },
+      { name: 'base-font-weights-bold', value: '700' },
+    ].map(w => ({
+      tokenName: w.name,
+      copyValue: `--${w.name}`,
+      value: w.value,
+      sampleStyle: `font-weight: ${w.value}; font-size: 20px`,
+      sampleContent: 'The quick brown fox jumps over the lazy dog',
     })))),
 
     section('Line Heights', baseScaleTable([
@@ -644,15 +927,32 @@ ${rows}
 }
 
 function animationContent() {
-  return foundationPage('Animation', 'Motion tokens and utility classes for consistent animation across the system.', [
-    `          <h3 class="style-guide-section-name">Timing Functions</h3>
+  return foundationPage('Animation', 'Motion tokens, micro-interactions, and entrance animations for consistent, tactile UI across the system.', [
+    `          <h3 class="style-guide-section-name">Duration Tokens</h3>
+          <div>
+            <div class="hds-stack hds-stack--lg">
+              <table class="style-guide-data-table">
+                <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>--hds-duration-instant</code></td><td>100ms</td><td>Micro-feedback (press, hover)</td></tr>
+                  <tr><td><code>--hds-duration-fast</code></td><td>150ms</td><td>Component transitions (buttons, inputs, toggles)</td></tr>
+                  <tr><td><code>--hds-duration-normal</code></td><td>200ms</td><td>Fade-in, scale-in utilities</td></tr>
+                  <tr><td><code>--hds-duration-slow</code></td><td>300ms</td><td>Entrance animations (slide-up, modal)</td></tr>
+                  <tr><td><code>--hds-duration-slower</code></td><td>500ms</td><td>Large reveals</td></tr>
+                  <tr><td><code>--hds-delay-stagger</code></td><td>50ms</td><td>Stagger increment between children</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <h3 class="style-guide-section-name">Timing Functions</h3>
           <div>
             <div class="hds-stack hds-stack--lg">
               <div class="hds-stack hds-stack--sm">
-                <div class="hds-kv"><span class="hds-kv-key">--ease-out</span><span class="hds-kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
-                <div class="hds-kv"><span class="hds-kv-key">--ease-in-out</span><span class="hds-kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
-                <div class="hds-kv"><span class="hds-kv-key">--ease-spring</span><span class="hds-kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">--hds-ease-out</span><span class="hds-kv-value">cubic-bezier(0.16, 1, 0.3, 1)</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">--hds-ease-in-out</span><span class="hds-kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
+                <div class="hds-kv"><span class="hds-kv-key">--hds-ease-spring</span><span class="hds-kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
               </div>
+              <p class="body-sm text-default">Backward-compatible aliases (<code>--ease-out</code>, <code>--ease-in-out</code>, <code>--ease-spring</code>) still work.</p>
             </div>
           </div>
           <h3 class="style-guide-section-name">Keyframes</h3>
@@ -665,6 +965,9 @@ function animationContent() {
                 <span class="hds-badge">scale-in</span>
                 <span class="hds-badge">spin</span>
                 <span class="hds-badge">shimmer</span>
+                <span class="hds-badge">backdrop-fade</span>
+                <span class="hds-badge">modal-enter</span>
+                <span class="hds-badge">progress-pulse</span>
               </div>
             </div>
           </div>
@@ -684,26 +987,26 @@ function animationContent() {
                   <tr>
                     <td><code>.animate-fade-in</code></td>
                     <td>fade-in</td>
-                    <td>0.2s</td>
-                    <td>ease-out</td>
+                    <td>--hds-duration-normal</td>
+                    <td>--hds-ease-out</td>
                   </tr>
                   <tr>
                     <td><code>.animate-slide-up</code></td>
                     <td>slide-up</td>
-                    <td>0.3s</td>
-                    <td>ease-out</td>
+                    <td>--hds-duration-slow</td>
+                    <td>--hds-ease-out</td>
                   </tr>
                   <tr>
                     <td><code>.animate-slide-down</code></td>
                     <td>slide-down</td>
-                    <td>0.3s</td>
-                    <td>ease-out</td>
+                    <td>--hds-duration-slow</td>
+                    <td>--hds-ease-out</td>
                   </tr>
                   <tr>
                     <td><code>.animate-scale-in</code></td>
                     <td>scale-in</td>
-                    <td>0.2s</td>
-                    <td>spring</td>
+                    <td>--hds-duration-normal</td>
+                    <td>--hds-ease-spring</td>
                   </tr>
                   <tr>
                     <td><code>.animate-spin</code></td>
@@ -715,9 +1018,72 @@ function animationContent() {
               </table>
             </div>
           </div>
+          <h3 class="style-guide-section-name">Micro-Interactions</h3>
+          <div>
+            <div class="hds-stack hds-stack--lg">
+              <p class="body-sm text-default">Subtle tactile feedback on interactive elements. Built into the components &mdash; no extra classes needed.</p>
+              <table class="style-guide-data-table">
+                <thead><tr><th>Component</th><th>Trigger</th><th>Effect</th></tr></thead>
+                <tbody>
+                  <tr><td>Button / Button Icon</td><td><code>:active</code></td><td><code>scale(0.97)</code> &mdash; 100ms ease-out</td></tr>
+                  <tr><td>Toggle</td><td>State change</td><td>Spring easing on thumb slide</td></tr>
+                  <tr><td>Progress bar</td><td>Continuous</td><td>Faint leading-edge pulse (2s cycle)</td></tr>
+                </tbody>
+              </table>
+              <div class="hds-cluster" style="gap: var(--hds-space-16);">
+                <button class="hds-btn hds-btn--primary">Press me</button>
+                <button class="hds-btn hds-btn--secondary">Press me</button>
+                <button class="hds-btn hds-btn--tertiary">Press me</button>
+              </div>
+              <div style="max-width: 300px;">
+                <label class="hds-form-toggle">
+                  <input type="checkbox" checked>
+                  <span class="hds-form-toggle-track"></span>
+                  <span class="body-sm">Spring toggle</span>
+                </label>
+              </div>
+              <div style="max-width: 300px;">
+                <div class="hds-progress"><div class="hds-progress-bar" style="width: 65%;"></div></div>
+                <p class="body-sm text-default" style="margin-top: var(--hds-space-4);">Progress with leading-edge pulse</p>
+              </div>
+              <div style="max-width: 300px;">
+                <div class="hds-progress"><div class="hds-progress-bar hds-progress-bar--complete" style="width: 100%;"></div></div>
+                <p class="body-sm text-default" style="margin-top: var(--hds-space-4);">Complete &mdash; pulse disabled</p>
+              </div>
+            </div>
+          </div>
+          <h3 class="style-guide-section-name">Component Entrances</h3>
+          <div>
+            <div class="hds-stack hds-stack--lg">
+              <p class="body-sm text-default">Modal uses a two-stage entrance: backdrop fades (200ms), then the modal scales in with spring easing (300ms).</p>
+              <table class="style-guide-data-table">
+                <thead><tr><th>Element</th><th>Keyframe</th><th>Duration</th><th>Easing</th></tr></thead>
+                <tbody>
+                  <tr><td><code>.hds-modal-backdrop</code></td><td>backdrop-fade</td><td>--hds-duration-normal</td><td>--hds-ease-out</td></tr>
+                  <tr><td><code>.hds-modal</code></td><td>modal-enter</td><td>--hds-duration-slow</td><td>--hds-ease-spring</td></tr>
+                </tbody>
+              </table>
+              <button class="hds-btn hds-btn--secondary" onclick="document.getElementById('animation-demo-modal').style.display='flex'">Open modal demo</button>
+              <div id="animation-demo-modal" class="hds-modal-backdrop" style="display:none; position:relative; inset:auto; min-height:200px; border-radius:var(--hds-radius-md);" onclick="if(event.target===this)this.style.display='none'">
+                <div class="hds-modal" style="min-width:200px; max-width:320px;">
+                  <div class="hds-modal-header">
+                    <span class="hds-modal-title">Demo Modal</span>
+                    <button class="hds-btn-icon" aria-label="Close" onclick="this.closest('.hds-modal-backdrop').style.display='none'">&times;</button>
+                  </div>
+                  <div class="hds-modal-body">
+                    <p class="body-sm text-default">Backdrop fades, modal scales in with spring easing.</p>
+                  </div>
+                  <div class="hds-modal-footer">
+                    <button class="hds-btn hds-btn--primary" onclick="this.closest('.hds-modal-backdrop').style.display='none'">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <h3 class="style-guide-section-name">Stagger Children</h3>
           <div>
             <div class="hds-stack hds-stack--lg">
+              <p class="body-sm text-default">Apply <code>.stagger-children</code> to a container. Supports up to 12 children. Customize pace with <code>--stagger-delay</code> (default: 50ms).</p>
               <div class="stagger-children hds-cluster">
                 <span class="hds-badge hds-badge--info">1</span>
                 <span class="hds-badge hds-badge--info">2</span>
@@ -725,7 +1091,19 @@ function animationContent() {
                 <span class="hds-badge hds-badge--info">4</span>
                 <span class="hds-badge hds-badge--info">5</span>
                 <span class="hds-badge hds-badge--info">6</span>
+                <span class="hds-badge hds-badge--info">7</span>
+                <span class="hds-badge hds-badge--info">8</span>
+                <span class="hds-badge hds-badge--info">9</span>
+                <span class="hds-badge hds-badge--info">10</span>
+                <span class="hds-badge hds-badge--info">11</span>
+                <span class="hds-badge hds-badge--info">12</span>
               </div>
+            </div>
+          </div>
+          <h3 class="style-guide-section-name">Reduced Motion</h3>
+          <div>
+            <div class="hds-stack hds-stack--lg">
+              <p class="body-sm text-default">A global <code>@media (prefers-reduced-motion: reduce)</code> rule forces all animations to near-zero duration and single iteration. No per-component opt-in needed &mdash; enable &ldquo;Reduce motion&rdquo; in system accessibility settings and all transitions resolve instantly.</p>
             </div>
           </div>`,
   ]);
@@ -734,6 +1112,21 @@ function animationContent() {
 function breadcrumbsContent() {
   return componentPage('Breadcrumbs', {
     description: 'A horizontal trail of links showing the user\'s location within a site hierarchy. Helps users navigate back to parent pages without using the browser\'s back button.',
+    anatomy: anatomy(
+      `            <div class="hds-breadcrumbs" data-anatomy="container">
+              <a class="hds-link" href="#" data-anatomy="link">Home</a>
+              <span class="hds-breadcrumbs-separator" data-anatomy="separator">/</span>
+              <a class="hds-link" href="#">Projects</a>
+              <span class="hds-breadcrumbs-separator">/</span>
+              <span class="hds-breadcrumbs-current" data-anatomy="current">Design System</span>
+            </div>`,
+      [
+        { label: 'Link', target: 'link' },
+        { label: 'Separator', target: 'separator' },
+        { label: 'Current', target: 'current' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -760,6 +1153,13 @@ function breadcrumbsContent() {
 function buttonsContent() {
   return componentPage('Button', {
     description: 'Trigger actions or navigate. Four style variants establish visual hierarchy — primary for the main call to action, secondary for supporting actions, tertiary for low-emphasis options, and danger for destructive operations.',
+    anatomy: anatomy(
+      `            <button class="hds-btn hds-btn--primary" data-anatomy="container"><span data-anatomy="label">Label</span></button>`,
+      [
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -812,6 +1212,13 @@ function buttonIconContent() {
   const iconLg = `<span class="hds-icon hds-icon--lg">${gearSvg24}</span>`;
   return componentPage('Button Icon', {
     description: 'A compact button that communicates its action through an icon alone. Wraps an HeavyIcon child. Used for common, recognizable actions where a text label would add clutter. Shares the same type variants as Button.',
+    anatomy: anatomy(
+      `            <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings" data-anatomy="container"><span class="hds-icon hds-icon--md" data-anatomy="icon">${gearSvg20}</span></button>`,
+      [
+        { label: 'Icon', target: 'icon' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -875,6 +1282,17 @@ function buttonIconContent() {
 function buttonGroupContent() {
   return componentPage('Button Group', {
     description: 'A horizontal row of related buttons with tightened spacing. Groups actions that operate on the same object or belong to the same workflow step.',
+    anatomy: anatomy(
+      `            <div class="hds-btn-group" data-anatomy="container">
+              <button class="hds-btn hds-btn--secondary" data-anatomy="button">Left</button>
+              <button class="hds-btn hds-btn--secondary">Center</button>
+              <button class="hds-btn hds-btn--secondary">Right</button>
+            </div>`,
+      [
+        { label: 'Button', target: 'button' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -897,6 +1315,14 @@ function buttonGroupContent() {
 function chipsContent() {
   return componentPage('Chips', {
     description: 'Compact elements for filtering content or selecting from a set of options. Chips toggle between active and inactive states, letting users refine what they see.',
+    anatomy: anatomy(
+      `            <button class="hds-chip" data-anatomy="container"><span data-anatomy="label">Label</span><span class="hds-chip-remove" data-anatomy="remove">&times;</span></button>`,
+      [
+        { label: 'Label', target: 'label' },
+        { label: 'Remove', target: 'remove' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -941,6 +1367,13 @@ function chipsContent() {
 function badgeContent() {
   return componentPage('Badge', {
     description: 'A small label for status, category, or metadata. Color variants map to semantic meaning — success, warning, danger, and info.',
+    anatomy: anatomy(
+      `            <span class="hds-badge" data-anatomy="container"><span data-anatomy="label">Default</span></span>`,
+      [
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -963,6 +1396,16 @@ function badgeContent() {
 function listContent() {
   return componentPage('List', {
     description: 'A vertical stack of items separated by borders. Items can be plain text or key-value pairs. Use for settings panels, metadata displays, menu options, or any repeating data rows.',
+    anatomy: anatomy(
+      `            <div data-anatomy="container">
+              <div class="hds-list-item" data-anatomy="item"><span class="hds-list-item-key">Version</span><span class="hds-list-item-value">2.4.1</span></div>
+              <div class="hds-list-item">Another item</div>
+            </div>`,
+      [
+        { label: 'Item', target: 'item' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `<div>
@@ -1029,6 +1472,18 @@ function listContent() {
 function progressContent() {
   return componentPage('Progress', {
     description: 'A horizontal bar that communicates completion or progress toward a goal. The fill width maps directly to a percentage value.',
+    anatomy: anatomy(
+      `            <div style="width: 200px">
+              <div class="hds-progress" data-anatomy="track"><div class="hds-progress-bar" data-anatomy="fill" style="width: 75%"></div></div>
+              <div class="body-sm text-muted" data-anatomy="label" style="margin-top: 4px">75%</div>
+            </div>`,
+      [
+        { label: 'Track', target: 'track' },
+        { label: 'Fill', target: 'fill' },
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'track', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Default', content: playground(
         `          <div style="width: 100%">
@@ -1046,9 +1501,92 @@ function progressContent() {
   });
 }
 
+function playgroundContent() {
+  const samplePreview = `          <div class="style-guide-variant-row">
+            <button class="hds-btn hds-btn--primary">Primary</button>
+            <button class="hds-btn hds-btn--secondary">Secondary</button>
+          </div>`;
+  const sampleCode = `<button class="hds-btn hds-btn--primary">Primary</button>
+<button class="hds-btn hds-btn--secondary">Secondary</button>`;
+
+  return componentPage('Playground', {
+    description: 'A preview-and-code container used on every component page. The top half renders a live component demo against the page background, and the bottom half shows the corresponding HTML in a copyable code block.',
+    anatomy: anatomy(
+      `            <div class="style-guide-playground" data-anatomy="container" style="width: 320px">
+              <div class="style-guide-playground-preview" data-anatomy="preview" style="padding: 16px; display: flex; justify-content: center;">
+                <button class="hds-btn hds-btn--primary">Primary</button>
+              </div>
+              <div class="style-guide-playground-code-container" data-anatomy="code" style="padding: 12px;">
+                <pre class="style-guide-playground-code" style="margin: 0; font-size: 11px;"><code>&lt;button class="hds-btn"&gt;Primary&lt;/button&gt;</code></pre>
+              </div>
+            </div>`,
+      [
+        { label: 'Preview', target: 'preview' },
+        { label: 'Code', target: 'code' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'Anatomy', content: playground(
+        samplePreview,
+        sampleCode
+      ) },
+      { label: 'Theme Toggle', content:
+        `      <div class="style-guide-playground">
+        <div class="style-guide-playground-preview">
+          <div class="hds-playground-theme-toggle">
+            <button class="style-guide-playground-accent active">Dark</button>
+            <button class="style-guide-playground-accent">Light</button>
+          </div>
+${samplePreview}
+        </div>
+        <div class="style-guide-playground-code-container">
+          <button class="style-guide-playground-copy" onclick="copyCode(this)" aria-label="Copy code">Copy</button>
+          <pre class="style-guide-playground-code"><code>${esc(sampleCode.trim())}</code></pre>
+        </div>
+      </div>`
+      },
+      { label: 'Wide Variant', content:
+        `      <div class="style-guide-playground style-guide-playground--wide">
+        <div class="style-guide-playground-preview">
+${samplePreview}
+        </div>
+        <div class="style-guide-playground-code-container">
+          <button class="style-guide-playground-copy" onclick="copyCode(this)" aria-label="Copy code">Copy</button>
+          <pre class="style-guide-playground-code"><code>${esc(sampleCode.trim())}</code></pre>
+        </div>
+      </div>`
+      },
+    ],
+    guidelines: `<h4>When to use</h4>\n` + guidelines([
+      'Every component dimension section — wrap the demo and its code in a playground.',
+      'Use the theme toggle variant when a component looks different in dark and light mode.',
+      'Use the wide variant (<code>.style-guide-playground--wide</code>) for components that need more horizontal space (e.g., full-width layouts, tables).',
+    ]) +
+    `\n<h4>Structure</h4>\n` + guidelines([
+      '<code>.style-guide-playground</code> — outer container with border and rounded corners.',
+      '<code>.style-guide-playground-preview</code> — top area, centers content with generous padding.',
+      '<code>.style-guide-playground-code-container</code> — bottom area with surface background, holds the Copy button and code block.',
+      '<code>.style-guide-playground-code</code> — monospace <code>&lt;pre&gt;</code> block with horizontal scroll.',
+      '<code>.style-guide-playground-copy</code> — absolute-positioned Copy button in the code area.',
+    ]),
+  });
+}
+
 function statContent() {
   return componentPage('Stat', {
     description: 'A key metric display with large value, label, and optional delta indicator. Use in dashboard cards or summary headers to highlight important numbers.',
+    anatomy: anatomy(
+      `            <div class="hds-stat" data-anatomy="container">
+              <div class="hds-stat-value" data-anatomy="value">98<span class="hds-stat-unit">%</span></div>
+              <div class="hds-stat-label" data-anatomy="label">Uptime</div>
+            </div>`,
+      [
+        { label: 'Value', target: 'value' },
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Default', content: playground(
         `          <div>
@@ -1082,6 +1620,18 @@ function statContent() {
 function collapsibleContent() {
   return componentPage('Collapsible', {
     description: 'A disclosure widget built with native <details> and <summary> elements. Reveals hidden content on click — no JavaScript needed.',
+    anatomy: anatomy(
+      `            <details class="collapsible" open data-anatomy="container">
+              <summary data-anatomy="header">Header <span data-anatomy="icon" style="float: right">&#9660;</span></summary>
+              <div data-anatomy="panel">Hidden content revealed when expanded.</div>
+            </details>`,
+      [
+        { label: 'Header', target: 'header' },
+        { label: 'Icon', target: 'icon' },
+        { label: 'Panel', target: 'panel' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'States', content: playground(
         `          <div class="hds-stack hds-stack--lg">
@@ -1111,6 +1661,12 @@ function collapsibleContent() {
 function dividerContent() {
   return componentPage('Divider', {
     description: 'A horizontal rule that separates content into distinct sections.',
+    anatomy: anatomy(
+      `            <div style="width: 200px"><hr class="hds-divider" data-anatomy="line"></div>`,
+      [
+        { label: 'Line', target: 'line', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="hds-stack hds-stack--lg">
@@ -1125,6 +1681,14 @@ function dividerContent() {
 function statusMessageContent() {
   return componentPage('Status Message', {
     description: 'Inline messages that communicate the result of an operation. Four sentiment variants provide visual context — success, error, warning, and info.',
+    anatomy: anatomy(
+      `            <div class="hds-status-msg hds-status-msg--success" data-anatomy="container"><span data-anatomy="icon" style="margin-right: 8px">&#10003;</span><span data-anatomy="message">Operation completed successfully.</span></div>`,
+      [
+        { label: 'Icon', target: 'icon' },
+        { label: 'Message', target: 'message' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="hds-stack hds-stack--sm">
@@ -1145,6 +1709,19 @@ function statusMessageContent() {
 function emptyStateContent() {
   return componentPage('Empty State', {
     description: 'A placeholder for views with no data. Communicates what the user can expect and optionally suggests an action to populate the view.',
+    anatomy: anatomy(
+      `            <div class="hds-empty-state" data-anatomy="container">
+              <div class="hds-empty-state-title" data-anatomy="title">No results found</div>
+              <div class="hds-empty-state-description" data-anatomy="description">Try adjusting your search or filters.</div>
+              <button class="hds-btn hds-btn--primary hds-btn--sm" data-anatomy="action" style="margin-top: 12px">Create New</button>
+            </div>`,
+      [
+        { label: 'Title', target: 'title' },
+        { label: 'Description', target: 'description' },
+        { label: 'Action', target: 'action' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="hds-empty-state">
@@ -1163,6 +1740,15 @@ function emptyStateContent() {
 function spinnerContent() {
   return componentPage('Spinner', {
     description: 'An animated loading indicator for operations with indeterminate duration. Pair with a text label for accessibility.',
+    anatomy: anatomy(
+      `            <div class="hds-cluster" data-anatomy="container">
+              <div class="hds-spinner" data-anatomy="track"></div>
+            </div>`,
+      [
+        { label: 'Track', target: 'track' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="hds-cluster">
@@ -1178,6 +1764,12 @@ function spinnerContent() {
 function skeletonContent() {
   return componentPage('Skeleton', {
     description: 'Placeholder shapes that preview the layout of incoming content. Use during loading to reduce perceived wait time and prevent layout shift.',
+    anatomy: anatomy(
+      `            <div class="hds-skeleton" data-anatomy="shape" style="height: 16px; width: 200px"></div>`,
+      [
+        { label: 'Shape', target: 'shape', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="hds-stack hds-stack--sm">
@@ -1194,6 +1786,18 @@ function skeletonContent() {
 function fileUploadContent() {
   return componentPage('File Upload', {
     description: 'A styled file input that replaces the browser\'s default file picker with a consistent button trigger. The native file input is hidden and the label acts as the clickable element.',
+    anatomy: anatomy(
+      `            <div class="hds-form-file" data-anatomy="container">
+              <input type="file" id="anatomy-file" style="display:none">
+              <label class="hds-form-file-trigger" for="anatomy-file" data-anatomy="label">Choose file</label>
+              <span class="body-sm text-muted" data-anatomy="hint" style="margin-left: 8px">No file chosen</span>
+            </div>`,
+      [
+        { label: 'Label', target: 'label' },
+        { label: 'Hint', target: 'hint' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1226,6 +1830,13 @@ function fileUploadContent() {
 function iconContent() {
   return componentPage('Icon', {
     description: 'A sized container for inline SVG icons. Three explicit size modifiers: sm (16), md (20), and lg (24).',
+    anatomy: anatomy(
+      `            <span class="hds-icon hds-icon--md" data-anatomy="container"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" data-anatomy="svg"><circle cx="10" cy="10" r="8.25"/></svg></span>`,
+      [
+        { label: 'SVG', target: 'svg' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1243,7 +1854,13 @@ function iconContent() {
 
 function inputsContent() {
   return componentPage('Inputs', {
-    description: 'Text fields for entering and editing single-line or multi-line content. Includes labels, placeholder text, hint text, and validation states for building accessible forms.',
+    description: 'Single-line text fields for entering and editing content. Available in four sizes with support for validation states.',
+    anatomy: anatomy(
+      `            <input class="hds-form-input" type="text" placeholder="Placeholder" data-anatomy="input" style="width: 240px">`,
+      [
+        { label: 'Input', target: 'input', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1261,10 +1878,58 @@ function inputsContent() {
             <input class="hds-form-input is-focus hds-col-span-2" type="text" placeholder="Focus">
             <input class="hds-form-input is-disabled hds-col-span-2" type="text" placeholder="Disabled" disabled>
           </div>`,
+        `<!-- Default -->
+<input class="hds-form-input" type="text" placeholder="Placeholder">
+<!-- Disabled -->
+<input class="hds-form-input" type="text" placeholder="Placeholder" disabled>`
+      ) },
+      { label: 'Validation', content: playground(
+        `          <div class="style-guide-variant-row">
+            <div class="hds-form-group hds-col-span-3">
+              <label class="hds-form-label">Email</label>
+              <input class="hds-form-input hds-form-input--error" type="text" placeholder="Enter email" value="not-an-email">
+              <span class="hds-form-hint hds-form-hint--error">Please enter a valid email address</span>
+            </div>
+            <div class="hds-form-group hds-col-span-3">
+              <label class="hds-form-label">Username</label>
+              <input class="hds-form-input hds-form-input--success" type="text" placeholder="Choose username" value="keithbarney">
+              <span class="hds-form-hint hds-form-hint--success">Username is available</span>
+            </div>
+          </div>`,
+        `<input class="hds-form-input hds-form-input--error" type="text" value="not-an-email">
+<input class="hds-form-input hds-form-input--success" type="text" value="keithbarney">`
+      ) },
+    ],
+  });
+}
+
+function formGroupContent() {
+  return componentPage('Form Group', {
+    description: 'A vertical container that pairs a label, input, and hint text into a single form field. Provides consistent spacing and structure for all form controls.',
+    anatomy: anatomy(
+      `            <div class="hds-form-group" data-anatomy="container" style="width: 240px">
+              <label class="hds-form-label" data-anatomy="label">Label</label>
+              <input class="hds-form-input" type="text" placeholder="Placeholder" data-anatomy="input">
+              <span class="hds-form-hint" data-anatomy="hint">Hint text goes here</span>
+            </div>`,
+      [
+        { label: 'Label', target: 'label' },
+        { label: 'Input', target: 'input' },
+        { label: 'Hint', target: 'hint' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'Default', content: playground(
+        `          <div class="hds-form-group hds-col-span-3">
+            <label class="hds-form-label">Label</label>
+            <input class="hds-form-input" type="text" placeholder="Placeholder">
+            <span class="hds-form-hint">Hint text goes here</span>
+          </div>`,
         `<div class="hds-form-group">
-  <label class="hds-form-label">Email</label>
-  <input class="hds-form-input hds-form-input--error" type="text" value="not-an-email">
-  <span class="hds-form-hint hds-form-hint--error">Please enter a valid email address</span>
+  <label class="hds-form-label">Label</label>
+  <input class="hds-form-input" type="text" placeholder="Placeholder">
+  <span class="hds-form-hint">Hint text goes here</span>
 </div>`
       ) },
       { label: 'Validation', content: playground(
@@ -1280,28 +1945,68 @@ function inputsContent() {
               <span class="hds-form-hint hds-form-hint--success">Username is available</span>
             </div>
           </div>`,
-        `<div class="hds-form-group">
+        `<!-- Error -->
+<div class="hds-form-group">
   <label class="hds-form-label">Email</label>
   <input class="hds-form-input hds-form-input--error" type="text" value="not-an-email">
   <span class="hds-form-hint hds-form-hint--error">Please enter a valid email address</span>
+</div>
+
+<!-- Success -->
+<div class="hds-form-group">
+  <label class="hds-form-label">Username</label>
+  <input class="hds-form-input hds-form-input--success" type="text" value="keithbarney">
+  <span class="hds-form-hint hds-form-hint--success">Username is available</span>
 </div>`
       ) },
-      { label: 'Textarea', content: playground(
+      { label: 'With Select', content: playground(
+        `          <div class="hds-form-group hds-col-span-3">
+            <label class="hds-form-label">Role</label>
+            <select class="hds-select">
+              <option>Select a role</option>
+              <option>Designer</option>
+              <option>Developer</option>
+            </select>
+            <span class="hds-form-hint">Choose one option</span>
+          </div>`,
+        `<div class="hds-form-group">
+  <label class="hds-form-label">Role</label>
+  <select class="hds-select">
+    <option>Select a role</option>
+  </select>
+  <span class="hds-form-hint">Choose one option</span>
+</div>`
+      ) },
+    ],
+  });
+}
+
+function textareaContent() {
+  return componentPage('Textarea', {
+    description: 'A multi-line text field for longer-form content. Shares base styling with inputs but allows vertical expansion for paragraphs, descriptions, and notes.',
+    anatomy: anatomy(
+      `            <textarea class="hds-form-input hds-form-textarea" placeholder="Write something..." data-anatomy="textarea" style="width: 240px"></textarea>`,
+      [
+        { label: 'Textarea', target: 'textarea', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'Default', content: playground(
         `          <div class="hds-col-span-4">
             <textarea class="hds-form-input hds-form-textarea" placeholder="Write something..."></textarea>
           </div>`,
         '<textarea class="hds-form-input hds-form-textarea" placeholder="Write something..."></textarea>'
       ) },
-      { label: 'Form Group', content: playground(
-        `          <div class="hds-form-group hds-col-span-3">
-            <label class="hds-form-label">Label</label>
-            <input class="hds-form-input" type="text" placeholder="Placeholder">
-            <span class="hds-form-hint">Hint text goes here</span>
+      { label: 'In Form Group', content: playground(
+        `          <div class="hds-form-group hds-col-span-4">
+            <label class="hds-form-label">Description</label>
+            <textarea class="hds-form-input hds-form-textarea" placeholder="Write something..."></textarea>
+            <span class="hds-form-hint">Maximum 500 characters</span>
           </div>`,
         `<div class="hds-form-group">
-  <label class="hds-form-label">Label</label>
-  <input class="hds-form-input" type="text" placeholder="Placeholder">
-  <span class="hds-form-hint">Hint text goes here</span>
+  <label class="hds-form-label">Description</label>
+  <textarea class="hds-form-input hds-form-textarea" placeholder="Write something..."></textarea>
+  <span class="hds-form-hint">Maximum 500 characters</span>
 </div>`
       ) },
     ],
@@ -1311,6 +2016,18 @@ function inputsContent() {
 function navLinksContent() {
   return componentPage('Nav Links', {
     description: 'Horizontal navigation links for moving between top-level pages or sections. One link is marked active to show the user\'s current location.',
+    anatomy: anatomy(
+      `            <nav data-anatomy="container" style="display: flex; gap: 16px;">
+              <a class="hds-nav-link hds-nav-link--active" href="#" data-anatomy="active-link">Dashboard</a>
+              <a class="hds-nav-link" href="#" data-anatomy="link">Settings</a>
+              <a class="hds-nav-link" href="#">Profile</a>
+            </nav>`,
+      [
+        { label: 'Link', target: 'link' },
+        { label: 'Active Link', target: 'active-link' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1331,6 +2048,15 @@ function navLinksContent() {
 function searchContent() {
   return componentPage('Search', {
     description: 'A text input with a built-in search icon for filtering or querying content. Available in four sizes to match surrounding UI density. Wraps a native input element for full keyboard and assistive technology support.',
+    anatomy: anatomy(
+      `            <label class="hds-search" data-anatomy="container"><span data-anatomy="icon" style="pointer-events: none">&#128269;</span><input type="search" placeholder="Search..." data-anatomy="input"><span data-anatomy="clear" style="cursor: pointer">&times;</span></label>`,
+      [
+        { label: 'Icon', target: 'icon' },
+        { label: 'Input', target: 'input' },
+        { label: 'Clear', target: 'clear' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1360,6 +2086,17 @@ function searchContent() {
 function selectsContent() {
   return componentPage('Selects', {
     description: 'A native dropdown for choosing one option from a list. Uses the browser\'s built-in select element with custom styling for consistency across platforms.',
+    anatomy: anatomy(
+      `            <div class="hds-form-group" data-anatomy="container" style="width: 240px">
+              <label class="hds-form-label" data-anatomy="label">Label</label>
+              <select class="hds-select" data-anatomy="select"><option>Select an option</option></select>
+            </div>`,
+      [
+        { label: 'Label', target: 'label' },
+        { label: 'Select', target: 'select' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1403,6 +2140,18 @@ function selectsContent() {
 function tabsContent() {
   return componentPage('Tabs', {
     description: 'A row of labeled controls that switch between content panels. Only one tab is active at a time, and its associated panel is visible while others are hidden.',
+    anatomy: anatomy(
+      `            <div class="hds-tabs" data-anatomy="container">
+              <button class="hds-tab" data-anatomy="tab">Overview</button>
+              <button class="hds-tab hds-tab--active" data-anatomy="active-tab">Details</button>
+              <button class="hds-tab">Settings</button>
+            </div>`,
+      [
+        { label: 'Tab', target: 'tab' },
+        { label: 'Active Tab', target: 'active-tab' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1422,11 +2171,70 @@ function tabsContent() {
   });
 }
 
-function togglesContent() {
-  return componentPage('Toggles', {
-    description: 'Controls for binary and multiple-choice selections. Includes toggle switches for on/off settings, checkboxes for multi-select, and radio buttons for single-select from a group.',
+function tokenCopyContent() {
+  return componentPage('Token Copy', {
+    description: 'Interactive chip that copies a token name or value to the clipboard on click. Shows a copy icon and brief success feedback. Used throughout the style guide to let developers grab token names, CSS variables, and resolved values.',
+    anatomy: anatomy(
+      `            <span class="style-guide-token-copy" role="button" tabindex="0" data-anatomy="container">
+              <span data-anatomy="token">hds.text.default</span>
+              <span data-anatomy="value" style="margin-left: 8px; opacity: 0.6">--hds-text-default</span>
+              <span data-anatomy="copy" style="margin-left: 4px; opacity: 0.5">&#128203;</span>
+            </span>`,
+      [
+        { label: 'Token', target: 'token' },
+        { label: 'Value', target: 'value' },
+        { label: 'Copy', target: 'copy' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
-      { label: 'Toggle', content: playground(
+      { label: 'States', content: playground(
+        `          <div class="style-guide-variant-row">
+            <span class="style-guide-token-copy" role="button" tabindex="0">Default</span>
+            <span class="style-guide-token-copy is-hover" role="button" tabindex="0">Hover</span>
+            <span class="style-guide-token-copy style-guide-copied" role="button" tabindex="0">Copied</span>
+          </div>`,
+        `<!-- Default -->\n<span class="style-guide-token-copy" role="button" tabindex="0">hds.text.default</span>\n<!-- Hover -->\n<span class="style-guide-token-copy" role="button" tabindex="0">hds.text.default</span>\n<!-- Copied (applied via JS) -->\n<span class="style-guide-token-copy style-guide-copied" role="button" tabindex="0">hds.text.default</span>`
+      ) },
+      { label: 'Content Variants', content: playground(
+        `          <div class="style-guide-variant-row">
+            <span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('hds.text.default', this)">hds.text.default</span>
+            <span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('--hds-text-default', this)">--hds-text-default</span>
+            <span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('#898989', this)">#898989</span>
+            <span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('16px', this)">16px</span>
+          </div>`,
+        `<!-- Token name -->\n<span class="style-guide-token-copy" role="button" tabindex="0"\n  onclick="copyToken(\'hds.text.default\', this)">hds.text.default</span>\n\n<!-- CSS variable -->\n<span class="style-guide-token-copy" role="button" tabindex="0"\n  onclick="copyToken(\'--hds-text-default\', this)">--hds-text-default</span>\n\n<!-- Hex value -->\n<span class="style-guide-token-copy" role="button" tabindex="0"\n  onclick="copyToken(\'#898989\', this)">#898989</span>\n\n<!-- Size value -->\n<span class="style-guide-token-copy" role="button" tabindex="0"\n  onclick="copyToken(\'16px\', this)">16px</span>`
+      ) },
+    ],
+    guidelines: `<h4>When to use</h4>\n` + guidelines([
+      'Display any copyable value — token names, CSS variables, hex colors, size values.',
+      'Use in data tables, props tables, and anywhere a developer needs to grab a value quickly.',
+    ]) +
+    `\n<h4>Accessibility</h4>\n` + guidelines([
+      'Always include <code>role="button"</code> and <code>tabindex="0"</code> on non-button elements.',
+      'The copy icon (::after pseudo-element) provides a visual affordance that the chip is interactive.',
+      'Success state (<code>.style-guide-copied</code>) provides visual confirmation — lasts 500ms.',
+    ]),
+  });
+}
+
+function toggleContent() {
+  return componentPage('Toggle', {
+    description: 'A switch for binary on/off settings. Wraps a hidden checkbox with a styled track and thumb for immediate visual feedback.',
+    anatomy: anatomy(
+      `            <label class="hds-form-toggle" data-anatomy="container">
+              <input type="checkbox" checked>
+              <span class="hds-form-toggle-track" data-anatomy="track"></span>
+              <span data-anatomy="label">On</span>
+            </label>`,
+      [
+        { label: 'Track', target: 'track' },
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'States', content: playground(
         `          <div class="style-guide-variant-row">
             <label class="hds-form-toggle">
               <input type="checkbox">
@@ -1443,38 +2251,96 @@ function togglesContent() {
   <input type="checkbox">
   <span class="hds-form-toggle-track"></span>
   <span>Off</span>
+</label>
+
+<label class="hds-form-toggle">
+  <input type="checkbox" checked>
+  <span class="hds-form-toggle-track"></span>
+  <span>On</span>
 </label>`
       ) },
-      { label: 'Checkbox', content: playground(
+    ],
+  });
+}
+
+function checkboxContent() {
+  return componentPage('Checkbox', {
+    description: 'A multi-select control for toggling individual options. Each checkbox operates independently — users can select any combination from a group.',
+    anatomy: anatomy(
+      `            <div class="hds-form-check" data-anatomy="container">
+              <input class="hds-form-check-input" type="checkbox" id="anatomy-check" checked data-anatomy="input">
+              <label class="hds-form-label" for="anatomy-check" data-anatomy="label">Checkbox option</label>
+            </div>`,
+      [
+        { label: 'Input', target: 'input' },
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'States', content: playground(
         `          <div>
             <div class="hds-stack">
               <div class="hds-form-check">
-                <input class="hds-form-check-input" type="checkbox" id="check1" checked>
-                <label class="hds-form-label" for="check1">Checkbox option</label>
+                <input class="hds-form-check-input" type="checkbox" id="check-off">
+                <label class="hds-form-label" for="check-off">Unchecked</label>
+              </div>
+              <div class="hds-form-check">
+                <input class="hds-form-check-input" type="checkbox" id="check-on" checked>
+                <label class="hds-form-label" for="check-on">Checked</label>
               </div>
             </div>
           </div>`,
         `<div class="hds-form-check">
   <input class="hds-form-check-input" type="checkbox" id="check1">
-  <label class="hds-form-label" for="check1">Checkbox option</label>
+  <label class="hds-form-label" for="check1">Unchecked</label>
+</div>
+
+<div class="hds-form-check">
+  <input class="hds-form-check-input" type="checkbox" id="check2" checked>
+  <label class="hds-form-label" for="check2">Checked</label>
 </div>`
       ) },
-      { label: 'Radio', content: playground(
+    ],
+  });
+}
+
+function radioContent() {
+  return componentPage('Radio', {
+    description: 'A single-select control for choosing one option from a group. Radios with the same name attribute are mutually exclusive — selecting one deselects the others.',
+    anatomy: anatomy(
+      `            <div class="hds-form-check" data-anatomy="container">
+              <input class="hds-form-check-input" type="radio" name="anatomy-radio" id="anatomy-radio1" checked data-anatomy="input">
+              <label class="hds-form-label" for="anatomy-radio1" data-anatomy="label">Radio option</label>
+            </div>`,
+      [
+        { label: 'Input', target: 'input' },
+        { label: 'Label', target: 'label' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'States', content: playground(
         `          <div>
             <div class="hds-stack">
               <div class="hds-form-check">
-                <input class="hds-form-check-input" type="radio" name="radio" id="radio1" checked>
-                <label class="hds-form-label" for="radio1">Radio option A</label>
+                <input class="hds-form-check-input" type="radio" name="radio-demo" id="radio-a" checked>
+                <label class="hds-form-label" for="radio-a">Option A (selected)</label>
               </div>
               <div class="hds-form-check">
-                <input class="hds-form-check-input" type="radio" name="radio" id="radio2">
-                <label class="hds-form-label" for="radio2">Radio option B</label>
+                <input class="hds-form-check-input" type="radio" name="radio-demo" id="radio-b">
+                <label class="hds-form-label" for="radio-b">Option B</label>
               </div>
             </div>
           </div>`,
         `<div class="hds-form-check">
-  <input class="hds-form-check-input" type="radio" name="group" id="radio1">
-  <label class="hds-form-label" for="radio1">Radio option A</label>
+  <input class="hds-form-check-input" type="radio" name="group" id="radio1" checked>
+  <label class="hds-form-label" for="radio1">Option A</label>
+</div>
+
+<div class="hds-form-check">
+  <input class="hds-form-check-input" type="radio" name="group" id="radio2">
+  <label class="hds-form-label" for="radio2">Option B</label>
 </div>`
       ) },
     ],
@@ -1577,6 +2443,25 @@ function searchPatternContent() {
 function cardContent() {
   return componentPage('Card', {
     description: 'A container that groups related content and actions. Cards create visual hierarchy by separating content into distinct sections with borders or elevation.',
+    anatomy: anatomy(
+      `            <div class="hds-card" data-anatomy="container" style="width: 280px">
+              <div class="hds-card-header" data-anatomy="header">
+                <div class="hds-card-title">Title</div>
+              </div>
+              <div class="hds-card-body" data-anatomy="body">
+                <p>Body content goes here.</p>
+              </div>
+              <div class="hds-card-footer" data-anatomy="footer">
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
+              </div>
+            </div>`,
+      [
+        { label: 'Header', target: 'header' },
+        { label: 'Body', target: 'body' },
+        { label: 'Footer', target: 'footer' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Composition', content: playgroundWide(
         `<div class="hds-stack hds-stack--lg" style="width: 100%;">
@@ -1671,6 +2556,20 @@ function cardContent() {
 function cardHeaderContent() {
   return componentPage('Card Header', {
     description: 'The top section of a card containing a title and optional subtitle. Separated from the body by a bottom border.',
+    anatomy: anatomy(
+      `            <div class="hds-card" style="width: 280px">
+              <div class="hds-card-header" data-anatomy="container">
+                <div class="hds-card-title" data-anatomy="title">Card Title</div>
+                <div class="hds-card-subtitle" data-anatomy="actions">Supporting text</div>
+              </div>
+              <div class="hds-card-body"><p>Body content</p></div>
+            </div>`,
+      [
+        { label: 'Title', target: 'title' },
+        { label: 'Actions', target: 'actions' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Default', content: playgroundWide(
         `<div class="hds-card" style="width: 100%;">
@@ -1717,6 +2616,19 @@ function cardHeaderContent() {
 function cardFooterContent() {
   return componentPage('Card Footer', {
     description: 'The bottom section of a card for actions. Buttons are right-aligned by default. Separated from the body by a top border.',
+    anatomy: anatomy(
+      `            <div class="hds-card" style="width: 280px">
+              <div class="hds-card-body"><p>Body content</p></div>
+              <div class="hds-card-footer" data-anatomy="container">
+                <button class="hds-btn hds-btn--secondary hds-btn--sm" data-anatomy="actions">Cancel</button>
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
+              </div>
+            </div>`,
+      [
+        { label: 'Actions', target: 'actions' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Default', content: playgroundWide(
         `<div class="hds-card" style="width: 100%;">
@@ -1778,6 +2690,12 @@ function cardFooterContent() {
 function linkContent() {
   return componentPage('Link', {
     description: 'Inline text link for navigation. Underlined with a subtle decoration color that strengthens on hover.',
+    anatomy: anatomy(
+      `            <a href="#" class="hds-link" data-anatomy="label">Link text</a>`,
+      [
+        { label: 'Label', target: 'label', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'States', content: playground(
         `          <div class="hds-stack hds-stack--lg">
@@ -1797,6 +2715,32 @@ function linkContent() {
 function modalContent() {
   return componentPage('Modal', {
     description: 'A dialog overlay that focuses the user\'s attention on a specific task or decision. Modals appear on top of a dimmed backdrop and block interaction with the underlying page until dismissed.',
+    anatomy: anatomy(
+      `            <div style="position: relative; height: 260px; width: 320px; background: var(--hds-bg-default); border-radius: var(--hds-radius-md); overflow: hidden;">
+              <div class="hds-modal-backdrop" data-anatomy="backdrop" style="position: absolute;">
+                <div class="hds-modal" data-anatomy="container" style="max-width: 280px;">
+                  <div class="hds-modal-header" data-anatomy="header">
+                    <div class="hds-modal-title" data-anatomy="title">Confirm</div>
+                  </div>
+                  <div class="hds-modal-body" data-anatomy="body">
+                    <p>Are you sure?</p>
+                  </div>
+                  <div class="hds-modal-footer" data-anatomy="footer">
+                    <button class="hds-btn hds-btn--sm">Cancel</button>
+                    <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>`,
+      [
+        { label: 'Header', target: 'header' },
+        { label: 'Title', target: 'title' },
+        { label: 'Body', target: 'body' },
+        { label: 'Footer', target: 'footer' },
+        { label: 'Backdrop', target: 'backdrop' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
     dimensions: [
       { label: 'Type', content: playground(
         `<div style="position: relative; height: 320px; width: 100%; background: var(--hds-bg-default); border-radius: var(--hds-radius-md); overflow: hidden;">
@@ -1830,6 +2774,25 @@ function modalContent() {
   </div>
 </div>`
       ) },
+      { label: 'Live Demo', content: `<div class="hds-stack hds-stack--lg">
+              <p class="body-sm text-default">Backdrop fades in, then the modal scales up with spring easing. Click the backdrop or a button to dismiss.</p>
+              <button class="hds-btn hds-btn--primary" onclick="document.getElementById('modal-live-demo').style.display='flex'">Open Modal</button>
+            </div>
+            <div id="modal-live-demo" class="hds-modal-backdrop" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+              <div class="hds-modal">
+                <div class="hds-modal-header">
+                  <div class="hds-modal-title">Confirm Action</div>
+                  <button class="hds-btn-icon" aria-label="Close" onclick="document.getElementById('modal-live-demo').style.display='none'">&times;</button>
+                </div>
+                <div class="hds-modal-body">
+                  <p class="body-sm text-default">Are you sure you want to proceed? This action cannot be undone.</p>
+                </div>
+                <div class="hds-modal-footer">
+                  <button class="hds-btn hds-btn--secondary hds-btn--sm" onclick="document.getElementById('modal-live-demo').style.display='none'">Cancel</button>
+                  <button class="hds-btn hds-btn--danger hds-btn--sm" onclick="document.getElementById('modal-live-demo').style.display='none'">Delete</button>
+                </div>
+              </div>
+            </div>` },
     ],
   });
 }
@@ -1861,18 +2824,24 @@ const contentMap = {
   'spinner': () => spinnerContent(),
   'skeleton': () => skeletonContent(),
   'file-upload': () => fileUploadContent(),
+  'form-group': () => formGroupContent(),
   'icon': () => iconContent(),
   'inputs': () => inputsContent(),
   'link': () => linkContent(),
   'list': () => listContent(),
   'modal': () => modalContent(),
   'nav-links': () => navLinksContent(),
+  'playground': () => playgroundContent(),
   'progress': () => progressContent(),
   'search': () => searchContent(),
   'selects': () => selectsContent(),
   'stat': () => statContent(),
   'tabs': () => tabsContent(),
-  'toggles': () => togglesContent(),
+  'textarea': () => textareaContent(),
+  'token-copy': () => tokenCopyContent(),
+  'toggle': () => toggleContent(),
+  'checkbox': () => checkboxContent(),
+  'radio': () => radioContent(),
   'form-validation': () => formValidationContent(),
   'search-pattern': () => searchPatternContent(),
 };
@@ -1900,7 +2869,7 @@ function main() {
   }
 
   // Clean stale pages from previous structure
-  const stalePages = ['animation.html', 'data-display.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html', 'feedback.html', 'key-value.html'];
+  const stalePages = ['animation.html', 'data-display.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html', 'feedback.html', 'key-value.html', 'toggles.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {

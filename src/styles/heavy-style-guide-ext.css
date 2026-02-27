@@ -468,3 +468,13 @@
   align-items: center;
   justify-content: center;
 }
+
+/* --- Anatomy Dark Mode --- */
+
+[data-theme="dark"] .style-guide-anatomy-marker {
+  color: var(--base-color-gray-75);
+}
+
+[data-theme="dark"] .style-guide-anatomy-legend li::before {
+  color: var(--base-color-gray-75);
+}

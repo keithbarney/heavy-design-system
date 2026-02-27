@@ -116,16 +116,27 @@ Swiss-inspired CSS Grid layout.
 
 ```css
 /* Stack (vertical rhythm) */
-.stack > * + * { margin-top: var(--space-16); }
+.hds-stack > * + * { margin-top: var(--hds-space-16); }
 
 /* Cluster (horizontal grouping) */
-.cluster { display: flex; flex-wrap: wrap; gap: var(--space-16); }
+.hds-cluster { display: flex; flex-wrap: wrap; gap: var(--hds-space-16); }
 
 /* Sidebar layout */
-.with-sidebar { display: flex; flex-wrap: wrap; }
+.hds-with-sidebar { display: flex; flex-wrap: wrap; }
 
 /* Center with max-width */
-.center { max-inline-size: var(--measure); margin-inline: auto; }
+.hds-center { max-inline-size: var(--hds-measure); margin-inline: auto; }
+
+/* All utility classes use hds- prefix */
+.hds-flex, .hds-flex-col, .hds-flex-row, .hds-flex-wrap
+.hds-items-{start,center,end,baseline}
+.hds-justify-{start,center,end,between}
+.hds-m-{0-6}, .hds-mx-auto, .hds-my-{0-6}, .hds-mb-{0-6}, .hds-mt-{0-6}
+.hds-p-{0-6}, .hds-px-{0-6}, .hds-py-{0-6}
+.hds-block, .hds-inline-block, .hds-inline, .hds-hidden
+.hds-text-{left,center,right}
+.hds-w-full, .hds-h-full, .hds-min-h-screen
+.hds-sr-only, .hds-sr-only-focusable
 ```
 
 ---

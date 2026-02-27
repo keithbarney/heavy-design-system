@@ -30,6 +30,7 @@ const PAGES = [
   { file: 'scale.html', id: 'scale', label: 'Scale', group: 'Foundations' },
   { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
   { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
+  { file: 'utilities.html', id: 'utilities', label: 'Utilities', group: 'Foundations' },
   // Components (alphabetical)
   { file: 'badge.html', id: 'badge', label: 'Badge', group: 'Components' },
   { file: 'breadcrumbs.html', id: 'breadcrumbs', label: 'Breadcrumbs', group: 'Components' },
@@ -520,7 +521,7 @@ const ANATOMY_SCRIPT = `<script>
 (function() {
   var BADGE_SIZE = 20;
   var OUTLINE_PAD = 2;
-  var ROW_HEIGHTS = [-30, -56, -82];
+  var BADGE_GAP = 26;
 
   function initAnatomy() {
     var containers = document.querySelectorAll('.style-guide-anatomy-component');
@@ -539,8 +540,9 @@ const ANATOMY_SCRIPT = `<script>
       });
 
       var containerRect = container.getBoundingClientRect();
-      var placements = [];
 
+      // Collect all marker data first
+      var markers = [];
       markerDefs.forEach(function(def) {
         var targetEl = container.querySelector('[data-anatomy="' + def.target + '"]');
         if (!targetEl) return;
@@ -562,35 +564,32 @@ const ANATOMY_SCRIPT = `<script>
         outline.style.height = (rect.height + OUTLINE_PAD * 2) + 'px';
         container.appendChild(outline);
 
-        // Assign row (collision avoidance)
-        var cx = rect.left + rect.width / 2;
-        var row = 0;
-        for (var r = 0; r < ROW_HEIGHTS.length; r++) {
-          var collision = false;
-          for (var p = 0; p < placements.length; p++) {
-            if (placements[p].row === r && Math.abs(placements[p].cx - cx) < 30) {
-              collision = true;
-              break;
-            }
-          }
-          if (!collision) { row = r; break; }
-        }
-        placements.push({ row: row, cx: cx });
+        markers.push({ def: def, rect: rect, cx: rect.left + rect.width / 2 });
+      });
 
-        // Create marker badge
+      // Sort by index for consistent layout
+      markers.sort(function(a, b) { return a.def.index - b.def.index; });
+
+      // Spread badges horizontally, centered above the component
+      var totalWidth = (markers.length - 1) * BADGE_GAP;
+      var componentCx = containerRect.width / 2;
+      var startX = componentCx - totalWidth / 2;
+      var badgeRow = -30;
+
+      // Stack additional rows if more than fits in one row
+      markers.forEach(function(m, i) {
         var badge = document.createElement('div');
         badge.className = 'style-guide-anatomy-marker';
-        if (def.primary) badge.setAttribute('data-primary', '');
-        badge.textContent = def.index;
+        if (m.def.primary) badge.setAttribute('data-primary', '');
+        badge.textContent = m.def.index;
 
-        var badgeTop = ROW_HEIGHTS[row];
-        var badgeLeft = cx - BADGE_SIZE / 2;
-        badge.style.top = badgeTop + 'px';
+        var badgeLeft = startX + i * BADGE_GAP - BADGE_SIZE / 2;
+        badge.style.top = badgeRow + 'px';
         badge.style.left = badgeLeft + 'px';
 
         // Stem from badge down to outline top
-        var outlineTop = rect.top - OUTLINE_PAD;
-        var stemLength = outlineTop - (badgeTop + BADGE_SIZE);
+        var outlineTop = m.rect.top - OUTLINE_PAD;
+        var stemLength = outlineTop - (badgeRow + BADGE_SIZE);
         if (stemLength > 0) {
           badge.setAttribute('data-stem', 'down');
           badge.style.setProperty('--stem-length', stemLength + 'px');
@@ -688,6 +687,28 @@ function colorsContent(tokens) {
   const darkBgHex = darkBgGroup?.tokens[0]?.darkHex || '#161616';
   const lightBgHex = lightBgGroup?.tokens[0]?.lightHex || '#f0f0f0';
 
+  const textColorClassRows = [
+    ['.hds-text-default', 'var(--hds-text-default)'],
+    ['.hds-text-strong', 'var(--hds-text-strong)'],
+    ['.hds-text-muted', 'var(--hds-text-default)'],
+    ['.hds-text-disabled', 'var(--hds-text-disabled)'],
+  ].map(([cls, val]) =>
+    `                <tr><td><code>${cls}</code></td><td>${val}</td></tr>`
+  ).join('\n');
+
+  const textColorClassesTable = `
+          <table class="style-guide-data-table" style="margin-top: var(--hds-space-24)">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${textColorClassRows}
+            </tbody>
+          </table>`;
+
   const uiColorSections = tokens.uiColorGroups.map(group => {
     const groupKey = group.group.toLowerCase();
     const rows = group.tokens.map(t => `          <tr>
@@ -703,7 +724,9 @@ function colorsContent(tokens) {
 ${rows}
         </tbody>
       </table>`;
-    return section(group.group, table);
+    // Append text color utility classes inside the Text section
+    const extra = group.group === 'Text' ? textColorClassesTable : '';
+    return section(group.group, table + extra);
   }).join('\n');
 
   return foundationPage('Colors', 'Alias color tokens for light and dark themes, referencing base color primitives.', [
@@ -795,10 +818,88 @@ function typographyContent(tokens) {
       sampleStyle: `line-height: ${lh.value}; font-size: 16px`,
       sampleContent: 'The quick brown fox jumps over the lazy dog. Design tokens maintain consistency across the system.',
     })))),
+
+    ...(() => {
+      const utilRows = (data) => data.map(([a, b, c]) =>
+        `                <tr><td><code>${a}</code></td><td>${b}</td><td>${c}</td></tr>`
+      ).join('\n');
+      const utilTable = (heading, headerRow, bodyRows) =>
+        section(heading,
+          `          <table class="style-guide-data-table">
+            <thead>
+              <tr>
+                <th>${headerRow[0]}</th>
+                <th>${headerRow[1]}</th>
+                <th>${headerRow[2]}</th>
+              </tr>
+            </thead>
+            <tbody>
+${bodyRows}
+            </tbody>
+          </table>`);
+      return [
+        utilTable('Body Text Classes', ['Class', 'Description', 'Font Size'], utilRows([
+          ['.hds-body', 'Body text', 'var(--hds-font-size-body)'],
+          ['.hds-body-sm', 'Small body text', 'var(--hds-font-size-body-sm)'],
+          ['.hds-body-xsm', 'Extra-small body text', 'var(--hds-font-size-body-xs)'],
+        ])),
+        utilTable('Font Family Classes', ['Class', 'Property', 'Value'], utilRows([
+          ['.hds-font-primary', 'font-family', 'var(--base-font-primary)'],
+          ['.hds-font-secondary', 'font-family', 'var(--base-font-secondary)'],
+          ['.hds-font-sans', 'font-family', 'var(--base-font-primary)'],
+        ])),
+        utilTable('Font Weight Classes', ['Class', 'Property', 'Value'], utilRows([
+          ['.hds-font-thin', 'font-weight', '100'],
+          ['.hds-font-extralight', 'font-weight', '200'],
+          ['.hds-font-light', 'font-weight', '300'],
+          ['.hds-font-normal', 'font-weight', '400'],
+          ['.hds-font-medium', 'font-weight', '500'],
+          ['.hds-font-semibold', 'font-weight', '600'],
+          ['.hds-font-bold', 'font-weight', '700'],
+          ['.hds-font-extrabold', 'font-weight', '800'],
+          ['.hds-font-black', 'font-weight', '900'],
+        ])),
+        utilTable('Text Transform Classes', ['Class', 'Property', 'Value'], utilRows([
+          ['.hds-uppercase', 'text-transform', 'uppercase'],
+          ['.hds-lowercase', 'text-transform', 'lowercase'],
+          ['.hds-capitalize', 'text-transform', 'capitalize'],
+        ])),
+        utilTable('Letter Spacing Classes', ['Class', 'Property', 'Value'], utilRows([
+          ['.hds-tracking-tight', 'letter-spacing', '-0.02em'],
+          ['.hds-tracking-normal', 'letter-spacing', '0'],
+          ['.hds-tracking-wide', 'letter-spacing', '0.05em'],
+          ['.hds-tracking-wider', 'letter-spacing', '0.1em'],
+        ])),
+        utilTable('Line Height Classes', ['Class', 'Property', 'Value'], utilRows([
+          ['.hds-leading-none', 'line-height', '1'],
+          ['.hds-leading-tight', 'line-height', 'var(--hds-line-height-tight)'],
+          ['.hds-leading-normal', 'line-height', 'var(--hds-line-height-base)'],
+          ['.hds-leading-loose', 'line-height', 'var(--hds-line-height-loose)'],
+        ])),
+      ];
+    })(),
   ]);
 }
 
 function spacingContent(tokens) {
+  const utilRows = (data) => data.map(([a, b, c]) =>
+    `                <tr><td><code>${a}</code></td><td>${b}</td><td>${c}</td></tr>`
+  ).join('\n');
+  const utilTable = (heading, bodyRows) =>
+    section(heading,
+      `          <table class="style-guide-data-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Property</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+${bodyRows}
+            </tbody>
+          </table>`);
+
   return foundationPage('Spacing', 'Semantic spacing aliases built from the base scale.', [
     section('Spacing Aliases', spacingTable(tokens.gaps.map(g => ({
       tokenName: g.name,
@@ -806,6 +907,60 @@ function spacingContent(tokens) {
       value: g.scaleRef || g.value,
       widthPx: parseInt(g.value),
     })))),
+    utilTable('Margin Classes', utilRows([
+      ['.hds-m-0', 'margin', '0'],
+      ['.hds-m-1', 'margin', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-m-2', 'margin', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-m-3', 'margin', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-m-4', 'margin', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-m-5', 'margin', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-m-6', 'margin', 'var(--hds-space-48) &mdash; 48px'],
+      ['.hds-mx-auto', 'margin-inline', 'auto'],
+      ['.hds-my-0', 'margin-block', '0'],
+      ['.hds-my-1', 'margin-block', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-my-2', 'margin-block', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-my-3', 'margin-block', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-my-4', 'margin-block', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-my-5', 'margin-block', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-my-6', 'margin-block', 'var(--hds-space-48) &mdash; 48px'],
+      ['.hds-mb-0', 'margin-bottom', '0'],
+      ['.hds-mb-1', 'margin-bottom', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-mb-2', 'margin-bottom', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-mb-3', 'margin-bottom', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-mb-4', 'margin-bottom', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-mb-5', 'margin-bottom', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-mb-6', 'margin-bottom', 'var(--hds-space-48) &mdash; 48px'],
+      ['.hds-mt-0', 'margin-top', '0'],
+      ['.hds-mt-1', 'margin-top', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-mt-2', 'margin-top', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-mt-3', 'margin-top', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-mt-4', 'margin-top', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-mt-5', 'margin-top', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-mt-6', 'margin-top', 'var(--hds-space-48) &mdash; 48px'],
+    ])),
+    utilTable('Padding Classes', utilRows([
+      ['.hds-p-0', 'padding', '0'],
+      ['.hds-p-1', 'padding', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-p-2', 'padding', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-p-3', 'padding', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-p-4', 'padding', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-p-5', 'padding', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-p-6', 'padding', 'var(--hds-space-48) &mdash; 48px'],
+      ['.hds-px-0', 'padding-inline', '0'],
+      ['.hds-px-1', 'padding-inline', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-px-2', 'padding-inline', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-px-3', 'padding-inline', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-px-4', 'padding-inline', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-px-5', 'padding-inline', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-px-6', 'padding-inline', 'var(--hds-space-48) &mdash; 48px'],
+      ['.hds-py-0', 'padding-block', '0'],
+      ['.hds-py-1', 'padding-block', 'var(--hds-space-4) &mdash; 4px'],
+      ['.hds-py-2', 'padding-block', 'var(--hds-space-8) &mdash; 8px'],
+      ['.hds-py-3', 'padding-block', 'var(--hds-space-16) &mdash; 16px'],
+      ['.hds-py-4', 'padding-block', 'var(--hds-space-24) &mdash; 24px'],
+      ['.hds-py-5', 'padding-block', 'var(--hds-space-32) &mdash; 32px'],
+      ['.hds-py-6', 'padding-block', 'var(--hds-space-48) &mdash; 48px'],
+    ])),
   ]);
 }
 
@@ -953,7 +1108,7 @@ function animationContent() {
                 <div class="hds-kv"><span class="hds-kv-key">--hds-ease-in-out</span><span class="hds-kv-value">cubic-bezier(0.45, 0, 0.55, 1)</span></div>
                 <div class="hds-kv"><span class="hds-kv-key">--hds-ease-spring</span><span class="hds-kv-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
               </div>
-              <p class="body-sm text-default">Backward-compatible aliases (<code>--ease-out</code>, <code>--ease-in-out</code>, <code>--ease-spring</code>) still work.</p>
+              <p class="hds-body-sm hds-text-default">Backward-compatible aliases (<code>--ease-out</code>, <code>--ease-in-out</code>, <code>--ease-spring</code>) still work.</p>
             </div>
           </div>
           <h3 class="style-guide-section-name">Keyframes</h3>
@@ -1022,7 +1177,7 @@ function animationContent() {
           <h3 class="style-guide-section-name">Micro-Interactions</h3>
           <div>
             <div class="hds-stack hds-stack--lg">
-              <p class="body-sm text-default">Subtle tactile feedback on interactive elements. Built into the components &mdash; no extra classes needed.</p>
+              <p class="hds-body-sm hds-text-default">Subtle tactile feedback on interactive elements. Built into the components &mdash; no extra classes needed.</p>
               <table class="style-guide-data-table">
                 <thead><tr><th>Component</th><th>Trigger</th><th>Effect</th></tr></thead>
                 <tbody>
@@ -1040,23 +1195,23 @@ function animationContent() {
                 <label class="hds-form-toggle">
                   <input type="checkbox" checked>
                   <span class="hds-form-toggle-track"></span>
-                  <span class="body-sm">Spring toggle</span>
+                  <span class="hds-body-sm">Spring toggle</span>
                 </label>
               </div>
               <div style="max-width: 300px;">
                 <div class="hds-progress"><div class="hds-progress-bar" style="width: 65%;"></div></div>
-                <p class="body-sm text-default" style="margin-top: var(--hds-space-4);">Progress with leading-edge pulse</p>
+                <p class="hds-body-sm hds-text-default" style="margin-top: var(--hds-space-4);">Progress with leading-edge pulse</p>
               </div>
               <div style="max-width: 300px;">
                 <div class="hds-progress"><div class="hds-progress-bar hds-progress-bar--complete" style="width: 100%;"></div></div>
-                <p class="body-sm text-default" style="margin-top: var(--hds-space-4);">Complete &mdash; pulse disabled</p>
+                <p class="hds-body-sm hds-text-default" style="margin-top: var(--hds-space-4);">Complete &mdash; pulse disabled</p>
               </div>
             </div>
           </div>
           <h3 class="style-guide-section-name">Component Entrances</h3>
           <div>
             <div class="hds-stack hds-stack--lg">
-              <p class="body-sm text-default">Modal uses a two-stage entrance: backdrop fades (200ms), then the modal scales in with spring easing (300ms).</p>
+              <p class="hds-body-sm hds-text-default">Modal uses a two-stage entrance: backdrop fades (200ms), then the modal scales in with spring easing (300ms).</p>
               <table class="style-guide-data-table">
                 <thead><tr><th>Element</th><th>Keyframe</th><th>Duration</th><th>Easing</th></tr></thead>
                 <tbody>
@@ -1072,7 +1227,7 @@ function animationContent() {
                     <button class="hds-btn-icon" aria-label="Close" onclick="this.closest('.hds-modal-backdrop').style.display='none'">&times;</button>
                   </div>
                   <div class="hds-modal-body">
-                    <p class="body-sm text-default">Backdrop fades, modal scales in with spring easing.</p>
+                    <p class="hds-body-sm hds-text-default">Backdrop fades, modal scales in with spring easing.</p>
                   </div>
                   <div class="hds-modal-footer">
                     <button class="hds-btn hds-btn--primary" onclick="this.closest('.hds-modal-backdrop').style.display='none'">Close</button>
@@ -1084,7 +1239,7 @@ function animationContent() {
           <h3 class="style-guide-section-name">Stagger Children</h3>
           <div>
             <div class="hds-stack hds-stack--lg">
-              <p class="body-sm text-default">Apply <code>.stagger-children</code> to a container. Supports up to 12 children. Customize pace with <code>--stagger-delay</code> (default: 50ms).</p>
+              <p class="hds-body-sm hds-text-default">Apply <code>.stagger-children</code> to a container. Supports up to 12 children. Customize pace with <code>--stagger-delay</code> (default: 50ms).</p>
               <div class="stagger-children hds-cluster">
                 <span class="hds-badge hds-badge--info">1</span>
                 <span class="hds-badge hds-badge--info">2</span>
@@ -1104,9 +1259,98 @@ function animationContent() {
           <h3 class="style-guide-section-name">Reduced Motion</h3>
           <div>
             <div class="hds-stack hds-stack--lg">
-              <p class="body-sm text-default">A global <code>@media (prefers-reduced-motion: reduce)</code> rule forces all animations to near-zero duration and single iteration. No per-component opt-in needed &mdash; enable &ldquo;Reduce motion&rdquo; in system accessibility settings and all transitions resolve instantly.</p>
+              <p class="hds-body-sm hds-text-default">A global <code>@media (prefers-reduced-motion: reduce)</code> rule forces all animations to near-zero duration and single iteration. No per-component opt-in needed &mdash; enable &ldquo;Reduce motion&rdquo; in system accessibility settings and all transitions resolve instantly.</p>
             </div>
           </div>`,
+  ]);
+}
+
+function utilitiesContent() {
+  const rows = (data) => data.map(([a, b, c]) =>
+    `                <tr><td><code>${a}</code></td><td>${b}</td><td>${c}</td></tr>`
+  ).join('\n');
+
+  const flexRows = rows([
+    ['.hds-flex', 'display', 'flex'],
+    ['.hds-flex-col', 'flex-direction', 'column'],
+    ['.hds-flex-row', 'flex-direction', 'row'],
+    ['.hds-flex-wrap', 'flex-wrap', 'wrap'],
+    ['.hds-items-start', 'align-items', 'flex-start'],
+    ['.hds-items-center', 'align-items', 'center'],
+    ['.hds-items-end', 'align-items', 'flex-end'],
+    ['.hds-items-baseline', 'align-items', 'baseline'],
+    ['.hds-justify-start', 'justify-content', 'flex-start'],
+    ['.hds-justify-center', 'justify-content', 'center'],
+    ['.hds-justify-end', 'justify-content', 'flex-end'],
+    ['.hds-justify-between', 'justify-content', 'space-between'],
+  ]);
+
+  const gapRows = rows([
+    ['.hds-gap-1', 'gap', 'var(--hds-space-8) &mdash; 8px'],
+    ['.hds-gap-2', 'gap', 'var(--hds-space-16) &mdash; 16px'],
+    ['.hds-gap-3', 'gap', 'var(--hds-space-24) &mdash; 24px'],
+    ['.hds-gap-4', 'gap', 'var(--hds-space-32) &mdash; 32px'],
+    ['.hds-gap-5', 'gap', 'var(--hds-space-40) &mdash; 40px'],
+    ['.hds-gap-6', 'gap', 'var(--hds-space-48) &mdash; 48px'],
+  ]);
+
+  const stackClusterRows = rows([
+    ['.hds-stack', 'Vertical rhythm between children', 'var(--hds-space-16) &mdash; 16px'],
+    ['.hds-stack--sm', 'Tight vertical rhythm', 'var(--hds-space-8) &mdash; 8px'],
+    ['.hds-stack--md', 'Medium vertical rhythm', 'var(--hds-space-16) &mdash; 16px'],
+    ['.hds-stack--lg', 'Loose vertical rhythm', 'var(--hds-space-24) &mdash; 24px'],
+    ['.hds-stack--xl', 'Extra-loose vertical rhythm', 'var(--hds-space-32) &mdash; 32px'],
+    ['.hds-cluster', 'Horizontal flex-wrap grouping', 'var(--hds-space-16) &mdash; 16px'],
+  ]);
+
+  const layoutRows = rows([
+    ['.hds-with-sidebar', 'Sidebar + main content layout', 'flex-wrap, sidebar 280px, main 50%+ min'],
+    ['.hds-center', 'Centered max-width container', 'max-inline-size: var(--hds-measure), margin-inline: auto'],
+    ['.hds-cover', 'Full-viewport flex column', 'min-block-size: 100vh, centered child via .hds-cover__centered'],
+    ['.hds-box', 'Padding primitive (default)', 'padding: var(--hds-space-16) &mdash; 16px'],
+    ['.hds-box--sm', 'Padding primitive (small)', 'padding: var(--hds-space-8) &mdash; 8px'],
+    ['.hds-box--lg', 'Padding primitive (large)', 'padding: var(--hds-space-24) &mdash; 24px'],
+    ['.hds-box--xl', 'Padding primitive (extra-large)', 'padding: var(--hds-space-32) &mdash; 32px'],
+  ]);
+
+  const displayRows = rows([
+    ['.hds-block', 'display', 'block'],
+    ['.hds-inline-block', 'display', 'inline-block'],
+    ['.hds-inline', 'display', 'inline'],
+    ['.hds-hidden', 'display', 'none'],
+    ['.hds-visible', 'visibility', 'visible'],
+    ['.hds-invisible', 'visibility', 'hidden'],
+    ['.hds-w-full', 'width', '100%'],
+    ['.hds-h-full', 'height', '100%'],
+    ['.hds-min-h-screen', 'min-height', '100vh'],
+    ['.hds-text-left', 'text-align', 'left'],
+    ['.hds-text-center', 'text-align', 'center'],
+    ['.hds-text-right', 'text-align', 'right'],
+    ['.hds-sr-only', 'Visually hidden, accessible to screen readers', 'position: absolute, clip, 1px &times; 1px'],
+    ['.hds-sr-only-focusable', 'Visible on focus (skip links)', 'Overrides sr-only on :focus/:focus-within'],
+  ]);
+
+  const utilityTable = (heading, headerRow, bodyRows) =>
+    section(heading,
+      `          <table class="style-guide-data-table">
+            <thead>
+              <tr>
+                <th>${headerRow[0]}</th>
+                <th>${headerRow[1]}</th>
+                <th>${headerRow[2]}</th>
+              </tr>
+            </thead>
+            <tbody>
+${bodyRows}
+            </tbody>
+          </table>`);
+
+  return foundationPage('Utilities', 'Single-purpose CSS classes for layout, spacing, display, and accessibility. Apply directly to elements &mdash; no custom CSS needed.', [
+    utilityTable('Flex', ['Class', 'Property', 'Value'], flexRows),
+    utilityTable('Gap', ['Class', 'Property', 'Value'], gapRows),
+    utilityTable('Stack &amp; Cluster', ['Class', 'Description', 'Default'], stackClusterRows),
+    utilityTable('Layout Primitives', ['Class', 'Description', 'Key Props'], layoutRows),
+    utilityTable('Display &amp; Visibility', ['Class', 'Property', 'Value'], displayRows),
   ]);
 }
 
@@ -1195,6 +1439,14 @@ function buttonsContent() {
 <button class="hds-btn hds-btn--primary hds-btn--sm">Label</button>
 <button class="hds-btn hds-btn--primary">Label</button>
 <button class="hds-btn hds-btn--primary hds-btn--lg">Label</button>`
+      ) },
+      { label: 'Icon + Text', content: playground(
+        `          <div class="style-guide-variant-row">
+            <button class="hds-btn hds-btn--primary"><span class="hds-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8.5l3.5 3.5L13 4.5"/></svg></span> Save</button>
+            <button class="hds-btn hds-btn--secondary"><span class="hds-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5Z"/></svg></span> Edit</button>
+            <button class="hds-btn hds-btn--tertiary"><span class="hds-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 2h13l-4.5 5.5V13l-4 2V7.5L1.5 2Z"/></svg></span> Filter</button>
+          </div>`,
+        esc(`<button class="hds-btn hds-btn--primary">\n  <span class="hds-icon"><svg>\u2026</svg></span>\n  Save\n</button>`)
       ) },
       { label: 'Block', content: playground(
         `          <button class="hds-btn hds-btn--primary hds-btn--block">Label</button>`,
@@ -1476,7 +1728,7 @@ function progressContent() {
     anatomy: anatomy(
       `            <div style="width: 200px">
               <div class="hds-progress" data-anatomy="track"><div class="hds-progress-bar" data-anatomy="fill" style="width: 75%"></div></div>
-              <div class="body-sm text-muted" data-anatomy="label" style="margin-top: 4px">75%</div>
+              <div class="hds-body-sm hds-text-muted" data-anatomy="label" style="margin-top: 4px">75%</div>
             </div>`,
       [
         { label: 'Track', target: 'track' },
@@ -1754,7 +2006,7 @@ function spinnerContent() {
       { label: 'Type', content: playground(
         `          <div class="hds-cluster">
             <div class="hds-spinner"></div>
-            <span class="body-sm text-muted">Loading...</span>
+            <span class="hds-body-sm hds-text-muted">Loading...</span>
           </div>`,
         '<div class="hds-spinner"></div>'
       ) },
@@ -1791,7 +2043,7 @@ function fileUploadContent() {
       `            <div class="hds-form-file" data-anatomy="container">
               <input type="file" id="anatomy-file" style="display:none">
               <label class="hds-form-file-trigger" for="anatomy-file" data-anatomy="label">Choose file</label>
-              <span class="body-sm text-muted" data-anatomy="hint" style="margin-left: 8px">No file chosen</span>
+              <span class="hds-body-sm hds-text-muted" data-anatomy="hint" style="margin-left: 8px">No file chosen</span>
             </div>`,
       [
         { label: 'Label', target: 'label' },
@@ -2441,7 +2693,7 @@ function formPatternsContent() {
                 <div class="hds-form-file">
                   <input type="file" id="contact-file">
                   <label class="hds-form-file-trigger" for="contact-file">Choose file</label>
-                  <span class="body-sm text-muted" style="margin-left: 8px">No file chosen</span>
+                  <span class="hds-body-sm hds-text-muted" style="margin-left: 8px">No file chosen</span>
                 </div>
               </div>
               <div class="hds-cluster" style="justify-content: flex-end;">
@@ -2492,7 +2744,7 @@ function formPatternsContent() {
                 <div class="hds-form-file">
                   <input type="file" id="profile-avatar" accept="image/*">
                   <label class="hds-form-file-trigger" for="profile-avatar">Upload photo</label>
-                  <span class="body-sm text-muted" style="margin-left: 8px">No file chosen</span>
+                  <span class="hds-body-sm hds-text-muted" style="margin-left: 8px">No file chosen</span>
                 </div>
               </div>
               <div class="hds-form-group">
@@ -3041,7 +3293,7 @@ function modalContent() {
 </div>`
       ) },
       { label: 'Live Demo', content: `<div class="hds-stack hds-stack--lg">
-              <p class="body-sm text-default">Backdrop fades in, then the modal scales up with spring easing. Click the backdrop or a button to dismiss.</p>
+              <p class="hds-body-sm hds-text-default">Backdrop fades in, then the modal scales up with spring easing. Click the backdrop or a button to dismiss.</p>
               <button class="hds-btn hds-btn--primary" onclick="document.getElementById('modal-live-demo').style.display='flex'">Open Modal</button>
             </div>
             <div id="modal-live-demo" class="hds-modal-backdrop" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
@@ -3051,7 +3303,7 @@ function modalContent() {
                   <button class="hds-btn-icon" aria-label="Close" onclick="document.getElementById('modal-live-demo').style.display='none'">&times;</button>
                 </div>
                 <div class="hds-modal-body">
-                  <p class="body-sm text-default">Are you sure you want to proceed? This action cannot be undone.</p>
+                  <p class="hds-body-sm hds-text-default">Are you sure you want to proceed? This action cannot be undone.</p>
                 </div>
                 <div class="hds-modal-footer">
                   <button class="hds-btn hds-btn--secondary hds-btn--sm" onclick="document.getElementById('modal-live-demo').style.display='none'">Cancel</button>
@@ -3074,6 +3326,7 @@ const contentMap = {
   'layout': () => layoutContent(),
   'breakpoints': () => breakpointsContent(),
   'animation': () => animationContent(),
+  'utilities': () => utilitiesContent(),
   'breadcrumbs': () => breadcrumbsContent(),
   'button': () => buttonsContent(),
   'button-group': () => buttonGroupContent(),

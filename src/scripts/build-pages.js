@@ -313,6 +313,7 @@ const VALIDATION_SCRIPT = `<script>
 const builder = createPageBuilder({
   brandName: 'Heavy Design System',
   pages: PAGES,
+  sidebarControls: '<button class="hds-btn hds-btn--tertiary hds-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>',
   customScripts: VALIDATION_SCRIPT,
 });
 

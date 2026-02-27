@@ -31,24 +31,32 @@ const PAGES = [
   { file: 'spacing.html', id: 'spacing', label: 'Spacing', group: 'Foundations' },
   { file: 'typography.html', id: 'typography', label: 'Typography', group: 'Foundations' },
   // Components (alphabetical)
+  { file: 'badge.html', id: 'badge', label: 'Badge', group: 'Components' },
   { file: 'breadcrumbs.html', id: 'breadcrumbs', label: 'Breadcrumbs', group: 'Components' },
   { file: 'button.html', id: 'button', label: 'Button', group: 'Components' },
   { file: 'button-group.html', id: 'button-group', label: 'Button Group', group: 'Components' },
   { file: 'button-icon.html', id: 'button-icon', label: 'Button Icon', group: 'Components' },
   { file: 'card.html', id: 'card', label: 'Card', group: 'Components' },
+  { file: 'card-footer.html', id: 'card-footer', label: 'Card Footer', group: 'Components' },
+  { file: 'card-header.html', id: 'card-header', label: 'Card Header', group: 'Components' },
   { file: 'chips.html', id: 'chips', label: 'Chips', group: 'Components' },
   { file: 'collapsible.html', id: 'collapsible', label: 'Collapsible', group: 'Components' },
-  { file: 'data-display.html', id: 'data-display', label: 'Data Display', group: 'Components' },
   { file: 'divider.html', id: 'divider', label: 'Divider', group: 'Components' },
-  { file: 'feedback.html', id: 'feedback', label: 'Feedback', group: 'Components' },
+  { file: 'empty-state.html', id: 'empty-state', label: 'Empty State', group: 'Components' },
   { file: 'file-upload.html', id: 'file-upload', label: 'File Upload', group: 'Components' },
   { file: 'icon.html', id: 'icon', label: 'Icon', group: 'Components' },
   { file: 'inputs.html', id: 'inputs', label: 'Inputs', group: 'Components' },
   { file: 'link.html', id: 'link', label: 'Link', group: 'Components' },
+  { file: 'list.html', id: 'list', label: 'List', group: 'Components' },
   { file: 'modal.html', id: 'modal', label: 'Modal', group: 'Components' },
   { file: 'nav-links.html', id: 'nav-links', label: 'Nav Links', group: 'Components' },
+  { file: 'progress.html', id: 'progress', label: 'Progress', group: 'Components' },
   { file: 'search.html', id: 'search', label: 'Search', group: 'Components' },
   { file: 'selects.html', id: 'selects', label: 'Selects', group: 'Components' },
+  { file: 'skeleton.html', id: 'skeleton', label: 'Skeleton', group: 'Components' },
+  { file: 'spinner.html', id: 'spinner', label: 'Spinner', group: 'Components' },
+  { file: 'stat.html', id: 'stat', label: 'Stat', group: 'Components' },
+  { file: 'status-message.html', id: 'status-message', label: 'Status Message', group: 'Components' },
   { file: 'tabs.html', id: 'tabs', label: 'Tabs', group: 'Components' },
   { file: 'toggles.html', id: 'toggles', label: 'Toggles', group: 'Components' },
   // Patterns (alphabetical)
@@ -229,7 +237,7 @@ function readTokens() {
       const tokens = [];
       for (const [variant, token] of Object.entries(variants)) {
         if (variant.startsWith('$')) continue;
-        const tokenName = `hds-${groupKey}-${variant}`;
+        const tokenName = `hds.${groupKey}.${variant}`;
         const cssVar = `--hds-${groupKey}-${variant}`;
         const lightHex = getHex(token);
         const lightRef = getRefName(token);
@@ -310,11 +318,29 @@ const VALIDATION_SCRIPT = `<script>
 })();
 </script>`;
 
+const PLAYGROUND_THEME_SCRIPT = `<script>
+function togglePlaygroundTheme(btn) {
+  var preview = btn.closest('.style-guide-playground-preview');
+  var current = preview.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  preview.setAttribute('data-theme', next);
+  btn.textContent = next === 'dark' ? 'Dark' : 'Light';
+}
+// Initialize all playground toggles to opposite of page theme
+(function() {
+  var pageTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  var label = pageTheme === 'dark' ? 'Dark' : 'Light';
+  document.querySelectorAll('.hds-playground-theme-toggle').forEach(function(btn) {
+    btn.textContent = label;
+  });
+})();
+</script>`;
+
 const builder = createPageBuilder({
   brandName: 'Heavy Design System',
   pages: PAGES,
   sidebarControls: '<button class="hds-btn hds-btn--tertiary hds-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button>',
-  customScripts: VALIDATION_SCRIPT,
+  customScripts: VALIDATION_SCRIPT + PLAYGROUND_THEME_SCRIPT,
 });
 
 const { esc, codeBlock, playground: _playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, typographyTable, baseScaleTable } = builder;
@@ -340,15 +366,38 @@ function highlightHtml(escaped) {
     .replace(/\x05(.*?)\x06/g, '<span class="style-guide-syntax-punct">$1</span>');
 }
 
-// Wrap playground to add hds-specific class + syntax highlighting
+// Wrap playground to add hds-specific class + syntax highlighting + theme toggle
+const THEME_TOGGLE = '<button class="hds-btn hds-btn--tertiary hds-btn--sm hds-playground-theme-toggle" onclick="togglePlaygroundTheme(this)" aria-label="Toggle dark/light">Light</button>';
+
 const playground = (preview, code) => {
   let html = _playground(preview, code);
   html = html.replace('style-guide-playground-code"', 'style-guide-playground-code hds-playground-code"');
   html = html.replace(/<code>([\s\S]*?)<\/code>/, (_, inner) => `<code>${highlightHtml(inner)}</code>`);
+  // Restyle copy button as hds-btn--tertiary --sm
+  html = html.replace('class="style-guide-playground-copy"', 'class="hds-btn hds-btn--tertiary hds-btn--sm style-guide-playground-copy"');
+  // Inject theme toggle into playground preview
+  html = html.replace('style-guide-playground-preview">', `style-guide-playground-preview">\n          ${THEME_TOGGLE}`);
+  return html;
+};
+
+const playgroundWide = (preview, code) => {
+  let html = playground(preview, code);
+  html = html.replace('class="style-guide-playground"', 'class="style-guide-playground style-guide-playground--wide"');
   return html;
 };
 
 // ===== Content Functions =====
+
+function colorSample(hex, groupKey, bgHex) {
+  if (groupKey === 'text') {
+    return `<span style="color: ${hex}; font-size: 14px; font-weight: 500">Lorem ipsum</span>`;
+  }
+  if (groupKey === 'border') {
+    return `<div style="width: 24px; height: 24px; border: 2px solid ${hex}; border-radius: 4px; background: ${bgHex || 'transparent'}"></div>`;
+  }
+  // bg, surface, action, feedback — filled swatch
+  return `<div class="style-guide-token-bar" style="background: ${hex}"></div>`;
+}
 
 function colorsContent(tokens) {
   const colorSections = tokens.colorFamilies.map(f =>
@@ -360,14 +409,30 @@ function colorsContent(tokens) {
     }))))
   ).join('\n');
 
-  const uiColorSections = tokens.uiColorGroups.map(group =>
-    section(group.group, colorTable(group.tokens.map(t => ({
-      tokenName: t.name,
-      copyValue: t.css,
-      sampleColor: t.lightHex,
-      value: `${t.lightRef} / ${t.darkRef}`,
-    }))))
-  ).join('\n');
+  // Resolve bg hex for border sample contrast
+  const darkBgGroup = tokens.uiColorGroups.find(g => g.group === 'Background');
+  const lightBgGroup = darkBgGroup;
+  const darkBgHex = darkBgGroup?.tokens[0]?.darkHex || '#161616';
+  const lightBgHex = lightBgGroup?.tokens[0]?.lightHex || '#f0f0f0';
+
+  const uiColorSections = tokens.uiColorGroups.map(group => {
+    const groupKey = group.group.toLowerCase();
+    const rows = group.tokens.map(t => `          <tr>
+            <td>${colorSample(t.darkHex, groupKey, darkBgHex)}</td>
+            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
+            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.darkRef)}', this)">${esc(t.darkRef)}</span></td>
+            <td>${colorSample(t.lightHex, groupKey, lightBgHex)}</td>
+            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.css)}', this)">${esc(t.name)}</span></td>
+            <td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(t.lightRef)}', this)">${esc(t.lightRef)}</span></td>
+          </tr>`).join('\n');
+    const table = `      <table class="style-guide-data-table style-guide-data-table--visual style-guide-data-table--dual">
+        <thead><tr><th>Sample Dark</th><th>Token</th><th>Value</th><th>Sample Light</th><th>Token</th><th>Value</th></tr></thead>
+        <tbody>
+${rows}
+        </tbody>
+      </table>`;
+    return section(group.group, table);
+  }).join('\n');
 
   return foundationPage('Colors', 'Alias color tokens for light and dark themes, referencing base color primitives.', [
     uiColorSections,
@@ -673,17 +738,17 @@ function breadcrumbsContent() {
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
             <div class="hds-breadcrumbs">
-              <a class="heavy-link" href="#">Home</a>
+              <a class="hds-link" href="#">Home</a>
               <span class="hds-breadcrumbs-separator">/</span>
-              <a class="heavy-link" href="#">Projects</a>
+              <a class="hds-link" href="#">Projects</a>
               <span class="hds-breadcrumbs-separator">/</span>
               <span class="hds-breadcrumbs-current">Design System</span>
             </div>
           </div>`,
         `<nav class="hds-breadcrumbs">
-  <a class="heavy-link" href="#">Home</a>
+  <a class="hds-link" href="#">Home</a>
   <span class="hds-breadcrumbs-separator">/</span>
-  <a class="heavy-link" href="#">Projects</a>
+  <a class="hds-link" href="#">Projects</a>
   <span class="hds-breadcrumbs-separator">/</span>
   <span class="hds-breadcrumbs-current">Design System</span>
 </nav>`
@@ -739,28 +804,69 @@ function buttonsContent() {
 }
 
 function buttonIconContent() {
+  const gearSvg16 = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.8 1.5h2.4l.3 1.9.5.2 1.6-1 1.7 1.7-1 1.6.2.5 1.9.3v2.4l-1.9.3-.2.5 1 1.6-1.7 1.7-1.6-1-.5.2-.3 1.9H6.8l-.3-1.9-.5-.2-1.6 1-1.7-1.7 1-1.6-.2-.5-1.9-.3V6.8l1.9-.3.2-.5-1-1.6 1.7-1.7 1.6 1 .5-.2.3-1.9Z"/><circle cx="8" cy="8" r="2.25"/></svg>';
+  const gearSvg20 = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 1.9h3l.4 2.3.6.3 2-1.3 2.1 2.1-1.3 2 .3.6 2.3.4v3l-2.3.4-.3.6 1.3 2-2.1 2.1-2-1.3-.6.3-.4 2.3h-3l-.4-2.3-.6-.3-2 1.3-2.1-2.1 1.3-2-.3-.6-2.3-.4v-3l2.3-.4.3-.6-1.3-2 2.1-2.1 2 1.3.6-.3.4-2.3Z"/><circle cx="10" cy="10" r="2.75"/></svg>';
+  const gearSvg24 = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.2 2.3h3.6l.5 2.8.7.3 2.4-1.5 2.5 2.5-1.5 2.4.3.7 2.8.5v3.6l-2.8.5-.3.7 1.5 2.4-2.5 2.5-2.4-1.5-.7.3-.5 2.8h-3.6l-.5-2.8-.7-.3-2.4 1.5-2.5-2.5 1.5-2.4-.3-.7-2.8-.5v-3.6l2.8-.5.3-.7-1.5-2.4 2.5-2.5 2.4 1.5.7-.3.5-2.8Z"/><circle cx="12" cy="12" r="3.25"/></svg>';
+  const iconSm = `<span class="hds-icon hds-icon--sm">${gearSvg16}</span>`;
+  const iconMd = `<span class="hds-icon hds-icon--md">${gearSvg20}</span>`;
+  const iconLg = `<span class="hds-icon hds-icon--lg">${gearSvg24}</span>`;
   return componentPage('Button Icon', {
-    description: 'A compact button that communicates its action through an icon alone. Used for common, recognizable actions where a text label would add clutter.',
+    description: 'A compact button that communicates its action through an icon alone. Wraps an HeavyIcon child. Used for common, recognizable actions where a text label would add clutter. Shares the same type variants as Button.',
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="hds-btn-icon" aria-label="Settings">&#9881;</button>
-            <button class="hds-btn-icon" aria-label="Close">&#10005;</button>
-            <button class="hds-btn-icon" aria-label="Menu">&#9776;</button>
+            <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--secondary" aria-label="Settings">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--tertiary" aria-label="Settings">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--danger" aria-label="Settings">${iconMd}</button>
           </div>`,
-        '<button class="hds-btn-icon" aria-label="Settings">&#9881;</button>'
+        `<button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">
+  <span class="hds-icon hds-icon--md"><!-- svg --></span>
+</button>
+<button class="hds-btn-icon hds-btn-icon--secondary">...</button>
+<button class="hds-btn-icon hds-btn-icon--tertiary">...</button>
+<button class="hds-btn-icon hds-btn-icon--danger">...</button>`
+      ) },
+      { label: 'States', content: playground(
+        `          <div class="style-guide-variant-row">
+            <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Default">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary is-hover" aria-label="Hover">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary is-active" aria-label="Active">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary is-focus" aria-label="Focus">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary is-disabled" disabled aria-label="Disabled">${iconMd}</button>
+          </div>`,
+        `<!-- Default -->
+<button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">
+  <span class="hds-icon hds-icon--md"><!-- svg --></span>
+</button>
+<!-- Disabled -->
+<button class="hds-btn-icon hds-btn-icon--primary" disabled aria-label="Settings">
+  <span class="hds-icon hds-icon--md"><!-- svg --></span>
+</button>`
       ) },
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="hds-btn-icon hds-btn-icon--xs" aria-label="Extra small">&#9881;</button>
-            <button class="hds-btn-icon hds-btn-icon--sm" aria-label="Small">&#9881;</button>
-            <button class="hds-btn-icon" aria-label="Medium">&#9881;</button>
-            <button class="hds-btn-icon hds-btn-icon--lg" aria-label="Large">&#9881;</button>
+            <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--xs" aria-label="Extra small">${iconSm}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--sm" aria-label="Small">${iconSm}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Medium">${iconMd}</button>
+            <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--lg" aria-label="Large">${iconLg}</button>
           </div>`,
-        `<button class="hds-btn-icon hds-btn-icon--xs" aria-label="Action">&#9881;</button>
-<button class="hds-btn-icon hds-btn-icon--sm" aria-label="Action">&#9881;</button>
-<button class="hds-btn-icon" aria-label="Action">&#9881;</button>
-<button class="hds-btn-icon hds-btn-icon--lg" aria-label="Action">&#9881;</button>`
+        `<!-- xs + icon sm -->
+<button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--xs">
+  <span class="hds-icon hds-icon--sm"><!-- svg --></span>
+</button>
+<!-- sm + icon sm -->
+<button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--sm">
+  <span class="hds-icon hds-icon--sm"><!-- svg --></span>
+</button>
+<!-- md (default) + icon md -->
+<button class="hds-btn-icon hds-btn-icon--primary">
+  <span class="hds-icon hds-icon--md"><!-- svg --></span>
+</button>
+<!-- lg + icon lg -->
+<button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--lg">
+  <span class="hds-icon hds-icon--lg"><!-- svg --></span>
+</button>`
       ) },
     ],
   });
@@ -792,23 +898,51 @@ function chipsContent() {
   return componentPage('Chips', {
     description: 'Compact elements for filtering content or selecting from a set of options. Chips toggle between active and inactive states, letting users refine what they see.',
     dimensions: [
-      { label: 'States', content: playground(
+      { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
-            <button class="hds-chip hds-chip--active">Active</button>
             <button class="hds-chip">Inactive</button>
+            <button class="hds-chip hds-chip--active">Active</button>
           </div>`,
-        `<button class="hds-chip hds-chip--active">Active</button>
-<button class="hds-chip">Inactive</button>`
+        `<button class="hds-chip">Inactive</button>
+<button class="hds-chip hds-chip--active">Active</button>`
+      ) },
+      { label: 'States (Inactive)', content: playground(
+        `          <div class="style-guide-variant-row">
+            <button class="hds-chip">Default</button>
+            <button class="hds-chip is-hover">Hover</button>
+            <button class="hds-chip is-active">Active</button>
+            <button class="hds-chip is-focus">Focus</button>
+            <button class="hds-chip is-disabled" disabled>Disabled</button>
+          </div>`,
+        `<button class="hds-chip">Default</button>
+<button class="hds-chip">Hover</button>
+<button class="hds-chip">Active</button>
+<button class="hds-chip">Focus</button>
+<button class="hds-chip" disabled>Disabled</button>`
+      ) },
+      { label: 'States (Active)', content: playground(
+        `          <div class="style-guide-variant-row">
+            <button class="hds-chip hds-chip--active">Default</button>
+            <button class="hds-chip hds-chip--active is-hover">Hover</button>
+            <button class="hds-chip hds-chip--active is-active">Active</button>
+            <button class="hds-chip hds-chip--active is-focus">Focus</button>
+            <button class="hds-chip hds-chip--active is-disabled" disabled>Disabled</button>
+          </div>`,
+        `<button class="hds-chip hds-chip--active">Default</button>
+<button class="hds-chip hds-chip--active">Hover</button>
+<button class="hds-chip hds-chip--active">Active</button>
+<button class="hds-chip hds-chip--active">Focus</button>
+<button class="hds-chip hds-chip--active" disabled>Disabled</button>`
       ) },
     ],
   });
 }
 
-function dataDisplayContent() {
-  return componentPage('Data Display', {
-    description: 'A collection of components for presenting read-only data — badges for status labels, stats for key metrics, key-value pairs for metadata, lists for ordered items, and progress bars for completion.',
+function badgeContent() {
+  return componentPage('Badge', {
+    description: 'A small label for status, category, or metadata. Color variants map to semantic meaning — success, warning, danger, and info.',
     dimensions: [
-      { label: 'Badge', content: playground(
+      { label: 'Type', content: playground(
         `          <div class="style-guide-variant-row">
             <span class="hds-badge">Default</span>
             <span class="hds-badge hds-badge--success">Success</span>
@@ -822,24 +956,116 @@ function dataDisplayContent() {
 <span class="hds-badge hds-badge--danger">Danger</span>
 <span class="hds-badge hds-badge--info">Info</span>`
       ) },
-      { label: 'Stat', content: playground(
+    ],
+  });
+}
+
+function listContent() {
+  return componentPage('List', {
+    description: 'A vertical stack of items separated by borders. Items can be plain text or key-value pairs. Use for settings panels, metadata displays, menu options, or any repeating data rows.',
+    dimensions: [
+      { label: 'Type', content: playground(
+        `<div>
+            <div class="hds-list-item">Plain text item</div>
+            <div class="hds-list-item">Another plain item</div>
+            <div class="hds-list-item">Third item</div>
+          </div>
+          <div style="margin-top: var(--hds-space-24)">
+            <div class="hds-list-item"><span class="hds-list-item-key">Version</span><span class="hds-list-item-value">2.4.1</span></div>
+            <div class="hds-list-item"><span class="hds-list-item-key">Status</span><span class="hds-list-item-value">Active</span></div>
+            <div class="hds-list-item"><span class="hds-list-item-key">Last Deploy</span><span class="hds-list-item-value">2 hours ago</span></div>
+          </div>`,
+        `<!-- Plain text -->
+<div class="hds-list-item">Plain text item</div>
+
+<!-- Key-value -->
+<div class="hds-list-item">
+  <span class="hds-list-item-key">Version</span>
+  <span class="hds-list-item-value">2.4.1</span>
+</div>`
+      ) },
+      { label: 'Size', content: playground(
+        `<div>
+            <div class="hds-list-item hds-list-item--sm"><span class="hds-list-item-key">Small</span><span class="hds-list-item-value">Compact</span></div>
+            <div class="hds-list-item hds-list-item--sm"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">High</span></div>
+          </div>
+          <div style="margin-top: var(--hds-space-24)">
+            <div class="hds-list-item"><span class="hds-list-item-key">Medium</span><span class="hds-list-item-value">Default</span></div>
+            <div class="hds-list-item"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">Standard</span></div>
+          </div>
+          <div style="margin-top: var(--hds-space-24)">
+            <div class="hds-list-item hds-list-item--lg"><span class="hds-list-item-key">Large</span><span class="hds-list-item-value">Spacious</span></div>
+            <div class="hds-list-item hds-list-item--lg"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">Low</span></div>
+          </div>`,
+        `<!-- Small -->
+<div class="hds-list-item hds-list-item--sm">...</div>
+
+<!-- Medium (default) -->
+<div class="hds-list-item">...</div>
+
+<!-- Large -->
+<div class="hds-list-item hds-list-item--lg">...</div>`
+      ) },
+      { label: 'States', content: playground(
+        `<div>
+            <div class="hds-list-item">Read-only item (no hover)</div>
+            <div class="hds-list-item">Another read-only item</div>
+          </div>
+          <div style="margin-top: var(--hds-space-24)">
+            <div class="hds-list-item hds-list-item--interactive">Interactive item (hover me)</div>
+            <div class="hds-list-item hds-list-item--interactive">Another interactive item</div>
+            <div class="hds-list-item hds-list-item--interactive is-hover">Hovered state</div>
+          </div>`,
+        `<!-- Read-only (default) -->
+<div class="hds-list-item">Read-only item</div>
+
+<!-- Interactive -->
+<div class="hds-list-item hds-list-item--interactive">Interactive item</div>`
+      ) },
+    ],
+  });
+}
+
+function progressContent() {
+  return componentPage('Progress', {
+    description: 'A horizontal bar that communicates completion or progress toward a goal. The fill width maps directly to a percentage value.',
+    dimensions: [
+      { label: 'Default', content: playground(
+        `          <div style="width: 100%">
+            <div class="hds-stack hds-stack--sm">
+              <div class="hds-progress"><div class="hds-progress-bar" style="width: 75%"></div></div>
+              <div class="hds-progress"><div class="hds-progress-bar" style="width: 45%"></div></div>
+              <div class="hds-progress"><div class="hds-progress-bar" style="width: 90%"></div></div>
+            </div>
+          </div>`,
+        `<div class="hds-progress">
+  <div class="hds-progress-bar" style="width: 75%"></div>
+</div>`
+      ) },
+    ],
+  });
+}
+
+function statContent() {
+  return componentPage('Stat', {
+    description: 'A key metric display with large value, label, and optional delta indicator. Use in dashboard cards or summary headers to highlight important numbers.',
+    dimensions: [
+      { label: 'Default', content: playground(
         `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-grid hds-grid--3">
-                <div class="hds-stat">
-                  <div class="hds-stat-value">1,234</div>
-                  <div class="hds-stat-label">Total Users</div>
-                </div>
-                <div class="hds-stat">
-                  <div class="hds-stat-value">98<span class="hds-stat-unit">%</span></div>
-                  <div class="hds-stat-label">Uptime</div>
-                  <div class="hds-stat-delta hds-stat-delta--positive">+2.3%</div>
-                </div>
-                <div class="hds-stat">
-                  <div class="hds-stat-value">42ms</div>
-                  <div class="hds-stat-label">Response Time</div>
-                  <div class="hds-stat-delta hds-stat-delta--negative">-5ms</div>
-                </div>
+            <div class="hds-grid hds-grid--3">
+              <div class="hds-stat">
+                <div class="hds-stat-value">1,234</div>
+                <div class="hds-stat-label">Total Users</div>
+              </div>
+              <div class="hds-stat">
+                <div class="hds-stat-value">98<span class="hds-stat-unit">%</span></div>
+                <div class="hds-stat-label">Uptime</div>
+                <div class="hds-stat-delta hds-stat-delta--positive">+2.3%</div>
+              </div>
+              <div class="hds-stat">
+                <div class="hds-stat-value">42ms</div>
+                <div class="hds-stat-label">Response Time</div>
+                <div class="hds-stat-delta hds-stat-delta--negative">-5ms</div>
               </div>
             </div>
           </div>`,
@@ -847,47 +1073,6 @@ function dataDisplayContent() {
   <div class="hds-stat-value">98<span class="hds-stat-unit">%</span></div>
   <div class="hds-stat-label">Uptime</div>
   <div class="hds-stat-delta hds-stat-delta--positive">+2.3%</div>
-</div>`
-      ) },
-      { label: 'Key-Value', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div>
-                <div class="hds-kv"><span class="hds-kv-key">Version</span><span class="hds-kv-value">2.4.1</span></div>
-                <div class="hds-kv"><span class="hds-kv-key">Status</span><span class="hds-kv-value">Active</span></div>
-                <div class="hds-kv"><span class="hds-kv-key">Last Deploy</span><span class="hds-kv-value">2 hours ago</span></div>
-              </div>
-            </div>
-          </div>`,
-        `<div class="hds-kv">
-  <span class="hds-kv-key">Version</span>
-  <span class="hds-kv-value">2.4.1</span>
-</div>`
-      ) },
-      { label: 'List', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div>
-                <div class="hds-list-item">First list item</div>
-                <div class="hds-list-item">Second list item</div>
-                <div class="hds-list-item">Third list item</div>
-              </div>
-            </div>
-          </div>`,
-        '<div class="hds-list-item">List item</div>'
-      ) },
-      { label: 'Progress', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-stack hds-stack--sm">
-                <div class="hds-progress"><div class="hds-progress-bar" style="width: 75%"></div></div>
-                <div class="hds-progress"><div class="hds-progress-bar" style="width: 45%"></div></div>
-                <div class="hds-progress"><div class="hds-progress-bar" style="width: 90%"></div></div>
-              </div>
-            </div>
-          </div>`,
-        `<div class="hds-progress">
-  <div class="hds-progress-bar" style="width: 75%"></div>
 </div>`
       ) },
     ],
@@ -925,72 +1110,80 @@ function collapsibleContent() {
 
 function dividerContent() {
   return componentPage('Divider', {
-    description: 'A horizontal rule that separates content into distinct sections. Pair with section headers for labeled divisions.',
+    description: 'A horizontal rule that separates content into distinct sections.',
     dimensions: [
       { label: 'Type', content: playground(
         `          <div class="hds-stack hds-stack--lg">
-            <hr class="divider">
-            <div class="hds-section-header">Section Header</div>
+            <hr class="hds-divider">
           </div>`,
-        `<hr class="divider">
-<div class="hds-section-header">Section Header</div>`
+        `<hr class="hds-divider">`
       ) },
     ],
   });
 }
 
-function feedbackContent() {
-  return componentPage('Feedback', {
-    description: 'Components that communicate system status to the user — status messages for operation results, empty states for zero-data views, and loading indicators for pending operations.',
+function statusMessageContent() {
+  return componentPage('Status Message', {
+    description: 'Inline messages that communicate the result of an operation. Four sentiment variants provide visual context — success, error, warning, and info.',
     dimensions: [
-      { label: 'Status Message', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-stack hds-stack--sm">
-                <div class="hds-status-msg hds-status-msg--success">Operation completed successfully.</div>
-                <div class="hds-status-msg hds-status-msg--error">Something went wrong. Please try again.</div>
-                <div class="hds-status-msg hds-status-msg--warning">Your session will expire in 5 minutes.</div>
-                <div class="hds-status-msg hds-status-msg--info">A new version is available.</div>
-              </div>
-            </div>
+      { label: 'Type', content: playground(
+        `          <div class="hds-stack hds-stack--sm">
+            <div class="hds-status-msg hds-status-msg--success">Operation completed successfully.</div>
+            <div class="hds-status-msg hds-status-msg--error">Something went wrong. Please try again.</div>
+            <div class="hds-status-msg hds-status-msg--warning">Your session will expire in 5 minutes.</div>
+            <div class="hds-status-msg hds-status-msg--info">A new version is available.</div>
           </div>`,
-        `<div class="hds-status-msg hds-status-msg--success">Operation completed successfully.</div>
-<div class="hds-status-msg hds-status-msg--error">Something went wrong. Please try again.</div>`
+        `<div class="hds-status-msg hds-status-msg--success">Message</div>
+<div class="hds-status-msg hds-status-msg--error">Message</div>
+<div class="hds-status-msg hds-status-msg--warning">Message</div>
+<div class="hds-status-msg hds-status-msg--info">Message</div>`
       ) },
-      { label: 'Empty State', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-empty-state">
-                <div class="hds-empty-state-title">No results found</div>
-                <div class="hds-empty-state-description">Try adjusting your search or filters.</div>
-              </div>
-            </div>
+    ],
+  });
+}
+
+function emptyStateContent() {
+  return componentPage('Empty State', {
+    description: 'A placeholder for views with no data. Communicates what the user can expect and optionally suggests an action to populate the view.',
+    dimensions: [
+      { label: 'Type', content: playground(
+        `          <div class="hds-empty-state">
+            <div class="hds-empty-state-title">No results found</div>
+            <div class="hds-empty-state-description">Try adjusting your search or filters.</div>
           </div>`,
         `<div class="hds-empty-state">
   <div class="hds-empty-state-title">No results found</div>
   <div class="hds-empty-state-description">Try adjusting your search or filters.</div>
 </div>`
       ) },
-      { label: 'Spinner', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-cluster">
-                <div class="hds-spinner"></div>
-                <span class="body-sm text-muted">Loading...</span>
-              </div>
-            </div>
+    ],
+  });
+}
+
+function spinnerContent() {
+  return componentPage('Spinner', {
+    description: 'An animated loading indicator for operations with indeterminate duration. Pair with a text label for accessibility.',
+    dimensions: [
+      { label: 'Type', content: playground(
+        `          <div class="hds-cluster">
+            <div class="hds-spinner"></div>
+            <span class="body-sm text-muted">Loading...</span>
           </div>`,
         '<div class="hds-spinner"></div>'
       ) },
-      { label: 'Skeleton', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-stack hds-stack--sm">
-                <div class="hds-skeleton" style="height: 16px; width: 60%"></div>
-                <div class="hds-skeleton" style="height: 16px; width: 80%"></div>
-                <div class="hds-skeleton" style="height: 16px; width: 40%"></div>
-              </div>
-            </div>
+    ],
+  });
+}
+
+function skeletonContent() {
+  return componentPage('Skeleton', {
+    description: 'Placeholder shapes that preview the layout of incoming content. Use during loading to reduce perceived wait time and prevent layout shift.',
+    dimensions: [
+      { label: 'Type', content: playground(
+        `          <div class="hds-stack hds-stack--sm">
+            <div class="hds-skeleton" style="height: 16px; width: 60%"></div>
+            <div class="hds-skeleton" style="height: 16px; width: 80%"></div>
+            <div class="hds-skeleton" style="height: 16px; width: 40%"></div>
           </div>`,
         '<div class="hds-skeleton" style="height: 16px; width: 60%"></div>'
       ) },
@@ -1032,16 +1225,16 @@ function fileUploadContent() {
 
 function iconContent() {
   return componentPage('Icon', {
-    description: 'A sized container for inline SVG icons. Three sizes map directly to base scale tokens: 16, 20 (default), and 24.',
+    description: 'A sized container for inline SVG icons. Three explicit size modifiers: sm (16), md (20), and lg (24).',
     dimensions: [
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
             <span class="hds-icon hds-icon--sm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.25"/></svg></span>
-            <span class="hds-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.25"/></svg></span>
+            <span class="hds-icon hds-icon--md"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.25"/></svg></span>
             <span class="hds-icon hds-icon--lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10.25"/></svg></span>
           </div>`,
         `<span class="hds-icon hds-icon--sm"><!-- 16×16 --></span>
-<span class="hds-icon"><!-- 20×20 (default) --></span>
+<span class="hds-icon hds-icon--md"><!-- 20×20 --></span>
 <span class="hds-icon hds-icon--lg"><!-- 24×24 --></span>`
       ) },
     ],
@@ -1385,65 +1578,198 @@ function cardContent() {
   return componentPage('Card', {
     description: 'A container that groups related content and actions. Cards create visual hierarchy by separating content into distinct sections with borders or elevation.',
     dimensions: [
-      { label: 'Default', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-card" style="max-width: 360px;">
-                <div class="hds-card-header">
-                  <div class="hds-card-title">Card Title</div>
-                  <div class="hds-card-subtitle">Optional subtitle or description</div>
-                </div>
-                <div class="hds-card-body">
-                  <p>Card body content goes here. This is where the primary information or form fields live.</p>
-                </div>
-                <div class="hds-card-footer">
-                  <div class="hds-cluster">
-                    <button class="hds-btn hds-btn--sm">Cancel</button>
-                    <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
-                  </div>
-                </div>
+      { label: 'Composition', content: playgroundWide(
+        `<div class="hds-stack hds-stack--lg" style="width: 100%;">
+            <div class="hds-card">
+              <div class="hds-card-body">
+                <div class="hds-card-title">Body Only</div>
+                <div class="hds-card-subtitle">Simplest form — just content</div>
+              </div>
+            </div>
+            <div class="hds-card">
+              <div class="hds-card-header">
+                <div class="hds-card-title">With Header</div>
+                <div class="hds-card-subtitle">Title separated from body</div>
+              </div>
+              <div class="hds-card-body">
+                <p>Body content below the header.</p>
+              </div>
+            </div>
+            <div class="hds-card">
+              <div class="hds-card-body">
+                <p>Body content above the footer.</p>
+              </div>
+              <div class="hds-card-footer">
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Confirm</button>
+              </div>
+            </div>
+            <div class="hds-card">
+              <div class="hds-card-header">
+                <div class="hds-card-title">Header + Footer</div>
+                <div class="hds-card-subtitle">Full composition</div>
+              </div>
+              <div class="hds-card-body">
+                <p>Body content between header and footer.</p>
+              </div>
+              <div class="hds-card-footer">
+                <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
               </div>
             </div>
           </div>`,
-        `<div class="hds-card">
-  <div class="hds-card-header">
-    <div class="hds-card-title">Card Title</div>
-    <div class="hds-card-subtitle">Optional subtitle</div>
-  </div>
-  <div class="hds-card-body">
-    <p>Card body content</p>
-  </div>
-  <div class="hds-card-footer">
-    <button class="hds-btn hds-btn--sm">Cancel</button>
-    <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
-  </div>
+        `<!-- Body only -->
+<div class="hds-card">
+  <div class="hds-card-body">...</div>
+</div>
+
+<!-- Header + body -->
+<div class="hds-card">
+  <div class="hds-card-header">...</div>
+  <div class="hds-card-body">...</div>
+</div>
+
+<!-- Body + footer -->
+<div class="hds-card">
+  <div class="hds-card-body">...</div>
+  <div class="hds-card-footer">...</div>
+</div>
+
+<!-- Header + body + footer -->
+<div class="hds-card">
+  <div class="hds-card-header">...</div>
+  <div class="hds-card-body">...</div>
+  <div class="hds-card-footer">...</div>
 </div>`
       ) },
-      { label: 'Elevated', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-card hds-card--elevated" style="max-width: 360px;">
-                <div class="hds-card-body">
-                  <div class="hds-card-title">Elevated Card</div>
-                  <div class="hds-card-subtitle">Uses a shadow instead of a border for visual separation.</div>
-                </div>
+      { label: 'States', content: playgroundWide(
+        `<div class="hds-stack hds-stack--lg" style="width: 100%;">
+            <div class="hds-card hds-card--interactive">
+              <div class="hds-card-body">
+                <div class="hds-card-title">Interactive</div>
+                <div class="hds-card-subtitle">Default state</div>
+              </div>
+            </div>
+            <div class="hds-card hds-card--interactive is-hover">
+              <div class="hds-card-body">
+                <div class="hds-card-title">Interactive (Hover)</div>
+                <div class="hds-card-subtitle">Background change on hover</div>
+              </div>
+            </div>
+            <div class="hds-card hds-card--interactive is-active">
+              <div class="hds-card-body">
+                <div class="hds-card-title">Interactive (Active)</div>
+                <div class="hds-card-subtitle">Background change on press</div>
               </div>
             </div>
           </div>`,
-        '<div class="hds-card hds-card--elevated">...</div>'
+        `<div class="hds-card hds-card--interactive">...</div>`
       ) },
-      { label: 'Interactive', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div class="hds-card hds-card--interactive" style="max-width: 360px;">
-                <div class="hds-card-body">
-                  <div class="hds-card-title">Clickable Card</div>
-                  <div class="hds-card-subtitle">Hover to see the lift effect. Use for items that navigate to a detail view.</div>
-                </div>
+    ],
+  });
+}
+
+function cardHeaderContent() {
+  return componentPage('Card Header', {
+    description: 'The top section of a card containing a title and optional subtitle. Separated from the body by a bottom border.',
+    dimensions: [
+      { label: 'Default', content: playgroundWide(
+        `<div class="hds-card" style="width: 100%;">
+              <div class="hds-card-header">
+                <div class="hds-card-title">Card Title</div>
+              </div>
+              <div class="hds-card-body"><p>Body content</p></div>
+            </div>`,
+        `<div class="hds-card-header">
+  <div class="hds-card-title">Card Title</div>
+</div>`
+      ) },
+      { label: 'Content Variations', content: playgroundWide(
+        `<div class="hds-stack hds-stack--lg" style="width: 100%;">
+            <div class="hds-card">
+              <div class="hds-card-header">
+                <div class="hds-card-title">Title Only</div>
+              </div>
+              <div class="hds-card-body"><p>Body content</p></div>
+            </div>
+            <div class="hds-card">
+              <div class="hds-card-header">
+                <div class="hds-card-title">Title with Subtitle</div>
+                <div class="hds-card-subtitle">Supporting text that adds context</div>
+              </div>
+              <div class="hds-card-body"><p>Body content</p></div>
+            </div>
+          </div>`,
+        `<!-- Title only -->
+<div class="hds-card-header">
+  <div class="hds-card-title">Title</div>
+</div>
+
+<!-- Title + subtitle -->
+<div class="hds-card-header">
+  <div class="hds-card-title">Title</div>
+  <div class="hds-card-subtitle">Subtitle</div>
+</div>`
+      ) },
+    ],
+  });
+}
+
+function cardFooterContent() {
+  return componentPage('Card Footer', {
+    description: 'The bottom section of a card for actions. Buttons are right-aligned by default. Separated from the body by a top border.',
+    dimensions: [
+      { label: 'Default', content: playgroundWide(
+        `<div class="hds-card" style="width: 100%;">
+              <div class="hds-card-body"><p>Body content</p></div>
+              <div class="hds-card-footer">
+                <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
+              </div>
+            </div>`,
+        `<div class="hds-card-footer">
+  <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+  <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
+</div>`
+      ) },
+      { label: 'Content Variations', content: playgroundWide(
+        `<div class="hds-stack hds-stack--lg" style="width: 100%;">
+            <div class="hds-card">
+              <div class="hds-card-body"><p>Single action</p></div>
+              <div class="hds-card-footer">
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Confirm</button>
+              </div>
+            </div>
+            <div class="hds-card">
+              <div class="hds-card-body"><p>Confirm and cancel</p></div>
+              <div class="hds-card-footer">
+                <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+                <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
+              </div>
+            </div>
+            <div class="hds-card">
+              <div class="hds-card-body"><p>Destructive action</p></div>
+              <div class="hds-card-footer">
+                <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+                <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
               </div>
             </div>
           </div>`,
-        '<div class="hds-card hds-card--interactive">...</div>'
+        `<!-- Single action -->
+<div class="hds-card-footer">
+  <button class="hds-btn hds-btn--primary hds-btn--sm">Confirm</button>
+</div>
+
+<!-- Confirm + cancel -->
+<div class="hds-card-footer">
+  <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+  <button class="hds-btn hds-btn--primary hds-btn--sm">Save</button>
+</div>
+
+<!-- Destructive -->
+<div class="hds-card-footer">
+  <button class="hds-btn hds-btn--secondary hds-btn--sm">Cancel</button>
+  <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
+</div>`
       ) },
     ],
   });
@@ -1473,26 +1799,22 @@ function modalContent() {
     description: 'A dialog overlay that focuses the user\'s attention on a specific task or decision. Modals appear on top of a dimmed backdrop and block interaction with the underlying page until dismissed.',
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div>
-            <div class="hds-stack hds-stack--lg">
-              <div style="position: relative; height: 320px; background: var(--ui-bg-default); border-radius: var(--hds-radius-md); overflow: hidden;">
-                <div class="hds-modal-backdrop" style="position: absolute;">
-                  <div class="hds-modal" style="max-width: 360px;">
-                    <div class="hds-modal-header">
-                      <div class="hds-modal-title">Confirm Action</div>
-                    </div>
-                    <div class="hds-modal-body">
-                      <p>Are you sure you want to proceed? This action cannot be undone.</p>
-                    </div>
-                    <div class="hds-modal-footer">
-                      <button class="hds-btn hds-btn--sm">Cancel</button>
-                      <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
-                    </div>
+        `<div style="position: relative; height: 320px; width: 100%; background: var(--hds-bg-default); border-radius: var(--hds-radius-md); overflow: hidden;">
+              <div class="hds-modal-backdrop" style="position: absolute;">
+                <div class="hds-modal" style="max-width: 360px;">
+                  <div class="hds-modal-header">
+                    <div class="hds-modal-title">Confirm Action</div>
+                  </div>
+                  <div class="hds-modal-body">
+                    <p>Are you sure you want to proceed? This action cannot be undone.</p>
+                  </div>
+                  <div class="hds-modal-footer">
+                    <button class="hds-btn hds-btn--sm">Cancel</button>
+                    <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>`,
+            </div>`,
         `<div class="hds-modal-backdrop">
   <div class="hds-modal">
     <div class="hds-modal-header">
@@ -1528,19 +1850,27 @@ const contentMap = {
   'button-group': () => buttonGroupContent(),
   'button-icon': () => buttonIconContent(),
   'card': () => cardContent(),
+  'card-footer': () => cardFooterContent(),
+  'card-header': () => cardHeaderContent(),
   'chips': () => chipsContent(),
   'collapsible': () => collapsibleContent(),
-  'data-display': () => dataDisplayContent(),
+  'badge': () => badgeContent(),
   'divider': () => dividerContent(),
-  'feedback': () => feedbackContent(),
+  'status-message': () => statusMessageContent(),
+  'empty-state': () => emptyStateContent(),
+  'spinner': () => spinnerContent(),
+  'skeleton': () => skeletonContent(),
   'file-upload': () => fileUploadContent(),
   'icon': () => iconContent(),
   'inputs': () => inputsContent(),
   'link': () => linkContent(),
+  'list': () => listContent(),
   'modal': () => modalContent(),
   'nav-links': () => navLinksContent(),
+  'progress': () => progressContent(),
   'search': () => searchContent(),
   'selects': () => selectsContent(),
+  'stat': () => statContent(),
   'tabs': () => tabsContent(),
   'toggles': () => togglesContent(),
   'form-validation': () => formValidationContent(),
@@ -1570,7 +1900,7 @@ function main() {
   }
 
   // Clean stale pages from previous structure
-  const stalePages = ['animation.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html'];
+  const stalePages = ['animation.html', 'data-display.html', 'stats.html', 'files.html', 'tokens.html', 'base.html', 'alias.html', 'forms.html', 'navigation.html', 'foundations.html', 'components.html', 'buttons.html', 'feedback.html', 'key-value.html'];
   for (const stale of stalePages) {
     const stalePath = path.join(DIST_DIR, stale);
     if (fs.existsSync(stalePath)) {

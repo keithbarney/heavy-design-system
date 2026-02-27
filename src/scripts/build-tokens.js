@@ -15,7 +15,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SHARED_TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/tokens');
+const SHARED_TOKENS_DIR = path.resolve(process.env.HOME, 'Projects/design/tokens');
 const BASE_TOKENS_DIR = path.join(SHARED_TOKENS_DIR, 'base');
 const ALIAS_TOKENS_DIR = path.join(SHARED_TOKENS_DIR, 'alias');
 const DIST_DIR = path.resolve(__dirname, '../../dist');
@@ -263,8 +263,8 @@ function main() {
     }
 
     // Read token files
-    const lightTokens = readTokenFile(ALIAS_TOKENS_DIR, 'ui.light.tokens.json') || {};
-    const darkTokens = readTokenFile(ALIAS_TOKENS_DIR, 'ui.dark.tokens.json') || {};
+    const lightTokens = readTokenFile(ALIAS_TOKENS_DIR, 'light.tokens.json') || {};
+    const darkTokens = readTokenFile(ALIAS_TOKENS_DIR, 'dark.tokens.json') || {};
 
     // Read project overrides if specified
     let overrides = null;

@@ -33,16 +33,15 @@
 
   /* Typography */
   --font-secondary: 'JetBrains Mono', ui-monospace, monospace;
-  --font-size-xs: 10px;
-  --font-size-sm: 11px;
   --font-size-base: 12px;
+  --font-size-sm: 11px;
+  --font-size-xs: 10px;
 
   /* Spacing */
-  --space-xs: 4px;
-  --space-sm: 6px;
-  --space-md: 8px;
-  --space-lg: 12px;
-  --space-xl: 16px;
+  --space-16: 16px;
+  --space-12: 12px;
+  --space-8: 8px;
+  --space-4: 4px;
 
   /* Sizing */
   --control-height: 32px;
@@ -50,4 +49,32 @@
 
   /* Motion */
   --transition: 100ms ease;
+}
+
+/* ================================================================
+   LIGHT MODE
+   ================================================================ */
+
+body.light-mode {
+  --color-bg: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-border: #D4D4D4;
+  --color-border-focus: #727272;
+
+  --color-text: #333333;
+  --color-text-strong: #141414;
+  --color-text-muted: #727272;
+  --color-text-disabled: rgba(51, 51, 51, 0.2);
+  --color-text-placeholder: rgba(51, 51, 51, 0.4);
+
+  --color-accent: #333333;
+  --color-btn-bg: rgba(0, 0, 0, 0.06);
+  --color-btn-bg-hover: rgba(0, 0, 0, 0.10);
+  --color-btn-bg-disabled: rgba(0, 0, 0, 0.03);
+  --color-btn-primary: #141414;
+
+  --color-success: #05a155;
+  --color-danger: #e5534b;
+  --color-danger-bg: rgba(229, 83, 75, 0.10);
+  --color-danger-bg-hover: rgba(229, 83, 75, 0.18);
 }

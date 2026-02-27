@@ -4,6 +4,42 @@
    layer on top of the heavy-style-guide framework.
    =========================================== */
 
+/* --- Bridge Tokens ---
+   Maps old unprefixed names used by style-guide.css
+   to the renamed --hds-* tokens in main.css. */
+
+:root {
+  --space-2: var(--hds-space-2);
+  --space-4: var(--hds-space-4);
+  --space-8: var(--hds-space-8);
+  --space-12: var(--hds-space-12);
+  --space-16: var(--hds-space-16);
+  --space-24: var(--hds-space-24);
+  --space-48: var(--hds-space-48);
+  --spacing-xl: var(--hds-spacing-xl);
+  --grid-gutter: var(--hds-grid-gutter);
+  --font-family: var(--hds-font-family);
+  --font-size-body: var(--hds-font-size-body);
+  --font-size-body-sm: var(--hds-font-size-body-sm);
+  --font-size-body-xs: var(--hds-font-size-body-xs);
+  --radius-sm: var(--hds-radius-sm);
+  --radius-md: var(--hds-radius-md);
+  --typography-heading-6-size: var(--hds-typography-heading-6-size);
+  --typography-heading-6-weight: var(--hds-typography-heading-6-weight);
+  --typography-heading-6-line-height: var(--hds-typography-heading-6-line-height);
+  --typography-heading-6-family: var(--base-font-primary);
+  --ui-bg-default: var(--hds-bg-default);
+  --ui-bg-surface: var(--hds-surface-default);
+  --ui-surface-default: var(--hds-surface-default);
+  --ui-text-default: var(--hds-text-default);
+  --ui-text-strong: var(--hds-text-strong);
+  --ui-text-disabled: var(--hds-text-disabled);
+  --ui-border-default: var(--hds-border-default);
+  --ui-border-strong: var(--hds-border-strong);
+  --ui-action-primary: var(--hds-action-primary);
+  --base-color-black-100: #000000;
+}
+
 /* --- Simulated Interactive States --- */
 
 /* Buttons */
@@ -40,7 +76,7 @@
 /* --- Page Intro (Heavy alias) --- */
 
 .page-intro {
-  padding-block: var(--space-40);
+  padding-block: var(--hds-space-40);
 
   @media (min-width: 768px) {
     grid-column: 1 / -1;
@@ -52,8 +88,8 @@
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--grid-gutter);
-  margin-bottom: var(--spacing-3xl);
+  gap: var(--hds-grid-gutter);
+  margin-bottom: var(--hds-spacing-3xl);
 
   @media (min-width: 768px) {
     grid-column: 1 / -1;
@@ -71,7 +107,7 @@
   @media (min-width: 768px) {
     display: grid;
     grid-template-columns: subgrid;
-    row-gap: var(--space-24);
+    row-gap: var(--hds-space-24);
   }
 }
 
@@ -100,7 +136,7 @@
       display: grid;
       grid-template-columns: subgrid;
       align-items: baseline;
-      padding-block: var(--space-8);
+      padding-block: var(--hds-space-8);
       border-bottom: 1px solid var(--ui-border-default);
 
       &:last-child { border-bottom: none; }
@@ -116,7 +152,7 @@
   @media (min-width: 768px) {
     display: grid;
     grid-template-columns: subgrid;
-    row-gap: var(--grid-gutter);
+    row-gap: var(--hds-grid-gutter);
   }
 
   & .sg-color-family { grid-column: span 2; }
@@ -125,11 +161,11 @@
 .sg-color-family {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--hds-space-4);
 }
 
 .sg-color-family-name {
-  font-size: var(--font-size-body-xs);
+  font-size: var(--hds-font-size-body-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--ui-text-default);
@@ -137,13 +173,13 @@
 
 .sg-color-swatches {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--hds-space-4);
 }
 
 .sg-color-swatch {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--hds-radius-sm);
 }
 
 /* --- Type Samples --- */
@@ -151,15 +187,15 @@
 .type-sample {
   display: flex;
   align-items: baseline;
-  gap: var(--space-16);
-  padding: var(--space-8) 0;
+  gap: var(--hds-space-16);
+  padding: var(--hds-space-8) 0;
   border-bottom: 1px solid var(--ui-border-default);
 
   &:last-child { border-bottom: none; }
 }
 
 .sample-label {
-  font-size: var(--font-size-body-xs);
+  font-size: var(--hds-font-size-body-xs);
   color: var(--ui-text-default);
 }
 
@@ -168,19 +204,19 @@
 .spacing-row {
   display: flex;
   align-items: center;
-  gap: var(--space-16);
-  padding: var(--space-4) 0;
+  gap: var(--hds-space-16);
+  padding: var(--hds-space-4) 0;
 }
 
 /* --- Flow Steps --- */
 
 .flow-steps {
-  font-size: var(--font-size-body-sm);
+  font-size: var(--hds-font-size-body-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: var(--hds-space-8);
 
   @media (min-width: 768px) {
     display: grid;
@@ -191,7 +227,7 @@
 .flow-step {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--hds-space-8);
   color: var(--ui-text-strong);
 }
 
@@ -201,17 +237,17 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: var(--radius-full);
+  border-radius: var(--hds-radius-full);
   background: var(--ui-action-primary);
   color: var(--ui-bg-default);
-  font-size: var(--font-size-body-xs);
+  font-size: var(--hds-font-size-body-xs);
   font-weight: 400;
   flex-shrink: 0;
 }
 
 .flow-arrow {
   color: var(--ui-text-disabled);
-  font-size: var(--font-size-body);
+  font-size: var(--hds-font-size-body);
   text-align: center;
 }
 
@@ -219,18 +255,18 @@
 
 .style-guide-demo {
   border: 1px solid var(--ui-border-default);
-  border-radius: var(--radius-md);
-  padding: var(--space-16);
+  border-radius: var(--hds-radius-md);
+  padding: var(--hds-space-16);
   overflow: hidden;
 }
 
-.style-guide-demo + .style-guide-demo { margin-top: var(--space-16); }
+.style-guide-demo + .style-guide-demo { margin-top: var(--hds-space-16); }
 
 .style-guide-demo-box {
   background: var(--ui-action-primary);
-  border-radius: var(--radius-sm);
-  padding: var(--space-8) var(--space-12);
-  font-size: var(--font-size-body-xs);
+  border-radius: var(--hds-radius-sm);
+  padding: var(--hds-space-8) var(--hds-space-12);
+  font-size: var(--hds-font-size-body-xs);
   color: var(--ui-action-primary-text);
   min-height: 32px;
   display: flex;

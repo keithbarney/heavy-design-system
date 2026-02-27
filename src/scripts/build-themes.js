@@ -15,6 +15,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const THEMES_DIR = path.resolve(__dirname, '../themes');
 const DIST_DIR = path.resolve(__dirname, '../../dist');
+const TEMPLATES_THEME = path.resolve(__dirname, '../../../keith-templates/figma-plugin/heavy-theme.css');
 
 function buildTheme(themeName) {
   const themeDir = path.join(THEMES_DIR, themeName);
@@ -44,6 +45,10 @@ function main() {
   const outputPath = path.join(DIST_DIR, 'heavy-theme.css');
   fs.writeFileSync(outputPath, heavyTheme);
   console.log(`✓ Generated: ${path.relative(process.cwd(), outputPath)}`);
+
+  // Auto-distribute to keith-templates (all plugins symlink there)
+  fs.copyFileSync(outputPath, TEMPLATES_THEME);
+  console.log(`✓ Copied to: ${path.relative(process.cwd(), TEMPLATES_THEME)}`);
 }
 
 main();

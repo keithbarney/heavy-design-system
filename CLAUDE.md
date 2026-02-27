@@ -141,29 +141,42 @@ All component pages follow the **style-guide framework's component page principl
 
 Heavy DS extends the base template with additional documentation sections. Use `buttonsContent()` in `build-pages.js` as the reference implementation.
 
-### Sections (in order)
+### Sections (canonical order)
 
-1. **Description** — `<p class="style-guide-description">`. One or two sentences: what it is, what it does.
-2. **When to use** — `<div class="style-guide-guidelines">`. Bulleted scenarios where this component is the right choice.
-3. **When not to use** — Same format. Each bullet names the alternative: "Use X instead."
-4. **Variants / Demo** — One section per dimension. Visual demos with simulated states (`.is-hover`, `.is-active`, `.is-disabled`), followed by a `codeBlock()` per variant showing copyable HTML. Each section isolates one variable.
-5. **Formatting** — Sizes, block, modifiers — whatever applies. Each gets a demo + code block.
-6. **Usage Guidelines** — When to use each variant, hierarchy rules.
-7. **Content** — Label/copy rules: verbs, casing, length, specificity.
-8. **String Length** — Live demos showing how the component handles short and long strings.
-9. **Keyboard** — Table mapping keys to actions. Notes on `aria-disabled` vs `disabled`, `aria-label` requirements.
-10. **Related** — Links to sibling/alternative components with one-line descriptions.
+1. **Description** — Raw text string passed to `componentPage()`. Renders in the page intro `<p>`.
+2. **Anatomy** — Visual breakdown with numbered markers.
+3. **Dimensions** — Array of `{ label, content }`. One section per axis of variation. Each playground isolates one dimension. Common labels: Type, Size, States, Form Group.
+4. **Props** — Property table.
+5. **Guidelines** — Merged `<h4>` sub-sections: When to use, When not to use, Usage, Content, String length. Use `guidelines()` helper for bulleted lists.
+6. **Accessibility** — Keyboard interaction table + ARIA notes.
+7. **Related** — Links to sibling/alternative components.
 
-Not every section is required for every component. Skip sections that don't apply (e.g. String Length for a toggle). But the order is fixed — don't rearrange.
+Not every section is required. Skip sections that don't apply. But the order is fixed — controlled by `componentPage()`.
 
 ### Template engine
 
-All component pages use `componentPage(title, sections)` which renders sections in `COMPONENT_SECTIONS` order. Each content function passes an object with named keys — the template controls the stacking order. To reorder sections across all pages, edit the `COMPONENT_SECTIONS` array.
+All component pages use `componentPage(title, sections)` which renders the canonical section arc. The `dimensions` key is an array of `{ label, content }` — each becomes its own `<section>`. Missing keys are skipped.
+
+```js
+componentPage('Button', {
+  description: 'One sentence purpose.',
+  dimensions: [
+    { label: 'Type', content: playground(...) },
+    { label: 'Size', content: playground(...) },
+  ],
+  guidelines: `<h4>When to use</h4>\n` + guidelines([...]) +
+              `\n<h4>When not to use</h4>\n` + guidelines([...]),
+  accessibility: '...',
+  related: guidelines([...]),
+});
+```
 
 ### Helpers
 
-- `componentPage(title, sections)` — Renders a `<section>` with `<h2>` and named sections in `COMPONENT_SECTIONS` order. Missing keys are skipped.
-- `codeBlock(html)` — Escapes HTML via `esc()`, wraps in `<pre class="style-guide-code">` with a Copy button. Reuse for every code example.
+- `componentPage(title, sections)` — Renders canonical arc: Intro → Anatomy → Dimensions → Props → Guidelines → Accessibility → Related.
+- `playground(previewHtml, code)` — Preview area + copyable code block.
+- `guidelines(items)` — Bulleted list of HTML strings.
+- `codeBlock(html)` — Escaped code in `<pre>` with Copy button.
 - `esc(str)` — Escapes `<`, `>`, `&`, `"` for safe HTML display.
 
 ### CSS classes

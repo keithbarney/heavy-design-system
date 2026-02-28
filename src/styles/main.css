@@ -1653,6 +1653,14 @@ p, .hds-body {
   color: var(--hds-feedback-danger);
 }
 
+.hds-form-group--sm {
+  gap: var(--hds-space-2);
+
+  & .hds-form-label {
+    font-size: var(--hds-font-size-body-xs);
+  }
+}
+
 .hds-form-input {
   height: 36px;
   padding-inline: var(--hds-space-12);
@@ -2259,12 +2267,8 @@ p, .hds-body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
   margin-left: var(--hds-space-4);
   padding: 0;
-  font-size: 14px;
-  line-height: 1;
   color: var(--hds-text-muted);
   background: transparent;
   border: none;
@@ -2302,7 +2306,7 @@ p, .hds-body {
 
   & .hds-chip {
     height: 28px;
-    padding: var(--hds-space-2) var(--hds-space-8);
+    padding: var(--hds-space-2) var(--hds-space-8) var(--hds-space-2) var(--hds-space-8);
     font-size: var(--hds-font-size-body-sm);
     cursor: default;
   }
@@ -2319,14 +2323,8 @@ p, .hds-body {
 
   & .hds-chip {
     height: 22px;
-    padding: var(--hds-space-2) var(--hds-space-4);
+    padding: var(--hds-space-2) var(--hds-space-8) var(--hds-space-2) var(--hds-space-8);
     font-size: var(--hds-font-size-body-xs);
-  }
-
-  & .hds-chip .hds-chip-remove {
-    width: 14px;
-    height: 14px;
-    font-size: 12px;
   }
 }
 

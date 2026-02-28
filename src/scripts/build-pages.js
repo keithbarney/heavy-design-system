@@ -1574,11 +1574,13 @@ function buttonGroupContent() {
   });
 }
 
+const chipX = '<span class="hds-icon hds-icon--xsm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="11" y1="5" x2="5" y2="11"/><line x1="5" y1="5" x2="11" y2="11"/></svg></span>';
+
 function chipsContent() {
   return componentPage('Chips', {
     description: 'Compact elements for filtering content or selecting from a set of options. Chips toggle between active and inactive states, letting users refine what they see.',
     anatomy: anatomy(
-      `            <button class="hds-chip" data-anatomy="container"><span data-anatomy="label">Label</span><span class="hds-chip-remove" data-anatomy="remove">&times;</span></button>`,
+      `            <button class="hds-chip" data-anatomy="container"><span data-anatomy="label">Label</span><span class="hds-chip-remove" data-anatomy="remove">${chipX}</span></button>`,
       [
         { label: 'Label', target: 'label' },
         { label: 'Remove', target: 'remove' },
@@ -1631,8 +1633,8 @@ function chipInputContent() {
     description: 'A text field that converts typed values into removable chips. Use for multi-value inputs like tags, categories, or domains.',
     anatomy: anatomy(
       `            <div class="hds-chip-input" data-anatomy="container">
-              <span class="hds-chip" data-anatomy="chip">Design<button class="hds-chip-remove" data-anatomy="remove">&times;</button></span>
-              <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+              <span class="hds-chip" data-anatomy="chip">Design<button class="hds-chip-remove" data-anatomy="remove">${chipX}</button></span>
+              <span class="hds-chip">Engineering<button class="hds-chip-remove">${chipX}</button></span>
               <input class="hds-chip-input-field" data-anatomy="field" placeholder="Add value…" />
             </div>`,
       [
@@ -1648,29 +1650,29 @@ function chipInputContent() {
             <div>
               <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Default (md)</p>
               <div class="hds-chip-input">
-                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
-                <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
+                <span class="hds-chip">Engineering<button class="hds-chip-remove">${chipX}</button></span>
                 <input class="hds-chip-input-field" placeholder="Add value…" />
               </div>
             </div>
             <div>
               <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Small (sm)</p>
               <div class="hds-chip-input hds-chip-input--sm">
-                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
-                <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
+                <span class="hds-chip">Engineering<button class="hds-chip-remove">${chipX}</button></span>
                 <input class="hds-chip-input-field" placeholder="Add value…" />
               </div>
             </div>
           </div>`,
         `<!-- Default (md) -->
 <div class="hds-chip-input">
-  <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+  <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
   <input class="hds-chip-input-field" placeholder="Add value…" />
 </div>
 
 <!-- Small -->
 <div class="hds-chip-input hds-chip-input--sm">
-  <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+  <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
   <input class="hds-chip-input-field" placeholder="Add value…" />
 </div>`
       ) },
@@ -1685,23 +1687,23 @@ function chipInputContent() {
             <div>
               <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">With chips</p>
               <div class="hds-chip-input">
-                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
-                <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
-                <span class="hds-chip">Marketing<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
+                <span class="hds-chip">Engineering<button class="hds-chip-remove">${chipX}</button></span>
+                <span class="hds-chip">Marketing<button class="hds-chip-remove">${chipX}</button></span>
                 <input class="hds-chip-input-field" placeholder="Add value…" />
               </div>
             </div>
             <div>
               <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Focused</p>
               <div class="hds-chip-input" style="border-color: var(--hds-forms-input-border-focus);">
-                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
                 <input class="hds-chip-input-field" placeholder="Add value…" />
               </div>
             </div>
             <div>
               <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Disabled</p>
               <div class="hds-chip-input hds-chip-input--disabled">
-                <span class="hds-chip" disabled>Design<button class="hds-chip-remove" disabled>&times;</button></span>
+                <span class="hds-chip" disabled>Design<button class="hds-chip-remove" disabled>${chipX}</button></span>
                 <input class="hds-chip-input-field" placeholder="Add value…" disabled />
               </div>
             </div>
@@ -1713,13 +1715,13 @@ function chipInputContent() {
 
 <!-- With chips -->
 <div class="hds-chip-input">
-  <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+  <span class="hds-chip">Design<button class="hds-chip-remove">${chipX}</button></span>
   <input class="hds-chip-input-field" placeholder="Add value…" />
 </div>
 
 <!-- Disabled -->
 <div class="hds-chip-input hds-chip-input--disabled">
-  <span class="hds-chip" disabled>Design<button class="hds-chip-remove" disabled>&times;</button></span>
+  <span class="hds-chip" disabled>Design<button class="hds-chip-remove" disabled>${chipX}</button></span>
   <input class="hds-chip-input-field" placeholder="Add value…" disabled />
 </div>`
       ) },

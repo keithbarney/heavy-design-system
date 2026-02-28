@@ -41,6 +41,7 @@ const PAGES = [
   { file: 'card-footer.html', id: 'card-footer', label: 'Card Footer', group: 'Components' },
   { file: 'card-header.html', id: 'card-header', label: 'Card Header', group: 'Components' },
   { file: 'chips.html', id: 'chips', label: 'Chips', group: 'Components' },
+  { file: 'chip-input.html', id: 'chip-input', label: 'Chip Input', group: 'Components' },
   { file: 'collapsible.html', id: 'collapsible', label: 'Collapsible', group: 'Components' },
   { file: 'divider.html', id: 'divider', label: 'Divider', group: 'Components' },
   { file: 'empty-state.html', id: 'empty-state', label: 'Empty State', group: 'Components' },
@@ -1267,7 +1268,7 @@ function animationContent() {
 
 function utilitiesContent() {
   const rows = (data) => data.map(([a, b, c]) =>
-    `                <tr><td><code>${a}</code></td><td>${b}</td><td>${c}</td></tr>`
+    `                <tr><td><span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('${esc(a)}', this)">${esc(a)}</span></td><td>${b}</td><td>${c}</td></tr>`
   ).join('\n');
 
   const flexRows = rows([
@@ -1430,12 +1431,14 @@ function buttonsContent() {
       ) },
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
+            <button class="hds-btn hds-btn--primary hds-btn--tiny">Tiny</button>
             <button class="hds-btn hds-btn--primary hds-btn--xs">X-Small</button>
             <button class="hds-btn hds-btn--primary hds-btn--sm">Small</button>
             <button class="hds-btn hds-btn--primary">Medium</button>
             <button class="hds-btn hds-btn--primary hds-btn--lg">Large</button>
           </div>`,
-        `<button class="hds-btn hds-btn--primary hds-btn--xs">Label</button>
+        `<button class="hds-btn hds-btn--primary hds-btn--tiny">Label</button>
+<button class="hds-btn hds-btn--primary hds-btn--xs">Label</button>
 <button class="hds-btn hds-btn--primary hds-btn--sm">Label</button>
 <button class="hds-btn hds-btn--primary">Label</button>
 <button class="hds-btn hds-btn--primary hds-btn--lg">Label</button>`
@@ -1460,6 +1463,7 @@ function buttonIconContent() {
   const gearSvg16 = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.8 1.5h2.4l.3 1.9.5.2 1.6-1 1.7 1.7-1 1.6.2.5 1.9.3v2.4l-1.9.3-.2.5 1 1.6-1.7 1.7-1.6-1-.5.2-.3 1.9H6.8l-.3-1.9-.5-.2-1.6 1-1.7-1.7 1-1.6-.2-.5-1.9-.3V6.8l1.9-.3.2-.5-1-1.6 1.7-1.7 1.6 1 .5-.2.3-1.9Z"/><circle cx="8" cy="8" r="2.25"/></svg>';
   const gearSvg20 = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 1.9h3l.4 2.3.6.3 2-1.3 2.1 2.1-1.3 2 .3.6 2.3.4v3l-2.3.4-.3.6 1.3 2-2.1 2.1-2-1.3-.6.3-.4 2.3h-3l-.4-2.3-.6-.3-2 1.3-2.1-2.1 1.3-2-.3-.6-2.3-.4v-3l2.3-.4.3-.6-1.3-2 2.1-2.1 2 1.3.6-.3.4-2.3Z"/><circle cx="10" cy="10" r="2.75"/></svg>';
   const gearSvg24 = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.2 2.3h3.6l.5 2.8.7.3 2.4-1.5 2.5 2.5-1.5 2.4.3.7 2.8.5v3.6l-2.8.5-.3.7 1.5 2.4-2.5 2.5-2.4-1.5-.7.3-.5 2.8h-3.6l-.5-2.8-.7-.3-2.4 1.5-2.5-2.5 1.5-2.4-.3-.7-2.8-.5v-3.6l2.8-.5.3-.7-1.5-2.4 2.5-2.5 2.4 1.5.7-.3.5-2.8Z"/><circle cx="12" cy="12" r="3.25"/></svg>';
+  const iconXsm = `<span class="hds-icon hds-icon--xsm">${gearSvg16}</span>`;
   const iconSm = `<span class="hds-icon hds-icon--sm">${gearSvg16}</span>`;
   const iconMd = `<span class="hds-icon hds-icon--md">${gearSvg20}</span>`;
   const iconLg = `<span class="hds-icon hds-icon--lg">${gearSvg24}</span>`;
@@ -1506,12 +1510,17 @@ function buttonIconContent() {
       ) },
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
+            <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--tiny" aria-label="Tiny">${iconXsm}</button>
             <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--xs" aria-label="Extra small">${iconSm}</button>
             <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--sm" aria-label="Small">${iconSm}</button>
             <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Medium">${iconMd}</button>
             <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--lg" aria-label="Large">${iconLg}</button>
           </div>`,
-        `<!-- xs + icon sm -->
+        `<!-- tiny + icon xsm -->
+<button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--tiny">
+  <span class="hds-icon hds-icon--xsm"><!-- svg --></span>
+</button>
+<!-- xs + icon sm -->
 <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--xs">
   <span class="hds-icon hds-icon--sm"><!-- svg --></span>
 </button>
@@ -1614,6 +1623,121 @@ function chipsContent() {
 <button class="hds-chip hds-chip--active" disabled>Disabled</button>`
       ) },
     ],
+  });
+}
+
+function chipInputContent() {
+  return componentPage('Chip Input', {
+    description: 'A text field that converts typed values into removable chips. Use for multi-value inputs like tags, categories, or domains.',
+    anatomy: anatomy(
+      `            <div class="hds-chip-input" data-anatomy="container">
+              <span class="hds-chip" data-anatomy="chip">Design<button class="hds-chip-remove" data-anatomy="remove">&times;</button></span>
+              <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+              <input class="hds-chip-input-field" data-anatomy="field" placeholder="Add value…" />
+            </div>`,
+      [
+        { label: 'Chip', target: 'chip' },
+        { label: 'Remove', target: 'remove' },
+        { label: 'Input field', target: 'field' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'Size', content: playground(
+        `          <div style="display: flex; flex-direction: column; gap: var(--hds-space-16); max-width: 360px;">
+            <div>
+              <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Default (md)</p>
+              <div class="hds-chip-input">
+                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+                <input class="hds-chip-input-field" placeholder="Add value…" />
+              </div>
+            </div>
+            <div>
+              <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Small (sm)</p>
+              <div class="hds-chip-input hds-chip-input--sm">
+                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+                <input class="hds-chip-input-field" placeholder="Add value…" />
+              </div>
+            </div>
+          </div>`,
+        `<!-- Default (md) -->
+<div class="hds-chip-input">
+  <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+  <input class="hds-chip-input-field" placeholder="Add value…" />
+</div>
+
+<!-- Small -->
+<div class="hds-chip-input hds-chip-input--sm">
+  <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+  <input class="hds-chip-input-field" placeholder="Add value…" />
+</div>`
+      ) },
+      { label: 'States', content: playground(
+        `          <div style="display: flex; flex-direction: column; gap: var(--hds-space-16); max-width: 360px;">
+            <div>
+              <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Empty</p>
+              <div class="hds-chip-input">
+                <input class="hds-chip-input-field" placeholder="Type and press Enter…" />
+              </div>
+            </div>
+            <div>
+              <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">With chips</p>
+              <div class="hds-chip-input">
+                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Engineering<button class="hds-chip-remove">&times;</button></span>
+                <span class="hds-chip">Marketing<button class="hds-chip-remove">&times;</button></span>
+                <input class="hds-chip-input-field" placeholder="Add value…" />
+              </div>
+            </div>
+            <div>
+              <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Focused</p>
+              <div class="hds-chip-input" style="border-color: var(--hds-forms-input-border-focus);">
+                <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+                <input class="hds-chip-input-field" placeholder="Add value…" />
+              </div>
+            </div>
+            <div>
+              <p class="hds-body-sm hds-text-muted" style="margin-bottom: var(--hds-space-4);">Disabled</p>
+              <div class="hds-chip-input hds-chip-input--disabled">
+                <span class="hds-chip" disabled>Design<button class="hds-chip-remove" disabled>&times;</button></span>
+                <input class="hds-chip-input-field" placeholder="Add value…" disabled />
+              </div>
+            </div>
+          </div>`,
+        `<!-- Empty -->
+<div class="hds-chip-input">
+  <input class="hds-chip-input-field" placeholder="Type and press Enter…" />
+</div>
+
+<!-- With chips -->
+<div class="hds-chip-input">
+  <span class="hds-chip">Design<button class="hds-chip-remove">&times;</button></span>
+  <input class="hds-chip-input-field" placeholder="Add value…" />
+</div>
+
+<!-- Disabled -->
+<div class="hds-chip-input hds-chip-input--disabled">
+  <span class="hds-chip" disabled>Design<button class="hds-chip-remove" disabled>&times;</button></span>
+  <input class="hds-chip-input-field" placeholder="Add value…" disabled />
+</div>`
+      ) },
+    ],
+    guidelines: `<h4>When to use</h4>\n` + guidelines([
+      'Multi-value text inputs — tags, categories, domains, email recipients',
+      'When values are discrete tokens entered one at a time',
+      'When users need to see and remove individual values',
+    ]) + `\n<h4>When not to use</h4>\n` + guidelines([
+      'Single-value inputs — use a standard text input instead',
+      'Predefined option sets — use a multi-select or checkbox group',
+      'Long-form text — use a textarea',
+    ]),
+    related: guidelines([
+      '<a href="chips.html">Chips</a> — standalone filter/toggle chips',
+      '<a href="inputs.html">Inputs</a> — single-value text fields',
+      '<a href="form-group.html">Form Group</a> — label + input wrapper',
+    ]),
   });
 }
 
@@ -3335,6 +3459,7 @@ const contentMap = {
   'card-footer': () => cardFooterContent(),
   'card-header': () => cardHeaderContent(),
   'chips': () => chipsContent(),
+  'chip-input': () => chipInputContent(),
   'collapsible': () => collapsibleContent(),
   'badge': () => badgeContent(),
   'divider': () => dividerContent(),

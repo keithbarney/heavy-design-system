@@ -595,7 +595,7 @@
   --hds-action-tertiary-border-hover: var(--base-color-gray-55);
   --hds-action-tertiary-border-active: var(--base-color-gray-45);
   --hds-action-tertiary-border-disabled: var(--base-color-gray-65);
-  --hds-action-tertiary-text-default: var(--base-color-gray-10);
+  --hds-action-tertiary-text-default: var(--base-color-gray-35);
   --hds-action-tertiary-text-disabled: var(--base-color-gray-55);
   --hds-action-danger-bg-default: var(--base-color-gray-75);
   --hds-action-danger-bg-hover: var(--base-color-gray-75);
@@ -1321,6 +1321,13 @@ p, .hds-body {
   }
 }
 
+.hds-btn--tiny {
+  height: 16px;
+  padding-inline: var(--hds-space-4);
+  font-size: var(--hds-font-size-body-xs);
+  border-radius: var(--hds-radius-xsm);
+}
+
 .hds-btn--xs {
   height: 24px;
   padding-inline: var(--hds-space-4);
@@ -1345,9 +1352,11 @@ p, .hds-body {
 
 /* Icon inside text button — auto-sizes to match */
 .hds-btn .hds-icon { width: 16px; height: 16px; }
+.hds-btn--tiny .hds-icon { width: 12px; height: 12px; }
 .hds-btn--lg .hds-icon { width: 20px; height: 20px; }
 
 .hds-btn-icon .hds-icon { width: 16px; height: 16px; }
+.hds-btn-icon--tiny .hds-icon { width: 10px; height: 10px; }
 .hds-btn-icon--xs .hds-icon { width: 12px; height: 12px; }
 
 .hds-btn-icon {
@@ -1440,6 +1449,12 @@ p, .hds-body {
     border-color: var(--hds-action-tertiary-border-disabled);
     cursor: not-allowed;
   }
+}
+
+.hds-btn-icon--tiny {
+  height: 16px;
+  font-size: var(--hds-font-size-body-xs);
+  border-radius: var(--hds-radius-xsm);
 }
 
 .hds-btn-icon--xs {
@@ -2237,6 +2252,113 @@ p, .hds-body {
     border-color: var(--hds-border-default);
     cursor: not-allowed;
     opacity: 0.5;
+  }
+}
+
+.hds-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: var(--hds-space-4);
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--hds-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--hds-radius-full);
+  cursor: pointer;
+  transition: color var(--hds-duration-fast) var(--hds-ease-out), background-color var(--hds-duration-fast) var(--hds-ease-out);
+
+  &:hover {
+    color: var(--hds-feedback-danger);
+    background: var(--hds-action-danger-bg-default);
+  }
+}
+
+/* --- Chip Input --- */
+
+.hds-chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hds-space-4);
+  min-height: 40px;
+  padding: var(--hds-space-4) var(--hds-space-4);
+  background: var(--hds-forms-input-bg-default);
+  border: 1px solid transparent;
+  border-radius: var(--hds-radius-sm);
+  transition: border-color var(--hds-duration-fast) var(--hds-ease-out);
+
+  &:hover {
+    border-color: var(--hds-forms-input-border-hover);
+  }
+
+  &:focus-within {
+    border-color: var(--hds-forms-input-border-focus);
+  }
+
+  & .hds-chip {
+    height: 28px;
+    padding: var(--hds-space-2) var(--hds-space-8);
+    font-size: var(--hds-font-size-body-sm);
+    cursor: default;
+  }
+
+  & .hds-chip .hds-chip-remove {
+    margin-left: var(--hds-space-4);
+  }
+}
+
+.hds-chip-input--sm {
+  min-height: 28px;
+  padding: var(--hds-space-4) var(--hds-space-4);
+  gap: var(--hds-space-4);
+
+  & .hds-chip {
+    height: 22px;
+    padding: var(--hds-space-2) var(--hds-space-4);
+    font-size: var(--hds-font-size-body-xs);
+  }
+
+  & .hds-chip .hds-chip-remove {
+    width: 14px;
+    height: 14px;
+    font-size: 12px;
+  }
+}
+
+.hds-chip-input-field {
+  flex: 1;
+  min-width: 80px;
+  height: 28px;
+  padding: var(--hds-space-4);
+  font-family: var(--base-font-secondary);
+  font-size: var(--hds-font-size-body-sm);
+  color: var(--hds-forms-input-text-value);
+  background: transparent;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: var(--hds-forms-input-text-default);
+  }
+}
+
+.hds-chip-input--sm .hds-chip-input-field {
+  height: 22px;
+  min-width: 60px;
+  font-size: var(--hds-font-size-body-xs);
+}
+
+.hds-chip-input--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  & .hds-chip-input-field {
+    cursor: not-allowed;
   }
 }
 

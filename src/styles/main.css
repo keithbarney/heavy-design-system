@@ -1242,7 +1242,7 @@ p, .hds-body {
   text-transform: uppercase;
   text-decoration: none;
   color: var(--hds-text-default);
-  background-color: transparent;
+  background-color: var(--hds-bg-surface);
   border: 1px solid transparent;
   border-radius: var(--hds-radius-sm);
   cursor: pointer;
@@ -1262,35 +1262,35 @@ p, .hds-body {
 }
 
 .hds-btn--primary {
-  background: var(--hds-action-primary-bg-default);
+  background-color: var(--hds-action-primary-bg-default);
   color: var(--hds-action-primary-text-default);
 
-  &:hover:not(:disabled) { background: var(--hds-action-primary-bg-hover); }
-  &:active:not(:disabled) { background: var(--hds-action-primary-bg-active); transform: scale(0.97); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-primary-bg-hover); }
+  &:active:not(:disabled) { background-color: var(--hds-action-primary-bg-active); transform: scale(0.97); }
 
   &:disabled {
-    background: var(--hds-action-primary-bg-disabled);
+    background-color: var(--hds-action-primary-bg-disabled);
     color: var(--hds-action-primary-text-disabled);
     cursor: not-allowed;
   }
 }
 
 .hds-btn--secondary {
-  background: transparent;
+  background-color: var(--hds-action-secondary-bg-default);
   color: var(--hds-action-secondary-text-default);
 
-  &:hover:not(:disabled) { background: var(--hds-action-secondary-bg-hover); }
-  &:active:not(:disabled) { background: var(--hds-action-secondary-bg-active); transform: scale(0.97); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-secondary-bg-hover); }
+  &:active:not(:disabled) { background-color: var(--hds-action-secondary-bg-active); transform: scale(0.97); }
 
   &:disabled {
-    background: var(--hds-action-secondary-bg-disabled);
+    background-color: var(--hds-action-secondary-bg-disabled);
     color: var(--hds-action-secondary-text-disabled);
     cursor: not-allowed;
   }
 }
 
 .hds-btn--danger {
-  background: transparent;
+  background-color: transparent;
   color: var(--hds-action-danger-text-default);
   border-color: var(--hds-action-danger-border-default);
 
@@ -1298,7 +1298,6 @@ p, .hds-body {
   &:active:not(:disabled) { border-color: var(--hds-action-danger-border-active); transform: scale(0.97); }
 
   &:disabled {
-    background: transparent;
     color: var(--hds-action-danger-text-disabled);
     border-color: var(--hds-action-danger-border-disabled);
     cursor: not-allowed;
@@ -1306,7 +1305,7 @@ p, .hds-body {
 }
 
 .hds-btn--tertiary {
-  background: var(--hds-action-tertiary-bg-default);
+  background-color: transparent;
   color: var(--hds-action-tertiary-text-default);
   border-color: var(--hds-action-tertiary-border-default);
 
@@ -1314,7 +1313,7 @@ p, .hds-body {
   &:active:not(:disabled) { border-color: var(--hds-action-tertiary-border-active); transform: scale(0.97); }
 
   &:disabled {
-    background: var(--hds-action-tertiary-bg-disabled);
+    background-color: var(--hds-action-tertiary-bg-disabled);
     color: var(--hds-action-tertiary-text-disabled);
     border-color: var(--hds-action-tertiary-border-disabled);
     cursor: not-allowed;
@@ -1371,7 +1370,7 @@ p, .hds-body {
   line-height: 1;
   text-transform: uppercase;
   text-decoration: none;
-  background-color: transparent;
+  background-color: var(--hds-bg-surface);
   border: 1px solid transparent;
   border-radius: var(--hds-radius-sm);
   cursor: pointer;
@@ -1392,35 +1391,35 @@ p, .hds-body {
 }
 
 .hds-btn-icon--primary {
-  background: var(--hds-action-primary-bg-default);
+  background-color: var(--hds-action-primary-bg-default);
   color: var(--hds-action-primary-text-default);
 
-  &:hover:not(:disabled) { background: var(--hds-action-primary-bg-hover); }
-  &:active:not(:disabled) { background: var(--hds-action-primary-bg-active); transform: scale(0.97); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-primary-bg-hover); }
+  &:active:not(:disabled) { background-color: var(--hds-action-primary-bg-active); transform: scale(0.97); }
 
   &:disabled {
-    background: var(--hds-action-primary-bg-disabled);
+    background-color: var(--hds-action-primary-bg-disabled);
     color: var(--hds-action-primary-text-disabled);
     cursor: not-allowed;
   }
 }
 
 .hds-btn-icon--secondary {
-  background: var(--hds-action-secondary-bg-default);
+  background-color: var(--hds-action-secondary-bg-default);
   color: var(--hds-action-secondary-text-default);
 
-  &:hover:not(:disabled) { background: var(--hds-action-secondary-bg-hover); }
-  &:active:not(:disabled) { background: var(--hds-action-secondary-bg-active); transform: scale(0.97); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-secondary-bg-hover); }
+  &:active:not(:disabled) { background-color: var(--hds-action-secondary-bg-active); transform: scale(0.97); }
 
   &:disabled {
-    background: var(--hds-action-secondary-bg-disabled);
+    background-color: var(--hds-action-secondary-bg-disabled);
     color: var(--hds-action-secondary-text-disabled);
     cursor: not-allowed;
   }
 }
 
 .hds-btn-icon--danger {
-  background: transparent;
+  background-color: transparent;
   color: var(--hds-action-danger-text-default);
   border-color: var(--hds-action-danger-border-default);
 
@@ -1428,7 +1427,6 @@ p, .hds-body {
   &:active:not(:disabled) { border-color: var(--hds-action-danger-border-active); transform: scale(0.97); }
 
   &:disabled {
-    background: transparent;
     color: var(--hds-action-danger-text-disabled);
     border-color: var(--hds-action-danger-border-disabled);
     cursor: not-allowed;
@@ -1436,7 +1434,7 @@ p, .hds-body {
 }
 
 .hds-btn-icon--tertiary {
-  background: var(--hds-action-tertiary-bg-default);
+  background-color: transparent;
   color: var(--hds-action-tertiary-text-default);
   border-color: var(--hds-action-tertiary-border-default);
 
@@ -1444,7 +1442,7 @@ p, .hds-body {
   &:active:not(:disabled) { border-color: var(--hds-action-tertiary-border-active); transform: scale(0.97); }
 
   &:disabled {
-    background: var(--hds-action-tertiary-bg-disabled);
+    background-color: var(--hds-action-tertiary-bg-disabled);
     color: var(--hds-action-tertiary-text-disabled);
     border-color: var(--hds-action-tertiary-border-disabled);
     cursor: not-allowed;

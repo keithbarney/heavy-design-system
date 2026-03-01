@@ -368,252 +368,14 @@ const VALIDATION_SCRIPT = `<script>
 })();
 </script>`;
 
-const PLAYGROUND_THEME_SCRIPT = `<script>
-function togglePlaygroundTheme(btn) {
-  var preview = btn.closest('.style-guide-playground-preview');
-  var current = preview.getAttribute('data-theme');
-  var next = current === 'dark' ? 'light' : 'dark';
-  preview.setAttribute('data-theme', next);
-  btn.textContent = next === 'dark' ? 'Dark' : 'Light';
-}
-// Initialize all playground toggles to opposite of page theme
-(function() {
-  var pageTheme = document.documentElement.getAttribute('data-theme') || 'light';
-  var label = pageTheme === 'dark' ? 'Dark' : 'Light';
-  document.querySelectorAll('.hds-playground-theme-toggle').forEach(function(btn) {
-    btn.textContent = label;
-  });
-})();
-</script>`;
 
-const CMD_K_SCRIPT = `<script>
-(function() {
-  // Build page list from sidebar links
-  var pages = [];
-  var currentGroup = '';
-  var sidebar = document.querySelector('.style-guide-sidebar nav');
-  if (!sidebar) return;
-  var children = sidebar.children;
-  for (var i = 0; i < children.length; i++) {
-    var el = children[i];
-    if (el.classList.contains('style-guide-sidebar-label')) {
-      currentGroup = el.textContent.trim();
-    } else if (el.tagName === 'A') {
-      pages.push({ label: el.textContent.trim(), href: el.getAttribute('href'), group: currentGroup, isActive: el.classList.contains('active') });
-    }
-  }
 
-  var backdrop = null;
-
-  function open() {
-    if (backdrop) return;
-    backdrop = document.createElement('div');
-    backdrop.className = 'command-palette-backdrop';
-    backdrop.innerHTML =
-      '<div class="command-palette">' +
-        '<input class="command-palette-input" type="text" placeholder="Jump to page\\u2026" autocomplete="off" spellcheck="false">' +
-        '<div class="command-palette-results"></div>' +
-      '</div>';
-    document.body.appendChild(backdrop);
-
-    var input = backdrop.querySelector('.command-palette-input');
-    var results = backdrop.querySelector('.command-palette-results');
-    var activeIndex = 0;
-
-    function render(query) {
-      var filtered = pages;
-      if (query) {
-        var q = query.toLowerCase();
-        filtered = pages.filter(function(p) { return p.label.toLowerCase().indexOf(q) !== -1; });
-      }
-
-      if (filtered.length === 0) {
-        results.innerHTML = '<div class="command-palette-empty">No results</div>';
-        activeIndex = -1;
-        return;
-      }
-
-      var html = '';
-      var itemIndex = 0;
-      var lastGroup = '';
-      for (var i = 0; i < filtered.length; i++) {
-        var p = filtered[i];
-        if (p.group !== lastGroup) {
-          html += '<div class="command-palette-group">' + p.group + '</div>';
-          lastGroup = p.group;
-        }
-        var cls = 'command-palette-item';
-        if (itemIndex === activeIndex) cls += ' is-active';
-        if (p.isActive) cls += ' is-current';
-        html += '<div class="' + cls + '" data-href="' + p.href + '" data-index="' + itemIndex + '">' + p.label + '</div>';
-        itemIndex++;
-      }
-      results.innerHTML = html;
-    }
-
-    function getItems() { return results.querySelectorAll('.command-palette-item'); }
-
-    function setActive(idx) {
-      var items = getItems();
-      if (items.length === 0) return;
-      if (idx < 0) idx = items.length - 1;
-      if (idx >= items.length) idx = 0;
-      for (var i = 0; i < items.length; i++) items[i].classList.remove('is-active');
-      items[idx].classList.add('is-active');
-      items[idx].scrollIntoView({ block: 'nearest' });
-      activeIndex = idx;
-    }
-
-    function navigate() {
-      var items = getItems();
-      if (items.length === 0 || activeIndex < 0) return;
-      var href = items[activeIndex].getAttribute('data-href');
-      if (href) window.location.href = href;
-    }
-
-    render('');
-    input.focus();
-
-    input.addEventListener('input', function() {
-      activeIndex = 0;
-      render(input.value);
-    });
-
-    input.addEventListener('keydown', function(e) {
-      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(activeIndex + 1); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(activeIndex - 1); }
-      else if (e.key === 'Enter') { e.preventDefault(); navigate(); }
-      else if (e.key === 'Escape') { e.preventDefault(); close(); }
-    });
-
-    results.addEventListener('click', function(e) {
-      var item = e.target.closest('.command-palette-item');
-      if (item) {
-        var href = item.getAttribute('data-href');
-        if (href) window.location.href = href;
-      }
-    });
-
-    backdrop.addEventListener('click', function(e) {
-      if (e.target === backdrop) close();
-    });
-  }
-
-  function close() {
-    if (!backdrop) return;
-    backdrop.remove();
-    backdrop = null;
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      if (backdrop) close(); else open();
-    }
-  });
-
-  // Wire up sidebar shortcut badge
-  var badge = document.querySelector('.command-palette-shortcut');
-  if (badge) badge.addEventListener('click', open);
-})();
-</script>`;
-
-const ANATOMY_SCRIPT = `<script>
-(function() {
-  var BADGE_SIZE = 20;
-  var OUTLINE_PAD = 2;
-  var BADGE_GAP = 26;
-
-  function initAnatomy() {
-    var containers = document.querySelectorAll('.style-guide-anatomy-component');
-    containers.forEach(function(container) {
-      var encoded = container.getAttribute('data-markers');
-      if (!encoded) return;
-      var markerDefs = encoded.split('||').map(function(s) {
-        var el = document.createElement('div');
-        el.innerHTML = '<i ' + s + '></i>';
-        var i = el.firstChild;
-        return {
-          target: i.getAttribute('data-marker-target'),
-          index: parseInt(i.getAttribute('data-marker-index')),
-          primary: i.hasAttribute('data-primary')
-        };
-      });
-
-      var containerRect = container.getBoundingClientRect();
-
-      // Collect all marker data first
-      var markers = [];
-      markerDefs.forEach(function(def) {
-        var targetEl = container.querySelector('[data-anatomy="' + def.target + '"]');
-        if (!targetEl) return;
-        var targetRect = targetEl.getBoundingClientRect();
-        var rect = {
-          top: targetRect.top - containerRect.top,
-          left: targetRect.left - containerRect.left,
-          width: targetRect.width,
-          height: targetRect.height
-        };
-
-        // Create outline
-        var outline = document.createElement('div');
-        outline.className = 'style-guide-anatomy-outline';
-        if (def.primary) outline.setAttribute('data-primary', '');
-        outline.style.top = (rect.top - OUTLINE_PAD) + 'px';
-        outline.style.left = (rect.left - OUTLINE_PAD) + 'px';
-        outline.style.width = (rect.width + OUTLINE_PAD * 2) + 'px';
-        outline.style.height = (rect.height + OUTLINE_PAD * 2) + 'px';
-        container.appendChild(outline);
-
-        markers.push({ def: def, rect: rect, cx: rect.left + rect.width / 2 });
-      });
-
-      // Sort by index for consistent layout
-      markers.sort(function(a, b) { return a.def.index - b.def.index; });
-
-      // Spread badges horizontally, centered above the component
-      var totalWidth = (markers.length - 1) * BADGE_GAP;
-      var componentCx = containerRect.width / 2;
-      var startX = componentCx - totalWidth / 2;
-      var badgeRow = -30;
-
-      // Stack additional rows if more than fits in one row
-      markers.forEach(function(m, i) {
-        var badge = document.createElement('div');
-        badge.className = 'style-guide-anatomy-marker';
-        if (m.def.primary) badge.setAttribute('data-primary', '');
-        badge.textContent = m.def.index;
-
-        var badgeLeft = startX + i * BADGE_GAP - BADGE_SIZE / 2;
-        badge.style.top = badgeRow + 'px';
-        badge.style.left = badgeLeft + 'px';
-
-        // Stem from badge down to outline top
-        var outlineTop = m.rect.top - OUTLINE_PAD;
-        var stemLength = outlineTop - (badgeRow + BADGE_SIZE);
-        if (stemLength > 0) {
-          badge.setAttribute('data-stem', 'down');
-          badge.style.setProperty('--stem-length', stemLength + 'px');
-        }
-
-        container.appendChild(badge);
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAnatomy);
-  } else {
-    initAnatomy();
-  }
-})();
-</script>`;
 
 const builder = createPageBuilder({
   brandName: 'Heavy Design System',
   pages: PAGES,
   sidebarControls: '<div class="hds-btn-group"><button class="hds-btn hds-btn--tertiary hds-btn--sm theme-toggle" id="theme-toggle" aria-label="Toggle theme">Dark</button><button class="hds-btn hds-btn--tertiary hds-btn--sm command-palette-shortcut" title="Quick jump (⌘K)">⌘K</button></div>',
-  customScripts: VALIDATION_SCRIPT + PLAYGROUND_THEME_SCRIPT + CMD_K_SCRIPT + ANATOMY_SCRIPT,
+  customScripts: VALIDATION_SCRIPT,
 });
 
 const { esc, codeBlock, anatomy, playground: _playground, description, guidelines, componentPage, foundationPage, section, wrapPage, colorTable, spacingTable, radiusTable, typographyTable, baseScaleTable } = builder;
@@ -640,7 +402,7 @@ function highlightHtml(escaped) {
 }
 
 // Wrap playground to add hds-specific class + syntax highlighting + theme toggle
-const THEME_TOGGLE = '<button class="hds-btn hds-btn--tertiary hds-btn--sm hds-playground-theme-toggle" onclick="togglePlaygroundTheme(this)" aria-label="Toggle dark/light">Light</button>';
+const THEME_TOGGLE = '<button class="hds-btn hds-btn--tertiary hds-btn--sm style-guide-playground-theme-toggle" onclick="togglePlaygroundTheme(this)" aria-label="Toggle dark/light">Light</button>';
 
 const playground = (preview, code) => {
   let html = _playground(preview, code);
@@ -1596,6 +1358,18 @@ function chipsContent() {
         `<button class="hds-chip">Inactive</button>
 <button class="hds-chip hds-chip--active">Active</button>`
       ) },
+      { label: 'Count', content: playground(
+        `          <div class="style-guide-variant-row">
+            <span class="hds-chip">Design<span class="hds-chip-count">5</span><button class="hds-chip-remove">${chipX}</button></span>
+            <span class="hds-chip">Engineering<span class="hds-chip-count">12</span><button class="hds-chip-remove">${chipX}</button></span>
+            <span class="hds-chip">Marketing<button class="hds-chip-remove">${chipX}</button></span>
+          </div>`,
+        `<span class="hds-chip">
+  Design
+  <span class="hds-chip-count">5</span>
+  <button class="hds-chip-remove">${esc(chipX)}</button>
+</span>`
+      ) },
       { label: 'States (Inactive)', content: playground(
         `          <div class="style-guide-variant-row">
             <button class="hds-chip">Default</button>
@@ -1913,7 +1687,7 @@ function playgroundContent() {
       { label: 'Theme Toggle', content:
         `      <div class="style-guide-playground">
         <div class="style-guide-playground-preview">
-          <div class="hds-playground-theme-toggle">
+          <div class="style-guide-playground-theme-toggle">
             <button class="style-guide-playground-accent active">Dark</button>
             <button class="style-guide-playground-accent">Light</button>
           </div>

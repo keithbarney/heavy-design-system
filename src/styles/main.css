@@ -563,7 +563,7 @@
   --hds-border-default: var(--base-color-gray-65);
   --hds-border-strong: var(--base-color-gray-25);
   --hds-text-default: var(--base-color-gray-35);
-  --hds-text-strong: var(--base-color-gray-10);
+  --hds-text-strong: var(--base-color-gray-20);
   --hds-text-disabled: var(--base-color-gray-55);
   --hds-text-muted: var(--base-color-gray-35);
   --hds-action-primary: var(--base-color-gray-10);
@@ -1242,7 +1242,7 @@ p, .hds-body {
   text-transform: uppercase;
   text-decoration: none;
   color: var(--hds-text-default);
-  background-color: var(--hds-bg-surface);
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: var(--hds-radius-sm);
   cursor: pointer;
@@ -1276,7 +1276,7 @@ p, .hds-body {
 }
 
 .hds-btn--secondary {
-  background: var(--hds-action-secondary-bg-default);
+  background: transparent;
   color: var(--hds-action-secondary-text-default);
 
   &:hover:not(:disabled) { background: var(--hds-action-secondary-bg-hover); }
@@ -1371,7 +1371,7 @@ p, .hds-body {
   line-height: 1;
   text-transform: uppercase;
   text-decoration: none;
-  background-color: var(--hds-bg-surface);
+  background-color: transparent;
   border: 1px solid transparent;
   border-radius: var(--hds-radius-sm);
   cursor: pointer;
@@ -2282,6 +2282,13 @@ p, .hds-body {
   }
 }
 
+.hds-chip-count {
+  font-size: var(--hds-font-size-body-xs);
+  color: var(--hds-text-muted);
+  flex-shrink: 0;
+  margin-left: var(--hds-space-4);
+}
+
 /* --- Chip Input --- */
 
 .hds-chip-input {
@@ -2466,7 +2473,7 @@ p, .hds-body {
 }
 
 .hds-modal-title {
-  font-size: var(--hds-font-size-h5);
+  font-size: var(--hds-font-size-h6);
   font-weight: 600;
   color: var(--hds-text-strong);
 }

@@ -150,106 +150,10 @@
   }
 }
 
-/* --- Playground Theme Toggle --- */
+/* --- Bridge: radius-lg (used by framework command palette) --- */
 
-.hds-playground-theme-toggle {
-  position: absolute;
-  top: var(--space-8, 8px);
-  right: var(--space-8, 8px);
-  z-index: 1;
-}
-
-.style-guide-playground-preview[data-theme] {
-  background-color: var(--hds-bg-default);
-}
-
-/* --- Command Palette (Cmd+K) --- */
-
-.command-palette-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 20vh;
-}
-
-.command-palette {
-  width: 100%;
-  max-width: 480px;
-  background: var(--hds-bg-default);
-  border: 1px solid var(--hds-border-default);
-  border-radius: var(--hds-radius-lg);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-}
-
-.command-palette-input {
-  width: 100%;
-  padding: var(--hds-space-12) var(--hds-space-16);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--hds-border-default);
-  color: var(--hds-text-strong);
-  font-family: var(--hds-font-family);
-  font-size: var(--hds-font-size-body);
-  outline: none;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--hds-text-disabled);
-  }
-}
-
-.command-palette-results {
-  max-height: 320px;
-  overflow-y: auto;
-  padding: var(--hds-space-4) 0;
-}
-
-.command-palette-group {
-  padding: var(--hds-space-8) var(--hds-space-16) var(--hds-space-4);
-  font-size: var(--hds-typography-heading-6-size);
-  font-weight: var(--hds-typography-heading-6-weight);
-  line-height: var(--hds-typography-heading-6-line-height);
-  font-family: var(--base-font-primary);
-  color: var(--hds-text-strong);
-  user-select: none;
-}
-
-.command-palette-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--hds-space-8) var(--hds-space-16);
-  color: var(--hds-text-default);
-  font-size: var(--hds-font-size-body-sm);
-  cursor: pointer;
-  text-decoration: none;
-
-  &.is-active {
-    background: var(--hds-surface-default);
-    color: var(--hds-text-strong);
-  }
-
-  &.is-current::after {
-    content: '•';
-    color: var(--hds-text-disabled);
-    font-size: var(--hds-font-size-body-xs);
-  }
-}
-
-.command-palette-empty {
-  padding: var(--hds-space-24) var(--hds-space-16);
-  text-align: center;
-  color: var(--hds-text-disabled);
-  font-size: var(--hds-font-size-body-sm);
-}
-
-.command-palette-shortcut {
-  font-family: var(--base-font-secondary);
+:root {
+  --radius-lg: var(--hds-radius-lg);
 }
 
 /* --- Page Intro (Heavy alias) --- */

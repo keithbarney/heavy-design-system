@@ -528,15 +528,22 @@ function typographyContent(tokens) {
       { tokenName: 'base-font-secondary', copyValue: '--base-font-secondary', value: '"JetBrains Mono"', sampleStyle: 'font-family: var(--base-font-secondary); font-size: 20px', sampleContent: 'The quick brown fox jumps over the lazy dog' },
     ])),
 
-    ...aliasStyles.map(group =>
-      section(group.title, typographyTable(group.tokens.map(t => ({
+    ...aliasStyles.map(group => {
+      const tokenTable = typographyTable(group.tokens.map(t => ({
         tokenName: t.token,
         copyValue: `--${t.token}`,
         sampleClass: t.token,
         sampleText: t.token.startsWith('hds-typography-body') ? BODY_SAMPLE : 'The quick brown fox',
         subTokens: t.bases.map(b => ({ tokenName: b, copyValue: `--${b}` })),
-      }))))
-    ),
+      })));
+      const classChips = group.tokens.map(t =>
+        `<span class="style-guide-token-copy" role="button" tabindex="0" onclick="copyToken('.${t.token}', this)">.${t.token}</span>`
+      ).join('\n              ');
+      const classTable = `          <div class="style-guide-token-stack" style="display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-24)">
+              ${classChips}
+            </div>`;
+      return section(group.title, tokenTable + classTable);
+    }),
 
     section('Font Sizes', baseScaleTable([
       { name: 'hds-font-size-display', value: '48px' },
@@ -582,65 +589,6 @@ function typographyContent(tokens) {
       sampleContent: 'The quick brown fox jumps over the lazy dog. Design tokens maintain consistency across the system.',
     })))),
 
-    ...(() => {
-      const utilRows = (data) => data.map(([a, b, c]) =>
-        `                <tr><td><code>${a}</code></td><td>${b}</td><td>${c}</td></tr>`
-      ).join('\n');
-      const utilTable = (heading, headerRow, bodyRows) =>
-        section(heading,
-          `          <table class="style-guide-data-table">
-            <thead>
-              <tr>
-                <th>${headerRow[0]}</th>
-                <th>${headerRow[1]}</th>
-                <th>${headerRow[2]}</th>
-              </tr>
-            </thead>
-            <tbody>
-${bodyRows}
-            </tbody>
-          </table>`);
-      return [
-        utilTable('Body Text Classes', ['Class', 'Description', 'Font Size'], utilRows([
-          ['.hds-body', 'Body text', 'var(--hds-font-size-body)'],
-          ['.hds-body-sm', 'Small body text', 'var(--hds-font-size-body-sm)'],
-          ['.hds-body-xsm', 'Extra-small body text', 'var(--hds-font-size-body-xs)'],
-        ])),
-        utilTable('Font Family Classes', ['Class', 'Property', 'Value'], utilRows([
-          ['.hds-font-primary', 'font-family', 'var(--base-font-primary)'],
-          ['.hds-font-secondary', 'font-family', 'var(--base-font-secondary)'],
-          ['.hds-font-sans', 'font-family', 'var(--base-font-primary)'],
-        ])),
-        utilTable('Font Weight Classes', ['Class', 'Property', 'Value'], utilRows([
-          ['.hds-font-thin', 'font-weight', '100'],
-          ['.hds-font-extralight', 'font-weight', '200'],
-          ['.hds-font-light', 'font-weight', '300'],
-          ['.hds-font-normal', 'font-weight', '400'],
-          ['.hds-font-medium', 'font-weight', '500'],
-          ['.hds-font-semibold', 'font-weight', '600'],
-          ['.hds-font-bold', 'font-weight', '700'],
-          ['.hds-font-extrabold', 'font-weight', '800'],
-          ['.hds-font-black', 'font-weight', '900'],
-        ])),
-        utilTable('Text Transform Classes', ['Class', 'Property', 'Value'], utilRows([
-          ['.hds-uppercase', 'text-transform', 'uppercase'],
-          ['.hds-lowercase', 'text-transform', 'lowercase'],
-          ['.hds-capitalize', 'text-transform', 'capitalize'],
-        ])),
-        utilTable('Letter Spacing Classes', ['Class', 'Property', 'Value'], utilRows([
-          ['.hds-tracking-tight', 'letter-spacing', '-0.02em'],
-          ['.hds-tracking-normal', 'letter-spacing', '0'],
-          ['.hds-tracking-wide', 'letter-spacing', '0.05em'],
-          ['.hds-tracking-wider', 'letter-spacing', '0.1em'],
-        ])),
-        utilTable('Line Height Classes', ['Class', 'Property', 'Value'], utilRows([
-          ['.hds-leading-none', 'line-height', '1'],
-          ['.hds-leading-tight', 'line-height', 'var(--hds-line-height-tight)'],
-          ['.hds-leading-normal', 'line-height', 'var(--hds-line-height-base)'],
-          ['.hds-leading-loose', 'line-height', 'var(--hds-line-height-loose)'],
-        ])),
-      ];
-    })(),
   ]);
 }
 
@@ -2963,7 +2911,7 @@ function cardHeaderContent() {
   return componentPage('Card Header', {
     description: 'The top section of a card containing a title and optional subtitle. Separated from the body by a bottom border.',
     anatomy: anatomy(
-      `            <div class="hds-card" style="width: 280px">
+      `            <div class="hds-card">
               <div class="hds-card-header" data-anatomy="container">
                 <div class="hds-card-title" data-anatomy="title">Card Title</div>
                 <div class="hds-card-subtitle" data-anatomy="actions">Supporting text</div>
@@ -2978,7 +2926,7 @@ function cardHeaderContent() {
     ),
     dimensions: [
       { label: 'Default', content: playgroundWide(
-        `<div class="hds-card" style="width: 100%;">
+        `<div class="hds-card">
               <div class="hds-card-header">
                 <div class="hds-card-title">Card Title</div>
               </div>
@@ -2989,7 +2937,7 @@ function cardHeaderContent() {
 </div>`
       ) },
       { label: 'Content Variations', content: playgroundWide(
-        `<div class="hds-stack hds-stack--lg" style="width: 100%;">
+        `<div class="hds-stack hds-stack--lg">
             <div class="hds-card">
               <div class="hds-card-header">
                 <div class="hds-card-title">Title Only</div>

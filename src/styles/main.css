@@ -2417,10 +2417,14 @@ p, .hds-body {
 }
 
 .hds-card-title {
-  font-size: var(--hds-font-size-h6);
-  font-weight: 600;
+  font-family: var(--hds-typography-heading-6-family);
+  font-size: var(--hds-typography-heading-6-size);
+  font-weight: var(--hds-typography-heading-6-weight);
+  line-height: var(--hds-typography-heading-6-line-height);
   color: var(--hds-text-strong);
 }
+
+
 
 .hds-card-subtitle {
   font-size: var(--hds-font-size-body-sm);

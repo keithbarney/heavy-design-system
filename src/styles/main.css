@@ -519,7 +519,7 @@
 
   /* Forms Input Tokens */
   --hds-forms-input-bg-default: var(--hds-bg-inset);
-  --hds-forms-input-text-default: var(--base-color-gray-45);
+  --hds-forms-input-text-default: var(--base-color-gray-30);
   --hds-forms-input-text-value: var(--base-color-gray-65);
   --hds-forms-input-text-disabled: var(--base-color-gray-25);
   --hds-forms-input-icon-default: var(--base-color-gray-35);
@@ -617,7 +617,7 @@
 
   /* Forms Input Tokens */
   --hds-forms-input-bg-default: var(--hds-bg-inset);
-  --hds-forms-input-text-default: var(--base-color-gray-65);
+  --hds-forms-input-text-default: var(--base-color-gray-60);
   --hds-forms-input-text-value: var(--base-color-gray-10);
   --hds-forms-input-text-disabled: var(--base-color-gray-55);
   --hds-forms-input-icon-default: var(--base-color-gray-25);
@@ -694,7 +694,7 @@
   --hds-action-danger-text-default: var(--base-color-red-40);
   --hds-action-danger-text-disabled: var(--base-color-red-25);
   --hds-forms-input-bg-default: var(--hds-bg-inset);
-  --hds-forms-input-text-default: var(--base-color-gray-45);
+  --hds-forms-input-text-default: var(--base-color-gray-30);
   --hds-forms-input-text-value: var(--base-color-gray-65);
   --hds-forms-input-text-disabled: var(--base-color-gray-25);
   --hds-forms-input-icon-default: var(--base-color-gray-35);

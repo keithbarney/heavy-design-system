@@ -1969,6 +1969,7 @@ p, .hds-body {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  gap: var(--hds-space-16);
   padding: var(--hds-padding-sm) var(--hds-padding-md);
   border-bottom: 1px solid var(--hds-border-default);
   font-size: var(--hds-font-size-body-sm);
@@ -1981,7 +1982,10 @@ p, .hds-body {
   cursor: pointer;
   transition: background-color var(--hds-duration-fast) var(--hds-ease-out);
 
-  &:hover { background: var(--hds-surface-default); }
+  &:hover, &.is-hover { background-color: var(--hds-surface-default); }
+  &:focus-visible, &.is-focus { outline: 2px solid var(--hds-action-primary); outline-offset: -2px; }
+  &:active, &.is-active { background-color: var(--hds-action-secondary-bg-default); }
+  &.is-disabled { opacity: 0.4; pointer-events: none; }
 }
 
 .hds-list-item--sm { padding: var(--hds-padding-xs) var(--hds-padding-sm); font-size: var(--hds-font-size-body-xs); }
@@ -2474,11 +2478,6 @@ p, .hds-body {
   margin-bottom: var(--hds-space-16);
 }
 
-.hds-modal-title {
-  font-size: var(--hds-font-size-h6);
-  font-weight: 600;
-  color: var(--hds-text-strong);
-}
 
 .hds-modal-body {
   flex: 1;

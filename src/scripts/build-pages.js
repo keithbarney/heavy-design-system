@@ -51,6 +51,7 @@ const PAGES = [
   { file: 'inputs.html', id: 'inputs', label: 'Inputs', group: 'Components' },
   { file: 'link.html', id: 'link', label: 'Link', group: 'Components' },
   { file: 'list.html', id: 'list', label: 'List', group: 'Components' },
+  { file: 'list-item.html', id: 'list-item', label: 'List Item', group: 'Components' },
   { file: 'modal.html', id: 'modal', label: 'Modal', group: 'Components' },
   { file: 'nav-links.html', id: 'nav-links', label: 'Nav Links', group: 'Components' },
   { file: 'playground.html', id: 'playground', label: 'Playground', group: 'Components' },
@@ -934,7 +935,7 @@ function animationContent() {
               <div id="animation-demo-modal" class="hds-modal-backdrop" style="display:none; position:relative; inset:auto; min-height:200px; border-radius:var(--hds-radius-md);" onclick="if(event.target===this)this.style.display='none'">
                 <div class="hds-modal" style="min-width:200px; max-width:320px;">
                   <div class="hds-modal-header">
-                    <span class="hds-modal-title">Demo Modal</span>
+                    <span class="hds-typography-heading-6 hds-text-strong">Demo Modal</span>
                     <button class="hds-btn-icon" aria-label="Close" onclick="this.closest('.hds-modal-backdrop').style.display='none'">&times;</button>
                   </div>
                   <div class="hds-modal-body">
@@ -1509,37 +1510,41 @@ function listContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `<div>
-            <div class="hds-list-item">Plain text item</div>
-            <div class="hds-list-item">Another plain item</div>
-            <div class="hds-list-item">Third item</div>
-          </div>
-          <div style="margin-top: var(--hds-space-24)">
-            <div class="hds-list-item"><span class="hds-list-item-key">Version</span><span class="hds-list-item-value">2.4.1</span></div>
-            <div class="hds-list-item"><span class="hds-list-item-key">Status</span><span class="hds-list-item-value">Active</span></div>
-            <div class="hds-list-item"><span class="hds-list-item-key">Last Deploy</span><span class="hds-list-item-value">2 hours ago</span></div>
+        `<div class="style-guide-variant-row">
+            <div>
+              <div class="hds-list-item">Plain text item</div>
+              <div class="hds-list-item">Another plain item</div>
+              <div class="hds-list-item">Third item</div>
+            </div>
+            <div>
+              <div class="hds-list-item"><span class="hds-list-item-key">Version</span><span class="hds-list-item-value">2.4.1</span></div>
+              <div class="hds-list-item"><span class="hds-list-item-key">Status</span><span class="hds-list-item-value">Active</span></div>
+              <div class="hds-list-item"><span class="hds-list-item-key">Last Deploy</span><span class="hds-list-item-value">2 hours ago</span></div>
+            </div>
           </div>`,
-        `<!-- Plain text -->
-<div class="hds-list-item">Plain text item</div>
+        `<!-- Default -->
+<div class="hds-list-item">Plain text</div>
 
-<!-- Key-value -->
+<!-- Key-Value -->
 <div class="hds-list-item">
-  <span class="hds-list-item-key">Version</span>
-  <span class="hds-list-item-value">2.4.1</span>
+  <span class="hds-list-item-key">Label</span>
+  <span class="hds-list-item-value">Value</span>
 </div>`
       ) },
       { label: 'Size', content: playground(
-        `<div>
-            <div class="hds-list-item hds-list-item--sm"><span class="hds-list-item-key">Small</span><span class="hds-list-item-value">Compact</span></div>
-            <div class="hds-list-item hds-list-item--sm"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">High</span></div>
-          </div>
-          <div style="margin-top: var(--hds-space-24)">
-            <div class="hds-list-item"><span class="hds-list-item-key">Medium</span><span class="hds-list-item-value">Default</span></div>
-            <div class="hds-list-item"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">Standard</span></div>
-          </div>
-          <div style="margin-top: var(--hds-space-24)">
-            <div class="hds-list-item hds-list-item--lg"><span class="hds-list-item-key">Large</span><span class="hds-list-item-value">Spacious</span></div>
-            <div class="hds-list-item hds-list-item--lg"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">Low</span></div>
+        `<div class="style-guide-variant-row">
+            <div>
+              <div class="hds-list-item hds-list-item--sm"><span class="hds-list-item-key">Small</span><span class="hds-list-item-value">Compact</span></div>
+              <div class="hds-list-item hds-list-item--sm"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">High</span></div>
+            </div>
+            <div>
+              <div class="hds-list-item"><span class="hds-list-item-key">Medium</span><span class="hds-list-item-value">Default</span></div>
+              <div class="hds-list-item"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">Standard</span></div>
+            </div>
+            <div>
+              <div class="hds-list-item hds-list-item--lg"><span class="hds-list-item-key">Large</span><span class="hds-list-item-value">Spacious</span></div>
+              <div class="hds-list-item hds-list-item--lg"><span class="hds-list-item-key">Density</span><span class="hds-list-item-value">Low</span></div>
+            </div>
           </div>`,
         `<!-- Small -->
 <div class="hds-list-item hds-list-item--sm">...</div>
@@ -1551,14 +1556,15 @@ function listContent() {
 <div class="hds-list-item hds-list-item--lg">...</div>`
       ) },
       { label: 'States', content: playground(
-        `<div>
-            <div class="hds-list-item">Read-only item (no hover)</div>
-            <div class="hds-list-item">Another read-only item</div>
-          </div>
-          <div style="margin-top: var(--hds-space-24)">
-            <div class="hds-list-item hds-list-item--interactive">Interactive item (hover me)</div>
-            <div class="hds-list-item hds-list-item--interactive">Another interactive item</div>
-            <div class="hds-list-item hds-list-item--interactive is-hover">Hovered state</div>
+        `<div class="style-guide-variant-row">
+            <div>
+              <div class="hds-list-item">Read-only item</div>
+              <div class="hds-list-item">Another read-only</div>
+            </div>
+            <div>
+              <div class="hds-list-item hds-list-item--interactive">Interactive item</div>
+              <div class="hds-list-item hds-list-item--interactive">Another interactive</div>
+            </div>
           </div>`,
         `<!-- Read-only (default) -->
 <div class="hds-list-item">Read-only item</div>
@@ -1567,6 +1573,80 @@ function listContent() {
 <div class="hds-list-item hds-list-item--interactive">Interactive item</div>`
       ) },
     ],
+  });
+}
+
+function listItemContent() {
+  return componentPage('List Item', {
+    description: 'An individual row within a list. Can render plain text or a key-value pair. Supports three sizes and an interactive variant with hover feedback.',
+    anatomy: anatomy(
+      `            <div class="hds-list-item" data-anatomy="container">
+              <span class="hds-list-item-key" data-anatomy="key">Label</span>
+              <span class="hds-list-item-value" data-anatomy="value">Value</span>
+            </div>`,
+      [
+        { label: 'Key', target: 'key' },
+        { label: 'Value', target: 'value' },
+        { label: 'Container', target: 'container', primary: true },
+      ]
+    ),
+    dimensions: [
+      { label: 'Type', content: playground(
+        `<div class="style-guide-variant-row">
+            <div class="hds-list-item">Default</div>
+            <div class="hds-list-item"><span class="hds-list-item-key">Label</span><span class="hds-list-item-value">Value</span></div>
+          </div>`,
+        `<!-- Default -->
+<div class="hds-list-item">Plain text</div>
+
+<!-- Key-Value -->
+<div class="hds-list-item">
+  <span class="hds-list-item-key">Label</span>
+  <span class="hds-list-item-value">Value</span>
+</div>`
+      ) },
+      { label: 'Size', content: playground(
+        `<div class="style-guide-variant-row">
+            <div class="hds-list-item hds-list-item--sm">Small</div>
+            <div class="hds-list-item">Medium</div>
+            <div class="hds-list-item hds-list-item--lg">Large</div>
+          </div>`,
+        `<!-- Small -->
+<div class="hds-list-item hds-list-item--sm">...</div>
+
+<!-- Medium (default) -->
+<div class="hds-list-item">...</div>
+
+<!-- Large -->
+<div class="hds-list-item hds-list-item--lg">...</div>`
+      ) },
+      { label: 'States', content: playground(
+        `<div class="style-guide-variant-row">
+            <div class="hds-list-item">Read-only</div>
+            <div class="hds-list-item hds-list-item--interactive">Interactive</div>
+          </div>`,
+        `<!-- Read-only (default) -->
+<div class="hds-list-item">Read-only</div>
+
+<!-- Interactive -->
+<div class="hds-list-item hds-list-item--interactive">Interactive</div>`
+      ) },
+    ],
+    guidelines: `<h4>When to use</h4>\n` + guidelines([
+      'Settings panels with label-value pairs',
+      'Metadata displays (version, status, timestamps)',
+      'Menu options that need hover feedback (use <code>--interactive</code>)',
+      'Simple vertical lists of text items',
+    ]) +
+    `\n<h4>When not to use</h4>\n` + guidelines([
+      'Tabular data with multiple columns — use a table instead',
+      'Items that need selection state — use a checkbox or radio list',
+      'Navigation menus — use Nav Links instead',
+    ]),
+    related: guidelines([
+      '<a href="list.html">List</a> — parent container for list items',
+      '<a href="nav-links.html">Nav Links</a> — navigation-specific list pattern',
+    ]),
   });
 }
 
@@ -3086,13 +3166,13 @@ function modalContent() {
               <div class="hds-modal-backdrop" data-anatomy="backdrop" style="position: absolute;">
                 <div class="hds-modal" data-anatomy="container" style="max-width: 280px;">
                   <div class="hds-modal-header" data-anatomy="header">
-                    <div class="hds-modal-title" data-anatomy="title">Confirm</div>
+                    <div class="hds-typography-heading-6 hds-text-strong" data-anatomy="title">Confirm</div>
                   </div>
                   <div class="hds-modal-body" data-anatomy="body">
                     <p>Are you sure?</p>
                   </div>
                   <div class="hds-modal-footer" data-anatomy="footer">
-                    <button class="hds-btn hds-btn--sm">Cancel</button>
+                    <button class="hds-btn hds-btn--tertiary hds-btn--sm">Cancel</button>
                     <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
                   </div>
                 </div>
@@ -3113,13 +3193,13 @@ function modalContent() {
               <div class="hds-modal-backdrop" style="position: absolute;">
                 <div class="hds-modal" style="max-width: 360px;">
                   <div class="hds-modal-header">
-                    <div class="hds-modal-title">Confirm Action</div>
+                    <div class="hds-typography-heading-6 hds-text-strong">Confirm Action</div>
                   </div>
                   <div class="hds-modal-body">
                     <p>Are you sure you want to proceed? This action cannot be undone.</p>
                   </div>
                   <div class="hds-modal-footer">
-                    <button class="hds-btn hds-btn--sm">Cancel</button>
+                    <button class="hds-btn hds-btn--tertiary hds-btn--sm">Cancel</button>
                     <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
                   </div>
                 </div>
@@ -3128,13 +3208,13 @@ function modalContent() {
         `<div class="hds-modal-backdrop">
   <div class="hds-modal">
     <div class="hds-modal-header">
-      <div class="hds-modal-title">Confirm Action</div>
+      <div class="hds-typography-heading-6 hds-text-strong">Confirm Action</div>
     </div>
     <div class="hds-modal-body">
       <p>Are you sure you want to proceed?</p>
     </div>
     <div class="hds-modal-footer">
-      <button class="hds-btn hds-btn--sm">Cancel</button>
+      <button class="hds-btn hds-btn--tertiary hds-btn--sm">Cancel</button>
       <button class="hds-btn hds-btn--danger hds-btn--sm">Delete</button>
     </div>
   </div>
@@ -3142,19 +3222,19 @@ function modalContent() {
       ) },
       { label: 'Live Demo', content: `<div class="hds-stack hds-stack--lg">
               <p class="hds-body-sm hds-text-default">Backdrop fades in, then the modal scales up with spring easing. Click the backdrop or a button to dismiss.</p>
-              <button class="hds-btn hds-btn--primary" onclick="document.getElementById('modal-live-demo').style.display='flex'">Open Modal</button>
+              <button class="hds-btn hds-btn--primary" onclick="var m=document.getElementById('modal-live-demo');document.body.appendChild(m);m.style.display='flex'">Open Modal</button>
             </div>
             <div id="modal-live-demo" class="hds-modal-backdrop" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
               <div class="hds-modal">
                 <div class="hds-modal-header">
-                  <div class="hds-modal-title">Confirm Action</div>
+                  <div class="hds-typography-heading-6 hds-text-strong">Confirm Action</div>
                   <button class="hds-btn-icon" aria-label="Close" onclick="document.getElementById('modal-live-demo').style.display='none'">&times;</button>
                 </div>
                 <div class="hds-modal-body">
                   <p class="hds-body-sm hds-text-default">Are you sure you want to proceed? This action cannot be undone.</p>
                 </div>
                 <div class="hds-modal-footer">
-                  <button class="hds-btn hds-btn--secondary hds-btn--sm" onclick="document.getElementById('modal-live-demo').style.display='none'">Cancel</button>
+                  <button class="hds-btn hds-btn--tertiary hds-btn--sm" onclick="document.getElementById('modal-live-demo').style.display='none'">Cancel</button>
                   <button class="hds-btn hds-btn--danger hds-btn--sm" onclick="document.getElementById('modal-live-demo').style.display='none'">Delete</button>
                 </div>
               </div>
@@ -3197,6 +3277,7 @@ const contentMap = {
   'inputs': () => inputsContent(),
   'link': () => linkContent(),
   'list': () => listContent(),
+  'list-item': () => listItemContent(),
   'modal': () => modalContent(),
   'nav-links': () => navLinksContent(),
   'playground': () => playgroundContent(),

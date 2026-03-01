@@ -146,6 +146,28 @@
   --base-color-amber-90: #020100;
   --base-color-amber-95: #000000;
 
+  /* Base Colors — Gold */
+  --base-color-gold-0: #f8f7f6;
+  --base-color-gold-5: #ece8e3;
+  --base-color-gold-10: #e0d9cf;
+  --base-color-gold-15: #d7cab9;
+  --base-color-gold-20: #cfbba1;
+  --base-color-gold-25: #c8ac88;
+  --base-color-gold-30: #c39e6d;
+  --base-color-gold-35: #ba915a;
+  --base-color-gold-40: #ae834b;
+  --base-color-gold-45: #9a7544;
+  --base-color-gold-50: #87673d;
+  --base-color-gold-55: #745936;
+  --base-color-gold-60: #624c2e;
+  --base-color-gold-65: #513f27;
+  --base-color-gold-70: #413320;
+  --base-color-gold-75: #312719;
+  --base-color-gold-80: #231b12;
+  --base-color-gold-85: #15110b;
+  --base-color-gold-90: #090705;
+  --base-color-gold-95: #000000;
+
   /* Base Colors — Yellow */
   --base-color-yellow-0: #fbf8f1;
   --base-color-yellow-5: #f6f0de;
@@ -475,21 +497,21 @@
   --hds-text-strong: var(--base-color-gray-black);
   --hds-text-disabled: var(--base-color-gray-25);
   --hds-text-muted: var(--base-color-gray-35);
-  --hds-action-primary: var(--base-color-gray-65);
-  --hds-action-primary-hover: var(--base-color-gray-55);
-  --hds-action-primary-active: var(--base-color-gray-75);
-  --hds-action-primary-text: var(--base-color-gray-10);
+  --hds-action-primary: var(--base-color-gold-30);
+  --hds-action-primary-hover: var(--base-color-gold-25);
+  --hds-action-primary-active: var(--base-color-gold-35);
+  --hds-action-primary-text: var(--base-color-gold-75);
   --hds-action-secondary: var(--base-color-gray-10);
   --hds-action-secondary-hover: var(--base-color-gray-15);
   --hds-action-secondary-text: var(--base-color-gray-65);
 
   /* Action Tokens */
-  --hds-action-primary-bg-default: var(--base-color-gray-65);
-  --hds-action-primary-bg-hover: var(--base-color-gray-55);
-  --hds-action-primary-bg-active: var(--base-color-gray-45);
-  --hds-action-primary-bg-disabled: var(--base-color-gray-10);
-  --hds-action-primary-text-default: var(--base-color-gray-10);
-  --hds-action-primary-text-disabled: var(--base-color-gray-25);
+  --hds-action-primary-bg-default: var(--base-color-gold-30);
+  --hds-action-primary-bg-hover: var(--base-color-gold-25);
+  --hds-action-primary-bg-active: var(--base-color-gold-35);
+  --hds-action-primary-bg-disabled: var(--base-color-gold-10);
+  --hds-action-primary-text-default: var(--base-color-gold-75);
+  --hds-action-primary-text-disabled: var(--base-color-gold-45);
   --hds-action-secondary-bg-default: var(--base-color-gray-10);
   --hds-action-secondary-bg-hover: var(--base-color-gray-15);
   --hds-action-secondary-bg-active: var(--base-color-gray-25);
@@ -566,21 +588,21 @@
   --hds-text-strong: var(--base-color-gray-20);
   --hds-text-disabled: var(--base-color-gray-55);
   --hds-text-muted: var(--base-color-gray-35);
-  --hds-action-primary: var(--base-color-gray-10);
-  --hds-action-primary-hover: var(--base-color-gray-25);
-  --hds-action-primary-active: var(--base-color-gray-35);
-  --hds-action-primary-text: var(--base-color-gray-65);
+  --hds-action-primary: var(--base-color-gold-30);
+  --hds-action-primary-hover: var(--base-color-gold-25);
+  --hds-action-primary-active: var(--base-color-gold-35);
+  --hds-action-primary-text: var(--base-color-gold-75);
   --hds-action-secondary: var(--base-color-gray-65);
   --hds-action-secondary-hover: var(--base-color-gray-55);
   --hds-action-secondary-text: var(--base-color-gray-10);
 
   /* Action Tokens */
-  --hds-action-primary-bg-default: var(--base-color-gray-10);
-  --hds-action-primary-bg-hover: var(--base-color-gray-25);
-  --hds-action-primary-bg-active: var(--base-color-gray-35);
-  --hds-action-primary-bg-disabled: var(--base-color-gray-65);
-  --hds-action-primary-text-default: var(--base-color-gray-65);
-  --hds-action-primary-text-disabled: var(--base-color-gray-55);
+  --hds-action-primary-bg-default: var(--base-color-gold-30);
+  --hds-action-primary-bg-hover: var(--base-color-gold-25);
+  --hds-action-primary-bg-active: var(--base-color-gold-35);
+  --hds-action-primary-bg-disabled: var(--base-color-gold-55);
+  --hds-action-primary-text-default: var(--base-color-gold-75);
+  --hds-action-primary-text-disabled: var(--base-color-gold-65);
   --hds-action-secondary-bg-default: var(--base-color-gray-70);
   --hds-action-secondary-bg-hover: var(--base-color-gray-55);
   --hds-action-secondary-bg-active: var(--base-color-gray-45);
@@ -663,16 +685,16 @@
   --hds-text-strong: var(--base-color-gray-black);
   --hds-text-disabled: var(--base-color-gray-25);
   --hds-text-muted: var(--base-color-gray-35);
-  --hds-action-primary: var(--base-color-gray-65);
-  --hds-action-primary-hover: var(--base-color-gray-55);
-  --hds-action-primary-active: var(--base-color-gray-75);
-  --hds-action-primary-text: var(--base-color-gray-10);
-  --hds-action-primary-bg-default: var(--base-color-gray-65);
-  --hds-action-primary-bg-hover: var(--base-color-gray-55);
-  --hds-action-primary-bg-active: var(--base-color-gray-45);
-  --hds-action-primary-bg-disabled: var(--base-color-gray-10);
-  --hds-action-primary-text-default: var(--base-color-gray-10);
-  --hds-action-primary-text-disabled: var(--base-color-gray-25);
+  --hds-action-primary: var(--base-color-gold-30);
+  --hds-action-primary-hover: var(--base-color-gold-25);
+  --hds-action-primary-active: var(--base-color-gold-35);
+  --hds-action-primary-text: var(--base-color-gold-75);
+  --hds-action-primary-bg-default: var(--base-color-gold-30);
+  --hds-action-primary-bg-hover: var(--base-color-gold-25);
+  --hds-action-primary-bg-active: var(--base-color-gold-35);
+  --hds-action-primary-bg-disabled: var(--base-color-gold-10);
+  --hds-action-primary-text-default: var(--base-color-gold-75);
+  --hds-action-primary-text-disabled: var(--base-color-gold-45);
   --hds-action-secondary-bg-default: var(--base-color-gray-10);
   --hds-action-secondary-bg-hover: var(--base-color-gray-15);
   --hds-action-secondary-bg-active: var(--base-color-gray-25);

@@ -1131,14 +1131,37 @@ function buttonsContent() {
 <button class="hds-btn hds-btn--danger">Label</button>`
       ) },
       { label: 'States', content: playground(
-        `          <div class="style-guide-variant-row">
-            <button class="hds-btn hds-btn--primary">Default</button>
-            <button class="hds-btn hds-btn--primary is-hover">Hover</button>
-            <button class="hds-btn hds-btn--primary is-active">Active</button>
-            <button class="hds-btn hds-btn--primary is-focus">Focus</button>
-            <button class="hds-btn hds-btn--primary is-disabled" disabled>Disabled</button>
+        `          <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
+            <div class="style-guide-variant-row">
+              <button class="hds-btn hds-btn--primary">Default</button>
+              <button class="hds-btn hds-btn--primary is-hover">Hover</button>
+              <button class="hds-btn hds-btn--primary is-active">Active</button>
+              <button class="hds-btn hds-btn--primary is-focus">Focus</button>
+              <button class="hds-btn hds-btn--primary" disabled>Disabled</button>
+            </div>
+            <div class="style-guide-variant-row">
+              <button class="hds-btn hds-btn--secondary">Default</button>
+              <button class="hds-btn hds-btn--secondary is-hover">Hover</button>
+              <button class="hds-btn hds-btn--secondary is-active">Active</button>
+              <button class="hds-btn hds-btn--secondary is-focus">Focus</button>
+              <button class="hds-btn hds-btn--secondary" disabled>Disabled</button>
+            </div>
+            <div class="style-guide-variant-row">
+              <button class="hds-btn hds-btn--tertiary">Default</button>
+              <button class="hds-btn hds-btn--tertiary is-hover">Hover</button>
+              <button class="hds-btn hds-btn--tertiary is-active">Active</button>
+              <button class="hds-btn hds-btn--tertiary is-focus">Focus</button>
+              <button class="hds-btn hds-btn--tertiary" disabled>Disabled</button>
+            </div>
+            <div class="style-guide-variant-row">
+              <button class="hds-btn hds-btn--danger">Default</button>
+              <button class="hds-btn hds-btn--danger is-hover">Hover</button>
+              <button class="hds-btn hds-btn--danger is-active">Active</button>
+              <button class="hds-btn hds-btn--danger is-focus">Focus</button>
+              <button class="hds-btn hds-btn--danger" disabled>Disabled</button>
+            </div>
           </div>`,
-        `<!-- Default -->\n<button class="hds-btn hds-btn--primary">Label</button>\n<!-- Hover -->\n<button class="hds-btn hds-btn--primary is-hover">Label</button>\n<!-- Active -->\n<button class="hds-btn hds-btn--primary is-active">Label</button>\n<!-- Focus -->\n<button class="hds-btn hds-btn--primary is-focus">Label</button>\n<!-- Disabled -->\n<button class="hds-btn hds-btn--primary" disabled>Label</button>`
+        `<!-- Primary -->\n<button class="hds-btn hds-btn--primary">Label</button>\n<button class="hds-btn hds-btn--primary" disabled>Label</button>\n\n<!-- Secondary -->\n<button class="hds-btn hds-btn--secondary">Label</button>\n<button class="hds-btn hds-btn--secondary" disabled>Label</button>\n\n<!-- Tertiary -->\n<button class="hds-btn hds-btn--tertiary">Label</button>\n<button class="hds-btn hds-btn--tertiary" disabled>Label</button>\n\n<!-- Danger -->\n<button class="hds-btn hds-btn--danger">Label</button>\n<button class="hds-btn hds-btn--danger" disabled>Label</button>`
       ) },
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">
@@ -1203,21 +1226,37 @@ function buttonIconContent() {
 <button class="hds-btn-icon hds-btn-icon--danger">...</button>`
       ) },
       { label: 'States', content: playground(
-        `          <div class="style-guide-variant-row">
-            <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Default">${iconMd}</button>
-            <button class="hds-btn-icon hds-btn-icon--primary is-hover" aria-label="Hover">${iconMd}</button>
-            <button class="hds-btn-icon hds-btn-icon--primary is-active" aria-label="Active">${iconMd}</button>
-            <button class="hds-btn-icon hds-btn-icon--primary is-focus" aria-label="Focus">${iconMd}</button>
-            <button class="hds-btn-icon hds-btn-icon--primary is-disabled" disabled aria-label="Disabled">${iconMd}</button>
+        `          <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
+            <div class="style-guide-variant-row">
+              <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Default">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--primary is-hover" aria-label="Hover">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--primary is-active" aria-label="Active">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--primary is-focus" aria-label="Focus">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--primary" disabled aria-label="Disabled">${iconMd}</button>
+            </div>
+            <div class="style-guide-variant-row">
+              <button class="hds-btn-icon hds-btn-icon--secondary" aria-label="Default">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--secondary is-hover" aria-label="Hover">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--secondary is-active" aria-label="Active">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--secondary is-focus" aria-label="Focus">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--secondary" disabled aria-label="Disabled">${iconMd}</button>
+            </div>
+            <div class="style-guide-variant-row">
+              <button class="hds-btn-icon hds-btn-icon--tertiary" aria-label="Default">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--tertiary is-hover" aria-label="Hover">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--tertiary is-active" aria-label="Active">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--tertiary is-focus" aria-label="Focus">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--tertiary" disabled aria-label="Disabled">${iconMd}</button>
+            </div>
+            <div class="style-guide-variant-row">
+              <button class="hds-btn-icon hds-btn-icon--danger" aria-label="Default">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--danger is-hover" aria-label="Hover">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--danger is-active" aria-label="Active">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--danger is-focus" aria-label="Focus">${iconMd}</button>
+              <button class="hds-btn-icon hds-btn-icon--danger" disabled aria-label="Disabled">${iconMd}</button>
+            </div>
           </div>`,
-        `<!-- Default -->
-<button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">
-  <span class="hds-icon hds-icon--md"><!-- svg --></span>
-</button>
-<!-- Disabled -->
-<button class="hds-btn-icon hds-btn-icon--primary" disabled aria-label="Settings">
-  <span class="hds-icon hds-icon--md"><!-- svg --></span>
-</button>`
+        `<!-- Primary -->\n<button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--primary" disabled aria-label="Settings">…</button>\n\n<!-- Secondary -->\n<button class="hds-btn-icon hds-btn-icon--secondary" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--secondary" disabled aria-label="Settings">…</button>\n\n<!-- Tertiary -->\n<button class="hds-btn-icon hds-btn-icon--tertiary" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--tertiary" disabled aria-label="Settings">…</button>\n\n<!-- Danger -->\n<button class="hds-btn-icon hds-btn-icon--danger" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--danger" disabled aria-label="Settings">…</button>`
       ) },
       { label: 'Size', content: playground(
         `          <div class="style-guide-variant-row">

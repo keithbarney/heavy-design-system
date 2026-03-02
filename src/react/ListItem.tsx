@@ -1,4 +1,4 @@
-import { type HTMLAttributes, type ReactNode } from 'react';
+import React, { type HTMLAttributes, type ReactNode } from 'react';
 
 type ListItemSize = 'sm' | 'lg';
 
@@ -19,12 +19,23 @@ function ListItem({ label, value, interactive, size, className, ...props }: List
     .filter(Boolean)
     .join(' ');
 
+  const handleKeyDown = interactive
+    ? (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.currentTarget.click();
+        }
+        props.onKeyDown?.(e);
+      }
+    : props.onKeyDown;
+
   return (
     <div
       className={cls}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
       {...props}
+      onKeyDown={handleKeyDown}
     >
       <span className="hds-list-item-key">{label}</span>
       {value !== undefined && <span className="hds-list-item-value">{value}</span>}

@@ -1,29 +1,23 @@
-import { type ReactNode } from 'react';
-import * as RadixSwitch from '@radix-ui/react-switch';
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 
-interface SwitchProps {
-  checked?: boolean;
-  defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  name?: string;
-  value?: string;
+interface SwitchProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: ReactNode;
-  className?: string;
 }
 
-function Switch({ label, className, ...props }: SwitchProps) {
-  const cls = ['hds-form-toggle', className].filter(Boolean).join(' ');
+const Switch = forwardRef<HTMLInputElement, SwitchProps>(
+  ({ label, className, ...props }, ref) => {
+    const cls = ['hds-form-toggle', className].filter(Boolean).join(' ');
 
-  return (
-    <label className={cls}>
-      <RadixSwitch.Root className="hds-form-toggle-root" {...props}>
-        <RadixSwitch.Thumb className="hds-form-toggle-track" />
-      </RadixSwitch.Root>
-      {label && <span>{label}</span>}
-    </label>
-  );
-}
+    return (
+      <label className={cls}>
+        <input ref={ref} type="checkbox" role="switch" {...props} />
+        <span className="hds-form-toggle-track" />
+        {label && <span>{label}</span>}
+      </label>
+    );
+  },
+);
+Switch.displayName = 'Switch';
 
 export { Switch };
 export type { SwitchProps };

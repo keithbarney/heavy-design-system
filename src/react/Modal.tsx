@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, type HTMLAttributes } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
 /* ─── Modal ─── */
@@ -55,31 +55,31 @@ function ModalHeader({ title, description, actions }: ModalHeaderProps) {
 
 /* ─── ModalBody ─── */
 
-interface ModalBodyProps {
-  children: ReactNode;
-  className?: string;
-}
+interface ModalBodyProps extends HTMLAttributes<HTMLDivElement> {}
 
-function ModalBody({ children, className }: ModalBodyProps) {
+function ModalBody({ className, ...props }: ModalBodyProps) {
   const cls = ['hds-modal-body', className].filter(Boolean).join(' ');
-  return <div className={cls}>{children}</div>;
+  return <div className={cls} {...props} />;
 }
 
 /* ─── ModalFooter ─── */
 
-interface ModalFooterProps {
-  children: ReactNode;
-  className?: string;
-}
+interface ModalFooterProps extends HTMLAttributes<HTMLDivElement> {}
 
-function ModalFooter({ children, className }: ModalFooterProps) {
+function ModalFooter({ className, ...props }: ModalFooterProps) {
   const cls = ['hds-modal-footer', className].filter(Boolean).join(' ');
-  return <div className={cls}>{children}</div>;
+  return <div className={cls} {...props} />;
 }
 
 /* ─── ModalClose ─── */
 
-const ModalClose = Dialog.Close;
+interface ModalCloseProps {
+  children: ReactNode;
+}
+
+function ModalClose({ children }: ModalCloseProps) {
+  return <Dialog.Close asChild>{children}</Dialog.Close>;
+}
 
 export { Modal, ModalHeader, ModalBody, ModalFooter, ModalClose };
-export type { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps };
+export type { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps, ModalCloseProps };

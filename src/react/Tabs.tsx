@@ -12,8 +12,7 @@ interface TabsProps {
 }
 
 function Tabs({ className, ...props }: TabsProps) {
-  const cls = ['hds-tabs', className].filter(Boolean).join(' ');
-  return <RadixTabs.Root className={cls} {...props} />;
+  return <RadixTabs.Root className={className} {...props} />;
 }
 
 /* ─── TabList ─── */

@@ -1,4 +1,4 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from 'react';
 
 /* ─── Variant / Size Types ─── */
 
@@ -57,14 +57,11 @@ ButtonIcon.displayName = 'ButtonIcon';
 
 /* ─── ButtonGroup ─── */
 
-interface ButtonGroupProps {
-  children: ReactNode;
-  className?: string;
-}
+interface ButtonGroupProps extends HTMLAttributes<HTMLDivElement> {}
 
-function ButtonGroup({ children, className }: ButtonGroupProps) {
+function ButtonGroup({ className, ...props }: ButtonGroupProps) {
   const cls = ['hds-btn-group', className].filter(Boolean).join(' ');
-  return <div className={cls}>{children}</div>;
+  return <div className={cls} {...props} />;
 }
 
 export { Button, ButtonIcon, ButtonGroup };

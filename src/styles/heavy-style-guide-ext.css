@@ -56,6 +56,12 @@
   background: var(--hds-bg-inset);
 }
 
+/* Override framework's bridge token with direct HDS token
+   so playground theme toggle actually switches the background */
+.style-guide-playground-preview[data-theme] {
+  background-color: var(--hds-bg-default);
+}
+
 /* --- Simulated Interactive States --- */
 
 /* Buttons */

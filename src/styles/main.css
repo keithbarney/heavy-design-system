@@ -506,15 +506,15 @@
   --hds-action-secondary-text: var(--base-color-gray-65);
 
   /* Action Tokens */
-  --hds-action-primary-bg-default: var(--base-color-gold-30);
-  --hds-action-primary-bg-hover: var(--base-color-gold-25);
-  --hds-action-primary-bg-active: var(--base-color-gold-35);
+  --hds-action-primary-bg-default: var(--base-color-gold-20);
+  --hds-action-primary-bg-hover: var(--base-color-gold-15);
+  --hds-action-primary-bg-active: var(--base-color-gold-10);
   --hds-action-primary-bg-disabled: var(--base-color-gold-10);
-  --hds-action-primary-text-default: var(--base-color-gold-75);
-  --hds-action-primary-text-disabled: var(--base-color-gold-45);
+  --hds-action-primary-text-default: var(--base-color-gold-65);
+  --hds-action-primary-text-disabled: var(--base-color-gold-30);
   --hds-action-secondary-bg-default: var(--base-color-gray-10);
   --hds-action-secondary-bg-hover: var(--base-color-gray-15);
-  --hds-action-secondary-bg-active: var(--base-color-gray-25);
+  --hds-action-secondary-bg-active: var(--base-color-gray-20);
   --hds-action-secondary-bg-disabled: var(--base-color-gray-10);
   --hds-action-secondary-text-default: var(--base-color-gray-65);
   --hds-action-secondary-text-disabled: var(--base-color-gray-25);
@@ -597,15 +597,15 @@
   --hds-action-secondary-text: var(--base-color-gray-10);
 
   /* Action Tokens */
-  --hds-action-primary-bg-default: var(--base-color-gold-30);
-  --hds-action-primary-bg-hover: var(--base-color-gold-25);
-  --hds-action-primary-bg-active: var(--base-color-gold-35);
-  --hds-action-primary-bg-disabled: var(--base-color-gold-55);
-  --hds-action-primary-text-default: var(--base-color-gold-75);
-  --hds-action-primary-text-disabled: var(--base-color-gold-65);
+  --hds-action-primary-bg-default: var(--base-color-gold-50);
+  --hds-action-primary-bg-hover: var(--base-color-gold-45);
+  --hds-action-primary-bg-active: var(--base-color-gold-40);
+  --hds-action-primary-bg-disabled: var(--base-color-gold-65);
+  --hds-action-primary-text-default: var(--base-color-gold-0);
+  --hds-action-primary-text-disabled: var(--base-color-gold-45);
   --hds-action-secondary-bg-default: var(--base-color-gray-70);
-  --hds-action-secondary-bg-hover: var(--base-color-gray-55);
-  --hds-action-secondary-bg-active: var(--base-color-gray-45);
+  --hds-action-secondary-bg-hover: var(--base-color-gray-65);
+  --hds-action-secondary-bg-active: var(--base-color-gray-60);
   --hds-action-secondary-bg-disabled: var(--base-color-gray-70);
   --hds-action-secondary-text-default: var(--base-color-gray-35);
   --hds-action-secondary-text-disabled: var(--base-color-gray-55);
@@ -614,7 +614,7 @@
   --hds-action-tertiary-bg-active: var(--base-color-gray-75);
   --hds-action-tertiary-bg-disabled: var(--base-color-gray-75);
   --hds-action-tertiary-border-default: var(--base-color-gray-65);
-  --hds-action-tertiary-border-hover: var(--base-color-gray-55);
+  --hds-action-tertiary-border-hover: var(--base-color-gray-50);
   --hds-action-tertiary-border-active: var(--base-color-gray-45);
   --hds-action-tertiary-border-disabled: var(--base-color-gray-65);
   --hds-action-tertiary-text-default: var(--base-color-gray-35);
@@ -623,12 +623,12 @@
   --hds-action-danger-bg-hover: var(--base-color-gray-75);
   --hds-action-danger-bg-active: var(--base-color-gray-75);
   --hds-action-danger-bg-disabled: var(--base-color-gray-75);
-  --hds-action-danger-border-default: var(--base-color-red-65);
-  --hds-action-danger-border-hover: var(--base-color-red-55);
-  --hds-action-danger-border-active: var(--base-color-red-45);
-  --hds-action-danger-border-disabled: var(--base-color-red-65);
+  --hds-action-danger-border-default: var(--base-color-red-55);
+  --hds-action-danger-border-hover: var(--base-color-red-45);
+  --hds-action-danger-border-active: var(--base-color-red-40);
+  --hds-action-danger-border-disabled: var(--base-color-red-70);
   --hds-action-danger-text-default: var(--base-color-red-35);
-  --hds-action-danger-text-disabled: var(--base-color-red-65);
+  --hds-action-danger-text-disabled: var(--base-color-red-60);
 
   /* Toggle Tokens */
   --hds-toggle-track: var(--base-color-gray-55);
@@ -689,15 +689,15 @@
   --hds-action-primary-hover: var(--base-color-gold-25);
   --hds-action-primary-active: var(--base-color-gold-35);
   --hds-action-primary-text: var(--base-color-gold-75);
-  --hds-action-primary-bg-default: var(--base-color-gold-30);
-  --hds-action-primary-bg-hover: var(--base-color-gold-25);
-  --hds-action-primary-bg-active: var(--base-color-gold-35);
+  --hds-action-primary-bg-default: var(--base-color-gold-20);
+  --hds-action-primary-bg-hover: var(--base-color-gold-15);
+  --hds-action-primary-bg-active: var(--base-color-gold-10);
   --hds-action-primary-bg-disabled: var(--base-color-gold-10);
-  --hds-action-primary-text-default: var(--base-color-gold-75);
-  --hds-action-primary-text-disabled: var(--base-color-gold-45);
+  --hds-action-primary-text-default: var(--base-color-gold-65);
+  --hds-action-primary-text-disabled: var(--base-color-gold-30);
   --hds-action-secondary-bg-default: var(--base-color-gray-10);
   --hds-action-secondary-bg-hover: var(--base-color-gray-15);
-  --hds-action-secondary-bg-active: var(--base-color-gray-25);
+  --hds-action-secondary-bg-active: var(--base-color-gray-20);
   --hds-action-secondary-bg-disabled: var(--base-color-gray-10);
   --hds-action-secondary-text-default: var(--base-color-gray-65);
   --hds-action-secondary-text-disabled: var(--base-color-gray-25);
@@ -950,6 +950,7 @@ p, .hds-body {
 .hds-text-strong { color: var(--hds-text-strong); }
 .hds-text-muted { color: var(--hds-text-default); }
 .hds-text-disabled { color: var(--hds-text-disabled); }
+.hds-text-brand { color: var(--hds-action-primary); }
 
 .hds-uppercase { text-transform: uppercase; }
 .hds-lowercase { text-transform: lowercase; }
@@ -1286,8 +1287,9 @@ p, .hds-body {
 .hds-btn--primary {
   background-color: var(--hds-action-primary-bg-default);
   color: var(--hds-action-primary-text-default);
+  border-color: transparent;
 
-  &:hover:not(:disabled) { background-color: var(--hds-action-primary-bg-hover); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-primary-bg-hover); border-color: transparent; }
   &:active:not(:disabled) { background-color: var(--hds-action-primary-bg-active); transform: scale(0.97); }
 
   &:disabled {
@@ -1300,9 +1302,10 @@ p, .hds-body {
 .hds-btn--secondary {
   background-color: var(--hds-action-secondary-bg-default);
   color: var(--hds-action-secondary-text-default);
+  border-color: transparent;
 
-  &:hover:not(:disabled) { background-color: var(--hds-action-secondary-bg-hover); }
-  &:active:not(:disabled) { background-color: var(--hds-action-secondary-bg-active); transform: scale(0.97); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-secondary-bg-hover); border-color: transparent; }
+  &:active:not(:disabled) { background-color: var(--hds-action-secondary-bg-active); border-color: transparent; transform: scale(0.97); }
 
   &:disabled {
     background-color: var(--hds-action-secondary-bg-disabled);
@@ -1415,8 +1418,9 @@ p, .hds-body {
 .hds-btn-icon--primary {
   background-color: var(--hds-action-primary-bg-default);
   color: var(--hds-action-primary-text-default);
+  border-color: transparent;
 
-  &:hover:not(:disabled) { background-color: var(--hds-action-primary-bg-hover); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-primary-bg-hover); border-color: transparent; }
   &:active:not(:disabled) { background-color: var(--hds-action-primary-bg-active); transform: scale(0.97); }
 
   &:disabled {
@@ -1429,9 +1433,10 @@ p, .hds-body {
 .hds-btn-icon--secondary {
   background-color: var(--hds-action-secondary-bg-default);
   color: var(--hds-action-secondary-text-default);
+  border-color: transparent;
 
-  &:hover:not(:disabled) { background-color: var(--hds-action-secondary-bg-hover); }
-  &:active:not(:disabled) { background-color: var(--hds-action-secondary-bg-active); transform: scale(0.97); }
+  &:hover:not(:disabled) { background-color: var(--hds-action-secondary-bg-hover); border-color: transparent; }
+  &:active:not(:disabled) { background-color: var(--hds-action-secondary-bg-active); border-color: transparent; transform: scale(0.97); }
 
   &:disabled {
     background-color: var(--hds-action-secondary-bg-disabled);

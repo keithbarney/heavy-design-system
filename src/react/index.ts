@@ -68,7 +68,7 @@ export type { FileUploadProps } from './FileUpload';
 /* ─── Radix-powered ─── */
 
 export { Modal, ModalHeader, ModalBody, ModalFooter, ModalClose } from './Modal';
-export type { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps } from './Modal';
+export type { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps, ModalCloseProps } from './Modal';
 
 export { Tabs, TabList, Tab, TabPanel } from './Tabs';
 export type { TabsProps, TabListProps, TabProps, TabPanelProps } from './Tabs';
@@ -88,5 +88,5 @@ export type { RadioGroupProps, RadioItemProps } from './Radio';
 export { Select, SelectItem, SelectGroup } from './Select';
 export type { SelectProps, SelectItemProps, SelectGroupProps } from './Select';
 
-export { Tooltip } from './Tooltip';
-export type { TooltipProps } from './Tooltip';
+export { Tooltip, TooltipProvider } from './Tooltip';
+export type { TooltipProps, TooltipProviderProps } from './Tooltip';

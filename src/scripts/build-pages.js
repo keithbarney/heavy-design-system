@@ -3031,6 +3031,17 @@ function cardHeaderContent() {
               </div>
               <div class="hds-card-body"><p>Body content</p></div>
             </div>
+            <div class="hds-card">
+              <div class="hds-card-header">
+                <div class="hds-card-header-text">
+                  <div class="hds-card-title">Title with Actions</div>
+                </div>
+                <div class="hds-card-header-actions">
+                  <button class="hds-btn-icon hds-btn-icon--sm" aria-label="Close"><span class="hds-icon hds-icon--xsm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="11" y1="5" x2="5" y2="11"/><line x1="5" y1="5" x2="11" y2="11"/></svg></span></button>
+                </div>
+              </div>
+              <div class="hds-card-body"><p>Body content</p></div>
+            </div>
           </div>`,
         `<!-- Title only -->
 <div class="hds-card-header">
@@ -3041,6 +3052,16 @@ function cardHeaderContent() {
 <div class="hds-card-header">
   <div class="hds-card-title">Title</div>
   <div class="hds-card-subtitle">Subtitle</div>
+</div>
+
+<!-- Title + actions (e.g. close button for modals) -->
+<div class="hds-card-header">
+  <div class="hds-card-header-text">
+    <div class="hds-card-title">Title</div>
+  </div>
+  <div class="hds-card-header-actions">
+    <button class="hds-btn-icon hds-btn-icon--sm" aria-label="Close">...</button>
+  </div>
 </div>`
       ) },
     ],

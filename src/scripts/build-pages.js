@@ -1086,7 +1086,7 @@ function breadcrumbsContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <div class="hds-breadcrumbs">
               <a class="hds-link" href="#">Home</a>
               <span class="hds-breadcrumbs-separator">/</span>
@@ -1119,7 +1119,7 @@ function buttonsContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-btn hds-btn--primary">Primary</button>
             <button class="hds-btn hds-btn--secondary">Secondary</button>
             <button class="hds-btn hds-btn--tertiary">Tertiary</button>
@@ -1132,28 +1132,28 @@ function buttonsContent() {
       ) },
       { label: 'States', content: playground(
         `          <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn hds-btn--primary">Default</button>
               <button class="hds-btn hds-btn--primary is-hover">Hover</button>
               <button class="hds-btn hds-btn--primary is-active">Active</button>
               <button class="hds-btn hds-btn--primary is-focus">Focus</button>
               <button class="hds-btn hds-btn--primary" disabled>Disabled</button>
             </div>
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn hds-btn--secondary">Default</button>
               <button class="hds-btn hds-btn--secondary is-hover">Hover</button>
               <button class="hds-btn hds-btn--secondary is-active">Active</button>
               <button class="hds-btn hds-btn--secondary is-focus">Focus</button>
               <button class="hds-btn hds-btn--secondary" disabled>Disabled</button>
             </div>
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn hds-btn--tertiary">Default</button>
               <button class="hds-btn hds-btn--tertiary is-hover">Hover</button>
               <button class="hds-btn hds-btn--tertiary is-active">Active</button>
               <button class="hds-btn hds-btn--tertiary is-focus">Focus</button>
               <button class="hds-btn hds-btn--tertiary" disabled>Disabled</button>
             </div>
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn hds-btn--danger">Default</button>
               <button class="hds-btn hds-btn--danger is-hover">Hover</button>
               <button class="hds-btn hds-btn--danger is-active">Active</button>
@@ -1164,7 +1164,7 @@ function buttonsContent() {
         `<!-- Primary -->\n<button class="hds-btn hds-btn--primary">Label</button>\n<button class="hds-btn hds-btn--primary" disabled>Label</button>\n\n<!-- Secondary -->\n<button class="hds-btn hds-btn--secondary">Label</button>\n<button class="hds-btn hds-btn--secondary" disabled>Label</button>\n\n<!-- Tertiary -->\n<button class="hds-btn hds-btn--tertiary">Label</button>\n<button class="hds-btn hds-btn--tertiary" disabled>Label</button>\n\n<!-- Danger -->\n<button class="hds-btn hds-btn--danger">Label</button>\n<button class="hds-btn hds-btn--danger" disabled>Label</button>`
       ) },
       { label: 'Size', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-btn hds-btn--primary hds-btn--tiny">Tiny</button>
             <button class="hds-btn hds-btn--primary hds-btn--xs">X-Small</button>
             <button class="hds-btn hds-btn--primary hds-btn--sm">Small</button>
@@ -1178,7 +1178,7 @@ function buttonsContent() {
 <button class="hds-btn hds-btn--primary hds-btn--lg">Label</button>`
       ) },
       { label: 'Icon + Text', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-btn hds-btn--primary"><span class="hds-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8.5l3.5 3.5L13 4.5"/></svg></span> Save</button>
             <button class="hds-btn hds-btn--secondary"><span class="hds-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5Z"/></svg></span> Edit</button>
             <button class="hds-btn hds-btn--tertiary"><span class="hds-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 2h13l-4.5 5.5V13l-4 2V7.5L1.5 2Z"/></svg></span> Filter</button>
@@ -1212,7 +1212,7 @@ function buttonIconContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">${iconMd}</button>
             <button class="hds-btn-icon hds-btn-icon--secondary" aria-label="Settings">${iconMd}</button>
             <button class="hds-btn-icon hds-btn-icon--tertiary" aria-label="Settings">${iconMd}</button>
@@ -1227,28 +1227,28 @@ function buttonIconContent() {
       ) },
       { label: 'States', content: playground(
         `          <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn-icon hds-btn-icon--primary" aria-label="Default">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--primary is-hover" aria-label="Hover">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--primary is-active" aria-label="Active">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--primary is-focus" aria-label="Focus">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--primary" disabled aria-label="Disabled">${iconMd}</button>
             </div>
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn-icon hds-btn-icon--secondary" aria-label="Default">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--secondary is-hover" aria-label="Hover">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--secondary is-active" aria-label="Active">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--secondary is-focus" aria-label="Focus">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--secondary" disabled aria-label="Disabled">${iconMd}</button>
             </div>
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn-icon hds-btn-icon--tertiary" aria-label="Default">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--tertiary is-hover" aria-label="Hover">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--tertiary is-active" aria-label="Active">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--tertiary is-focus" aria-label="Focus">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--tertiary" disabled aria-label="Disabled">${iconMd}</button>
             </div>
-            <div class="style-guide-variant-row">
+            <div class="style-guide-variant-row style-guide-variant-row--inline">
               <button class="hds-btn-icon hds-btn-icon--danger" aria-label="Default">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--danger is-hover" aria-label="Hover">${iconMd}</button>
               <button class="hds-btn-icon hds-btn-icon--danger is-active" aria-label="Active">${iconMd}</button>
@@ -1259,7 +1259,7 @@ function buttonIconContent() {
         `<!-- Primary -->\n<button class="hds-btn-icon hds-btn-icon--primary" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--primary" disabled aria-label="Settings">…</button>\n\n<!-- Secondary -->\n<button class="hds-btn-icon hds-btn-icon--secondary" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--secondary" disabled aria-label="Settings">…</button>\n\n<!-- Tertiary -->\n<button class="hds-btn-icon hds-btn-icon--tertiary" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--tertiary" disabled aria-label="Settings">…</button>\n\n<!-- Danger -->\n<button class="hds-btn-icon hds-btn-icon--danger" aria-label="Settings">…</button>\n<button class="hds-btn-icon hds-btn-icon--danger" disabled aria-label="Settings">…</button>`
       ) },
       { label: 'Size', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--tiny" aria-label="Tiny">${iconXsm}</button>
             <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--xs" aria-label="Extra small">${iconSm}</button>
             <button class="hds-btn-icon hds-btn-icon--primary hds-btn-icon--sm" aria-label="Small">${iconSm}</button>
@@ -1307,7 +1307,7 @@ function buttonGroupContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <div class="hds-btn-group">
               <button class="hds-btn hds-btn--secondary">Left</button>
               <button class="hds-btn hds-btn--secondary">Center</button>
@@ -1339,7 +1339,7 @@ function chipsContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-chip">Inactive</button>
             <button class="hds-chip hds-chip--active">Active</button>
           </div>`,
@@ -1347,7 +1347,7 @@ function chipsContent() {
 <button class="hds-chip hds-chip--active">Active</button>`
       ) },
       { label: 'Count', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <span class="hds-chip">Design<span class="hds-chip-count">5</span><button class="hds-chip-remove">${chipX}</button></span>
             <span class="hds-chip">Engineering<span class="hds-chip-count">12</span><button class="hds-chip-remove">${chipX}</button></span>
             <span class="hds-chip">Marketing<button class="hds-chip-remove">${chipX}</button></span>
@@ -1359,7 +1359,7 @@ function chipsContent() {
 </span>`
       ) },
       { label: 'States (Inactive)', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-chip">Default</button>
             <button class="hds-chip is-hover">Hover</button>
             <button class="hds-chip is-active">Active</button>
@@ -1373,7 +1373,7 @@ function chipsContent() {
 <button class="hds-chip" disabled>Disabled</button>`
       ) },
       { label: 'States (Active)', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <button class="hds-chip hds-chip--active">Default</button>
             <button class="hds-chip hds-chip--active is-hover">Hover</button>
             <button class="hds-chip hds-chip--active is-active">Active</button>
@@ -1517,7 +1517,7 @@ function badgeContent() {
     ),
     dimensions: [
       { label: 'Type', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <span class="hds-badge">Default</span>
             <span class="hds-badge hds-badge--success">Success</span>
             <span class="hds-badge hds-badge--warning">Warning</span>
@@ -2059,7 +2059,7 @@ function iconContent() {
     ),
     dimensions: [
       { label: 'Size', content: playground(
-        `          <div class="style-guide-variant-row">
+        `          <div class="style-guide-variant-row style-guide-variant-row--inline">
             <span class="hds-icon hds-icon--sm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.25"/></svg></span>
             <span class="hds-icon hds-icon--md"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.25"/></svg></span>
             <span class="hds-icon hds-icon--lg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10.25"/></svg></span>

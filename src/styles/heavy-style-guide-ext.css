@@ -62,6 +62,10 @@
   background-color: var(--hds-bg-default);
 }
 
+/* Inline variant rows — items keep natural width, centered */
+.style-guide-variant-row--inline { justify-content: center; }
+.style-guide-variant-row--inline > * { flex: 0 1 auto; }
+
 /* --- Simulated Interactive States --- */
 
 /* Buttons */
@@ -95,15 +99,16 @@
 .hds-btn-icon.is-focus { outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
 
 /* Chips (inactive) */
-.hds-chip.is-hover { border-color: var(--hds-text-default); color: var(--hds-text-strong); }
-.hds-chip.is-active { background: var(--hds-surface-default); border-color: var(--hds-text-strong); color: var(--hds-text-strong); }
+.hds-chip.is-hover { border-color: var(--base-color-gray-25); color: var(--hds-text-strong); }
+.hds-chip.is-active { border-color: var(--base-color-gray-30); color: var(--hds-text-strong); }
 .hds-chip.is-focus { outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
 .hds-chip.is-disabled { color: var(--hds-text-disabled); border-color: var(--hds-border-default); cursor: not-allowed; opacity: 0.5; }
 
-/* Chips (active) */
-.hds-chip--active.is-hover { background: var(--hds-action-primary-bg-hover); border-color: var(--hds-action-primary-bg-hover); }
-.hds-chip--active.is-active { background: var(--hds-action-primary-bg-active); border-color: var(--hds-action-primary-bg-active); }
-.hds-chip--active.is-disabled { background: var(--hds-action-primary-bg-disabled); border-color: var(--hds-action-primary-bg-disabled); color: var(--hds-action-primary-text-disabled); opacity: 1; }
+/* Chips (active/selected) */
+.hds-chip--active.is-hover { border-color: var(--base-color-gold-35); color: var(--hds-text-brand); }
+.hds-chip--active.is-active { border-color: var(--base-color-gold-40); color: var(--hds-text-brand); }
+.hds-chip--active.is-focus { border-color: var(--base-color-gold-30); color: var(--hds-text-brand); outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
+.hds-chip--active.is-disabled { border-color: var(--hds-action-primary-bg-disabled); color: var(--hds-action-primary-text-disabled); opacity: 0.5; }
 
 /* Selects */
 .hds-select.is-hover { border-color: var(--hds-forms-input-border-hover); }

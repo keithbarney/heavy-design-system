@@ -2272,13 +2272,13 @@ p, .hds-body {
   transition: background-color var(--hds-duration-fast) var(--hds-ease-out), border-color var(--hds-duration-fast) var(--hds-ease-out), color var(--hds-duration-fast) var(--hds-ease-out);
 
   &:hover:not(:disabled) {
-    border-color: var(--base-color-gray-25);
-    color: var(--hds-text-strong);
+    border-color: var(--base-color-gray-30);
+    color: var(--base-color-gray-55);
   }
 
   &:active:not(:disabled) {
-    border-color: var(--base-color-gray-30);
-    color: var(--hds-text-strong);
+    border-color: var(--base-color-gray-40);
+    color: var(--base-color-gray-65);
   }
 
   &:focus-visible {
@@ -2403,13 +2403,13 @@ p, .hds-body {
   color: var(--hds-text-brand);
 
   &:hover:not(:disabled) {
-    border-color: var(--base-color-gold-35);
-    color: var(--hds-text-brand);
+    border-color: var(--base-color-gold-40);
+    color: var(--base-color-gold-60);
   }
 
   &:active:not(:disabled) {
-    border-color: var(--base-color-gold-40);
-    color: var(--hds-text-brand);
+    border-color: var(--base-color-gold-50);
+    color: var(--base-color-gold-70);
   }
 
   &:disabled {

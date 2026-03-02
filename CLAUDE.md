@@ -212,6 +212,103 @@ Component variants use the **base name first** so they sort together in the side
 
 ---
 
+## How to Consume
+
+Three patterns depending on project type. All patterns use `dist/main.css` as the single entry point — it includes tokens, reset, typography, grid, layout utilities, and all component styles.
+
+### Pattern A: React + Vite App (full integration)
+
+For apps like heavy-tabs, heavy-music-school, eighteen-visions.
+
+**1. CSS import** — in your app entry file (e.g., `main.tsx` or `App.tsx`):
+```ts
+import '../../design/heavy-design-system/dist/main.css'
+```
+Adjust the relative path based on your project's location within `~/Projects/`.
+
+**2. Vite alias** — in `vite.config.ts`:
+```ts
+resolve: {
+  alias: {
+    '@hds': path.resolve(__dirname, '../design/heavy-design-system/src/react'),
+  }
+}
+```
+Path assumes project is one level inside a category folder (e.g., `apps/my-app/`). Adjust if deeper.
+
+**3. TypeScript path mapping** — in `tsconfig.json`:
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@hds/*": ["../design/heavy-design-system/src/react/*"]
+    }
+  },
+  "include": ["src", "../design/heavy-design-system/src/react"]
+}
+```
+The `include` array is required — without it, TS won't resolve React types from the library's location. HDS also needs `@types/react` installed (even as devDependency).
+
+**4. Theme** — set `data-theme="dark"` on `<html>` for dark mode (HDS defaults to light).
+
+**5. Usage:**
+```tsx
+import { Button, Card, Modal } from '@hds'
+```
+
+### Pattern B: Figma Plugin (CSS inline at build time)
+
+For all plugins in `~/Projects/design/figma-plugins/`.
+
+**build-ui.js** reads HDS CSS, strips unusable parts, flattens nesting, and inlines into `ui.html`. Canonical reference: `heavy-branch-manager/build-ui.js`.
+
+**Key steps in build-ui.js:**
+1. Read `../../heavy-design-system/dist/main.css` (sibling path — plugins and HDS are both in `design/`)
+2. Strip `@font-face` blocks (fonts don't load in Figma's iframe)
+3. Strip Style Guide Contract Token sections (delimited by `/* Style Guide Contract Tokens */` comments)
+4. Flatten CSS nesting with lightningcss (`targets: { chrome: 100 << 16 }`, `drafts: { nesting: true }`)
+5. Replace `<!-- HEAVY_THEME -->` marker in `ui.src.html` with `<style>` tag containing processed CSS
+6. Write to `ui.html`
+
+**HTML:** Use `hds-*` classes directly in `ui.src.html`. Plugin-specific overrides go in a separate `<style>` block after the HDS injection.
+
+**Gotchas:** No `color-mix()` (Chrome 111+ but target is 100). Use `.hds-btn` / `.hds-form-input` classes explicitly — bare element resets are minimal.
+
+### Pattern C: Static / Non-React (CSS only)
+
+For portfolio, branding, slides, tools, or any non-React project.
+
+**Option 1 — Direct link** (if project can resolve the path at runtime):
+```html
+<link rel="stylesheet" href="../../design/heavy-design-system/dist/main.css">
+```
+
+**Option 2 — Copy during build** (if deployed or needs self-contained dist):
+```bash
+cp ~/Projects/design/heavy-design-system/dist/main.css dist/css/main.css
+```
+Then link to the local copy. Rebuild HDS first if its tokens/styles changed.
+
+**Option 3 — Tokens only** (for tools like heavy-dashboard):
+Read `dist/main.css` at startup, regex-extract `:root { ... }` and `[data-theme="dark"] { ... }` blocks. Gives ~580 lines of tokens without ~2,000 lines of component CSS.
+
+**Theme:** Set `data-theme="dark"` on `<html>` for dark-only projects.
+
+**Usage:** HDS classes (`hds-btn`, `hds-card`, `hds-form-input`, etc.) + token custom properties (`var(--hds-bg-default)`, `var(--hds-space-16)`, etc.).
+
+### Bridge tokens
+
+Any project can define a bridge layer with project-specific overrides that alias to HDS tokens:
+```css
+:root {
+  --my-app-font: var(--hds-font-primary);
+  --my-app-sidebar-bg: var(--hds-surface-default);
+}
+```
+Bridge tokens use the project name as prefix (e.g., `--dashboard-*`, `--tabs-*`).
+
+---
+
 ## Notes
 
 - `src/styles/main.css` is the design system — standalone, no style-guide dependencies

@@ -540,6 +540,18 @@
   --hds-action-danger-text-default: var(--base-color-red-40);
   --hds-action-danger-text-disabled: var(--base-color-red-25);
 
+  /* Chip Tokens */
+  --hds-chip-border-default: var(--base-color-gray-20);
+  --hds-chip-border-hover: var(--base-color-gray-30);
+  --hds-chip-border-active: var(--base-color-gray-40);
+  --hds-chip-text-hover: var(--base-color-gray-55);
+  --hds-chip-text-active: var(--base-color-gray-65);
+  --hds-chip-active-border-default: var(--base-color-gold-30);
+  --hds-chip-active-border-hover: var(--base-color-gold-40);
+  --hds-chip-active-border-active: var(--base-color-gold-50);
+  --hds-chip-active-text-hover: var(--base-color-gold-60);
+  --hds-chip-active-text-active: var(--base-color-gold-70);
+
   /* Forms Input Tokens */
   --hds-forms-input-bg-default: var(--hds-bg-inset);
   --hds-forms-input-text-default: var(--base-color-gray-30);
@@ -638,6 +650,18 @@
 
   /* Checkbox/Radio Tokens */
   --hds-check-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10' fill='none' stroke='%232b2b2b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 5.5 4 7.5 8 3'/%3E%3C/svg%3E");
+
+  /* Chip Tokens */
+  --hds-chip-border-default: var(--base-color-gray-55);
+  --hds-chip-border-hover: var(--base-color-gray-45);
+  --hds-chip-border-active: var(--base-color-gray-35);
+  --hds-chip-text-hover: var(--base-color-gray-25);
+  --hds-chip-text-active: var(--base-color-gray-15);
+  --hds-chip-active-border-default: var(--base-color-gold-40);
+  --hds-chip-active-border-hover: var(--base-color-gold-30);
+  --hds-chip-active-border-active: var(--base-color-gold-20);
+  --hds-chip-active-text-hover: var(--base-color-gold-20);
+  --hds-chip-active-text-active: var(--base-color-gold-10);
 
   /* Forms Input Tokens */
   --hds-forms-input-bg-default: var(--hds-bg-inset);
@@ -2266,19 +2290,19 @@ p, .hds-body {
   font-size: var(--hds-font-size-body-xs);
   color: var(--hds-text-default);
   background: transparent;
-  border: 1px solid var(--base-color-gray-20);
+  border: 1px solid var(--hds-chip-border-default);
   border-radius: var(--hds-radius-full);
   cursor: pointer;
   transition: background-color var(--hds-duration-fast) var(--hds-ease-out), border-color var(--hds-duration-fast) var(--hds-ease-out), color var(--hds-duration-fast) var(--hds-ease-out);
 
   &:hover:not(:disabled) {
-    border-color: var(--base-color-gray-30);
-    color: var(--base-color-gray-55);
+    border-color: var(--hds-chip-border-hover);
+    color: var(--hds-chip-text-hover);
   }
 
   &:active:not(:disabled) {
-    border-color: var(--base-color-gray-40);
-    color: var(--base-color-gray-65);
+    border-color: var(--hds-chip-border-active);
+    color: var(--hds-chip-text-active);
   }
 
   &:focus-visible {
@@ -2399,17 +2423,17 @@ p, .hds-body {
 }
 
 .hds-chip--active {
-  border-color: var(--base-color-gold-30);
+  border-color: var(--hds-chip-active-border-default);
   color: var(--hds-text-brand);
 
   &:hover:not(:disabled) {
-    border-color: var(--base-color-gold-40);
-    color: var(--base-color-gold-60);
+    border-color: var(--hds-chip-active-border-hover);
+    color: var(--hds-chip-active-text-hover);
   }
 
   &:active:not(:disabled) {
-    border-color: var(--base-color-gold-50);
-    color: var(--base-color-gold-70);
+    border-color: var(--hds-chip-active-border-active);
+    color: var(--hds-chip-active-text-active);
   }
 
   &:disabled {

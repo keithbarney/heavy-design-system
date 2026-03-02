@@ -99,15 +99,15 @@
 .hds-btn-icon.is-focus { outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
 
 /* Chips (inactive) */
-.hds-chip.is-hover { border-color: var(--base-color-gray-30); color: var(--base-color-gray-55); }
-.hds-chip.is-active { border-color: var(--base-color-gray-40); color: var(--base-color-gray-65); }
+.hds-chip.is-hover { border-color: var(--hds-chip-border-hover); color: var(--hds-chip-text-hover); }
+.hds-chip.is-active { border-color: var(--hds-chip-border-active); color: var(--hds-chip-text-active); }
 .hds-chip.is-focus { outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
 .hds-chip.is-disabled { color: var(--hds-text-disabled); border-color: var(--hds-border-default); cursor: not-allowed; opacity: 0.5; }
 
 /* Chips (active/selected) */
-.hds-chip--active.is-hover { border-color: var(--base-color-gold-40); color: var(--base-color-gold-60); }
-.hds-chip--active.is-active { border-color: var(--base-color-gold-50); color: var(--base-color-gold-70); }
-.hds-chip--active.is-focus { border-color: var(--base-color-gold-30); color: var(--hds-text-brand); outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
+.hds-chip--active.is-hover { border-color: var(--hds-chip-active-border-hover); color: var(--hds-chip-active-text-hover); }
+.hds-chip--active.is-active { border-color: var(--hds-chip-active-border-active); color: var(--hds-chip-active-text-active); }
+.hds-chip--active.is-focus { border-color: var(--hds-chip-active-border-default); color: var(--hds-text-brand); outline: 2px solid var(--hds-action-primary); outline-offset: 2px; }
 .hds-chip--active.is-disabled { border-color: var(--hds-action-primary-bg-disabled); color: var(--hds-action-primary-text-disabled); opacity: 0.5; }
 
 /* Selects */

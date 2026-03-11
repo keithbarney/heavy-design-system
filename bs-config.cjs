@@ -38,4 +38,5 @@ module.exports = {
   },
   files: ['dist/**/*'],
   port: 3100,
+  open: false,
 };

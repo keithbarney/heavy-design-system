@@ -39,12 +39,8 @@
   --ui-action-primary: var(--hds-action-primary);
   --base-color-black-100: #000000;
 
-  /* Style Guide success background (moved from main.css base tokens) */
-  --style-guide-success-bg: rgba(14, 131, 69, 0.1);
-}
-
-[data-theme="dark"] {
-  --style-guide-success-bg: rgba(6, 193, 103, 0.1);
+  /* Style Guide success background — references token so extractor classifies as semantic, not base */
+  --style-guide-success-bg: color-mix(in srgb, var(--style-guide-success) 10%, transparent);
 }
 
 /* --- Section Names (JetBrains Mono to match <th>) --- */
